@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amelia Chung | Article Archive</title>
+    <style>
+        body { font-family: "Helvetica", "Arial", "PingFang TC", sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 40px 20px; background-color: #fff; }
+        nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px; }
+        .logo { font-weight: bold; letter-spacing: 1px; }
+        .menu a { margin-left: 20px; text-decoration: none; color: #666; font-size: 0.9em; }
+        .lang-btn { background: none; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; font-size: 0.8em; margin-left: 20px; }
+        header { text-align: center; margin-bottom: 50px; }
+        h1 { font-size: 2.5em; letter-spacing: 5px; margin-bottom: 10px; text-transform: uppercase; }
+        hr { width: 100px; border: 0; border-top: 3px solid #000; margin: 0 auto 40px; }
+        h3 { border-bottom: none; margin-top: 40px; font-size: 1.1em; }
+        ol { padding-left: 20px; }
+        li { margin-bottom: 25px; }
+        li a { color: #000; text-decoration: underline; font-weight: bold; display: block; margin-bottom: 5px; }
+        .desc { font-size: 0.95em; color: #555; margin: 5px 0; display: block; border-left: 3px solid #eee; padding-left: 15px; }
+        .date { color: #888; font-weight: normal; font-size: 0.85em; }
+        footer { margin-top: 80px; text-align: center; font-size: 0.9em; border-top: 1px solid #eee; padding-top: 20px; }
+        /* 語系切換隱藏控制 */
+        .en { display: none; }
+    </style>
+</head>
+<body class="lang-zh">
+    <nav>
+        <div class="logo">AMELIA CHUNG</div>
+        <div class="menu">
+            <a href="#">Works</a>
+            <a href="#">Article Archive</a>
+            <a href="#">Abouts</a>
+            <button class="lang-btn" onclick="toggleLang()">EN / 中文</button>
+        </div>
+    </nav>
+
+    <header>
+        <h1 class="zh">文章存檔</h1>
+        <h1 class="en">ARTICLE ARCHIVE</h1>
+        <hr>
+    </header>
+
+    <main>
+        <h3 class="zh">發佈作品：</h3>
+        <h3 class="en">Published Works:</h3>
+
+        <ol>
+            <li>
+                <a href="#" class="zh">數說2024台灣大選之二：藍綠立委席次消長，民眾黨坐大第三勢力？ <span class="date">(2023.12.22)</span></a>
+                <a href="#" class="en">Data Analysis of 2024 Taiwan Election II: The Rise of TPP <span class="date">(2023.12.22)</span></a>
+                <span class="desc zh">分析了主要政黨之間的立法席位變化以及台灣民眾黨的崛起。</span>
+                <span class="desc en">Analyzed the shifting legislative seats and the rise of the Taiwan People's Party.</span>
+            </li>
+            <li>
+                <a href="#" class="zh">一念十年：台灣20世代的太陽花記憶，會是什麼模樣？ <span class="date">(2024.03.14)</span></a>
+                <a href="#" class="en">Ten Years After: Sunflower Movement Memories of Taiwan's Gen Z <span class="date">(2024.03.14)</span></a>
+                <span class="desc zh">紀念太陽花學運十週年，反映其對台灣青年的影響。</span>
+                <span class="desc en">Commemorated the 10th anniversary of the Sunflower Movement.</span>
+            </li>
+        </ol>
+    </main>
+
+    <footer>
+        yichingchung910@gmail.com | +886 972790330
+    </footer>
+
+    <script>
+        function toggleLang() {
+            const zhElements = document.querySelectorAll('.zh');
+            const enElements = document.querySelectorAll('.en');
+            const isZh = zhElements[0].style.display !== 'none';
+
+            zhElements.forEach(el => el.style.display = isZh ? 'none' : 'block');
+            enElements.forEach(el => el.style.display = isZh ? 'block' : 'none');
+        }
+    </script>
+</body>
+</html>
