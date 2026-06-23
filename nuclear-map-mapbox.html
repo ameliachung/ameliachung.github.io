@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taiwan 2025 Nuclear Referendum — Interactive Map</title>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:#fafafa;color:#1a1a1a;}
+#app{display:flex;min-height:100vh;flex-wrap:wrap;}
+#map{flex:1 1 480px;min-height:520px;position:relative;}
+#panel{flex:0 0 300px;padding:2rem 1.75rem;background:#fff;border-left:1px solid #e5e5e5;display:flex;flex-direction:column;gap:1.25rem;}
+
+.eyebrow{font-family:monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#999;}
+h1{font-size:24px;font-weight:800;line-height:1.15;letter-spacing:-.01em;}
+.lede{font-size:13px;line-height:1.65;color:#555;}
+
+.stats{display:flex;flex-direction:column;gap:.75rem;border-top:1px solid #eee;padding-top:1.25rem;}
+.stat-row{display:flex;justify-content:space-between;align-items:baseline;}
+.stat-label{font-family:monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#999;}
+.stat-val{font-size:20px;font-weight:800;}
+.stat-val.yes{color:#c8a000;}
+.stat-val.no{color:#8b6fae;}
+
+.bar-track{height:6px;background:#eee;border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;}
+.bar-yes{background:#c8a000;}.bar-no{background:#8b6fae;}
+.bar-labels{display:flex;justify-content:space-between;font-family:monospace;font-size:10px;color:#999;margin-top:3px;}
+
+.thresh{background:#fdf3f1;border:1px solid #f0d4ce;border-radius:5px;padding:10px 12px;}
+.thresh-label{font-family:monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#c0654f;margin-bottom:3px;}
+.thresh-num{font-size:15px;font-weight:800;color:#d4502e;}
+.thresh-sub{font-family:monospace;font-size:10px;color:#aa8;margin-top:2px;color:#a88;}
+
+.legend{border-top:1px solid #eee;padding-top:1rem;}
+.legend-title{font-family:monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#999;margin-bottom:5px;}
+.legend-bar{height:10px;border-radius:2px;background:linear-gradient(to right,#cdbfe0,#e8d080,#8b6800);margin-bottom:3px;}
+.legend-ticks{display:flex;justify-content:space-between;font-family:monospace;font-size:9px;color:#999;}
+
+.hover-info{border-top:1px solid #eee;padding-top:1rem;min-height:80px;}
+.h-county{font-size:15px;font-weight:800;margin-bottom:4px;}
+.h-pct{font-family:monospace;font-size:12px;color:#b89000;font-weight:bold;}
+.h-detail{font-family:monospace;font-size:11px;color:#777;margin-top:5px;line-height:1.7;}
+.h-placeholder{font-family:monospace;font-size:11px;color:#bbb;}
+
+.play-btn{font-family:monospace;font-size:11px;padding:7px 16px;border:1px solid #ccc;border-radius:4px;background:#fff;color:#666;cursor:pointer;letter-spacing:.05em;transition:all .15s;align-self:flex-start;}
+.play-btn:hover{border-color:#c8a000;color:#b89000;}
+
+.src{font-family:monospace;font-size:10px;color:#bbb;border-top:1px solid #eee;padding-top:.75rem;line-height:1.6;}
+.src a{color:#999;}
+
+.map-title-overlay{position:absolute;top:16px;left:16px;background:rgba(255,255,255,.92);padding:8px 14px;border-radius:5px;font-family:monospace;font-size:11px;color:#666;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="map">
+    <div class="map-title-overlay">Agreement rate by county · hover to explore</div>
+  </div>
+  <div id="panel">
+    <div>
+      <div class="eyebrow">Referendum · August 2025</div>
+      <h1>Taiwan's Nuclear<br>Power Referendum</h1>
+    </div>
+    <p class="lede">Voters were asked whether to restart the Maanshan (核三) nuclear plant. A majority voted yes — but turnout fell short of the legal threshold, so the measure failed.</p>
+
+    <div class="stats">
+      <div class="stat-row"><span class="stat-label">Yes votes</span><span class="stat-val yes">4,341,432</span></div>
+      <div class="stat-row"><span class="stat-label">No votes</span><span class="stat-val no">1,511,693</span></div>
+      <div>
+        <div class="bar-track"><div class="bar-fill bar-yes" style="width:74.2%"></div></div>
+        <div class="bar-labels"><span>Yes 74.2%</span><span>No 25.8%</span></div>
+      </div>
+    </div>
+
+    <div class="thresh">
+      <div class="thresh-label">Below threshold</div>
+      <div class="thresh-num">Short by 658,568 votes</div>
+      <div class="thresh-sub">5,000,523 needed to pass</div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-title">Yes vote share (of ballots cast)</div>
+      <div class="legend-bar"></div>
+      <div class="legend-ticks"><span>55%</span><span>74%</span><span>93%</span></div>
+    </div>
+
+    <div class="hover-info" id="hover-info">
+      <div class="h-placeholder">Hover over a county to see its results</div>
+    </div>
+
+    <button class="play-btn" onclick="playAnim()">▶ Replay animation</button>
+
+    <div class="src">
+      Source: Central Election Commission (中選會)<br>
+      Map & analysis: <a href="https://ameliachung.github.io">Amelia Chung</a><br>
+      Environmental Information Center
+    </div>
+  </div>
+</div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiYW1lbGlhLWNodW5nIiwiYSI6ImNtcXF1bm9kaDBqNzEyc3I1YzBtNnoxZ2IifQ.mOZFrTq1mdP8sOcHtpwXIQ';
+
+const VOTES = {
+  '台北市': {en:'Taipei City', yes:475405, no:150152, total:629887},
+  '新北市': {en:'New Taipei City', yes:777046, no:262784, total:1047913},
+  '桃園市': {en:'Taoyuan City', yes:429306, no:98886, total:532214},
+  '台中市': {en:'Taichung City', yes:645486, no:212952, total:869580},
+  '台南市': {en:'Tainan City', yes:281553, no:141687, total:426241},
+  '高雄市': {en:'Kaohsiung City', yes:423651, no:229579, total:656998},
+  '新竹縣': {en:'Hsinchu County', yes:149516, no:36135, total:188290},
+  '苗栗縣': {en:'Miaoli County', yes:113477, no:17612, total:132546},
+  '彰化縣': {en:'Changhua County', yes:222117, no:56089, total:281149},
+  '南投縣': {en:'Nantou County', yes:136907, no:53895, total:194514},
+  '雲林縣': {en:'Yunlin County', yes:98165, no:29429, total:128698},
+  '嘉義縣': {en:'Chiayi County', yes:71315, no:27545, total:99582},
+  '屏東縣': {en:'Pingtung County', yes:120720, no:90460, total:213366},
+  '宜蘭縣': {en:'Yilan County', yes:62075, no:26003, total:88793},
+  '花蓮縣': {en:'Hualien County', yes:63040, no:9956, total:73829},
+  '台東縣': {en:'Taitung County', yes:37858, no:7191, total:45498},
+  '澎湖縣': {en:'Penghu County', yes:13180, no:4012, total:17335},
+  '基隆市': {en:'Keelung City', yes:70703, no:17895, total:89258},
+  '新竹市': {en:'Hsinchu City', yes:89585, no:21123, total:111465},
+  '嘉義市': {en:'Chiayi City', yes:43674, no:17279, total:61324},
+  '金門縣': {en:'Kinmen County', yes:14524, no:893, total:15593},
+  '連江縣': {en:'Lienchiang County', yes:2129, no:136, total:2297},
+};
+Object.values(VOTES).forEach(v => v.pct = v.yes / v.total);
+
+function norm(n){return (n||'').replace(/臺/g,'台');}
+function fmt(n){return n.toLocaleString();}
+function fmtPct(p){return (p*100).toFixed(1)+'%';}
+
+// color ramp: 55% purple-grey → 74% gold → 93% deep gold
+function pctColor(pct){
+  const t = Math.max(0, Math.min(1, (pct - 0.55) / 0.38));
+  if(t < 0.5){
+    const s = t*2;
+    return `rgb(${Math.round(205+(232-205)*s)},${Math.round(191+(208-191)*s)},${Math.round(224+(128-224)*s)})`;
+  } else {
+    const s = (t-0.5)*2;
+    return `rgb(${Math.round(232+(139-232)*s)},${Math.round(208+(104-208)*s)},${Math.round(128+(0-128)*s)})`;
+  }
+}
+
+const GEO_URL = 'https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty2010.geo.json';
+
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v11',
+  center: [120.9, 23.7],
+  zoom: 6.3,
+  attributionControl: true,
+});
+map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+let geoData = null;
+let revealed = {}; // county -> bool
+
+map.on('load', async () => {
+  geoData = await fetch(GEO_URL).then(r => r.json());
+
+  // attach data props
+  geoData.features.forEach(f => {
+    const name = norm(f.properties.COUNTYNAME || '');
+    const v = VOTES[name];
+    f.properties.cname = name;
+    f.properties.ename = v ? v.en : name;
+    f.properties.pct = v ? v.pct : 0;
+    f.properties.fillColor = '#e8e8e8'; // start grey
+  });
+
+  map.addSource('counties', { type:'geojson', data: geoData });
+
+  map.addLayer({
+    id: 'county-fill',
+    type: 'fill',
+    source: 'counties',
+    paint: {
+      'fill-color': ['get','fillColor'],
+      'fill-opacity': 0.85,
+    }
+  });
+  map.addLayer({
+    id: 'county-line',
+    type: 'line',
+    source: 'counties',
+    paint: { 'line-color':'#fff', 'line-width':1 }
+  });
+  map.addLayer({
+    id: 'county-hover',
+    type: 'line',
+    source: 'counties',
+    paint: { 'line-color':'#1a1a1a', 'line-width':2 },
+    filter: ['==','cname','']
+  });
+
+  // hover
+  map.on('mousemove', 'county-fill', (e) => {
+    const f = e.features[0];
+    const name = f.properties.cname;
+    const v = VOTES[name];
+    map.getCanvas().style.cursor = 'pointer';
+    map.setFilter('county-hover', ['==','cname', name]);
+    if(v){
+      document.getElementById('hover-info').innerHTML =
+        `<div class="h-county">${v.en}</div>
+         <div class="h-pct">Yes ${fmtPct(v.pct)}</div>
+         <div class="h-detail">
+           Yes &nbsp;${fmt(v.yes)}<br>
+           No &nbsp;&nbsp;${fmt(v.no)}<br>
+           Cast ${fmt(v.total)}
+         </div>`;
+    }
+  });
+  map.on('mouseleave', 'county-fill', () => {
+    map.getCanvas().style.cursor = '';
+    map.setFilter('county-hover', ['==','cname','']);
+    document.getElementById('hover-info').innerHTML = '<div class="h-placeholder">Hover over a county to see its results</div>';
+  });
+
+  setTimeout(playAnim, 600);
+});
+
+window.playAnim = function(){
+  if(!geoData) return;
+  // reset
+  geoData.features.forEach(f => f.properties.fillColor = '#e8e8e8');
+  map.getSource('counties').setData(geoData);
+
+  const names = Object.keys(VOTES).sort(() => Math.random() - 0.5);
+  names.forEach((name, i) => {
+    setTimeout(() => {
+      const feat = geoData.features.find(f => f.properties.cname === name);
+      if(feat){
+        feat.properties.fillColor = pctColor(VOTES[name].pct);
+        map.getSource('counties').setData(geoData);
+      }
+    }, i * 150);
+  });
+};
+</script>
+</body>
+</html>

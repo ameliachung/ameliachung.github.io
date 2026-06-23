@@ -177,11 +177,12 @@ footer {
           <span class="card-tag">Interactive map</span>
           <span class="card-tag">Nuclear energy</span>
         </div>
-        <p class="card-anno" id="a1-en">Built an interactive choropleth map showing township-level voting patterns across Taiwan, then layered in nuclear plant proximity and demographic data to surface who lives closest to the risk — and how they voted. My first attempt at combining geospatial risk assessment with democratic data.</p>
-        <p class="card-anno-zh" id="a1-zh">製作互動式分區地圖，呈現台灣各鄉鎮的投票行為，並疊加核電廠距離與人口結構數據，揭示誰住得離風險最近——以及他們如何投票。這是我首次嘗試將地理空間風險評估與民主數據結合。</p>
+        <p class="card-anno" id="a1-en">A two-part visual story on Taiwan's 2025 nuclear referendum. One interactive map animates the yes-vote share across all 22 counties, revealing the geography of public opinion. The other models the risk most voters never weighed: the 15 villages and ~24,000 residents inside the 8km emergency evacuation zone around the Maanshan plant. Together they ask — what does the map of consent leave out?</p>
+        <p class="card-anno-zh" id="a1-zh">關於台灣2025核三公投的雙重視覺敘事。一張互動地圖以動畫呈現22縣市的同意票比例，揭示民意的地理分布；另一張則模擬多數選民從未權衡的代價：核電廠8公里緊急疏散範圍內的15個村落、約2.4萬居民。兩者並置提問——這張「同意地圖」，遺漏了什麼？</p>
         <div class="card-links">
-          <a class="card-link" href="https://ameliachung.github.io/nuclear-risk-tw/" target="_blank" rel="noopener" id="l1a-en">Interactive map ↗</a>
-          <a class="card-link" href="https://e-info.org.tw/node/241997" target="_blank" rel="noopener" id="l1b-en">Read the story ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/nuclear-referendum/" target="_blank" rel="noopener" id="l1a-en">Referendum map ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/nuclear-risk-tw/" target="_blank" rel="noopener" id="l1b-en">Risk zone map ↗</a>
+          <a class="card-link" href="https://e-info.org.tw/node/241997" target="_blank" rel="noopener" id="l1c-en">Read the story ↗</a>
         </div>
       </div>
       <div class="card-visual">
@@ -343,13 +344,15 @@ function setLang(l) {
 
   // card link labels
   if(isZh) {
-    const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = '互動地圖 ↗';
-    const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = '閱讀報導 ↗';
+    const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = '公投地圖 ↗';
+    const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = '風險範圍地圖 ↗';
+    const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = '閱讀報導 ↗';
     const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = '作者採訪 ↗';
     const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = '數位圖表 ↗';
   } else {
-    const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = 'Interactive map ↗';
-    const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = 'Read the story ↗';
+    const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = 'Referendum map ↗';
+    const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = 'Risk zone map ↗';
+    const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = 'Read the story ↗';
     const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = 'Author interview ↗';
     const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = 'Data charts ↗';
   }
