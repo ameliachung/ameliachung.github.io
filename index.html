@@ -1,79 +1,359 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amelia Chung | Article Archive</title>
-    <style>
-        body { font-family: "Helvetica", "Arial", "PingFang TC", sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 40px 20px; background-color: #fff; }
-        nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px; }
-        .logo { font-weight: bold; letter-spacing: 1px; }
-        .menu a { margin-left: 20px; text-decoration: none; color: #666; font-size: 0.9em; }
-        .lang-btn { background: none; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; font-size: 0.8em; margin-left: 20px; }
-        header { text-align: center; margin-bottom: 50px; }
-        h1 { font-size: 2.5em; letter-spacing: 5px; margin-bottom: 10px; text-transform: uppercase; }
-        hr { width: 100px; border: 0; border-top: 3px solid #000; margin: 0 auto 40px; }
-        h3 { border-bottom: none; margin-top: 40px; font-size: 1.1em; }
-        ol { padding-left: 20px; }
-        li { margin-bottom: 25px; }
-        li a { color: #000; text-decoration: underline; font-weight: bold; display: block; margin-bottom: 5px; }
-        .desc { font-size: 0.95em; color: #555; margin: 5px 0; display: block; border-left: 3px solid #eee; padding-left: 15px; }
-        .date { color: #888; font-weight: normal; font-size: 0.85em; }
-        footer { margin-top: 80px; text-align: center; font-size: 0.9em; border-top: 1px solid #eee; padding-top: 20px; }
-        /* 語系切換隱藏控制 */
-        .en { display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amelia Chung — Data Journalist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Serif+TC:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --text-sec: #555555;
+  --text-ter: #999999;
+  --border: #e0e0e0;
+  --border-med: #cccccc;
+  --hover-bg: #f5f5f5;
+  --c1: #FFE135;
+  --c2: #E8533A;
+  --c3: #3A7DE8;
+  --c4: #2ECC8A;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; padding: 0 1.5rem; }
+.wrap { max-width: 720px; margin: 0 auto; }
+
+/* NAV */
+nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 0; margin-bottom: 2.5rem;
+  border-bottom: 1.5px solid var(--text);
+  position: sticky; top: 0; background: var(--bg); z-index: 100;
+}
+.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; transition: color 0.1s; }
+.nav-link:hover { color: var(--text); }
+.lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
+.lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 3px 10px; border: none; cursor: pointer; background: transparent; color: var(--text-sec); transition: all 0.15s; }
+.lang-btn.active { background: var(--text); color: var(--bg); }
+
+/* HERO */
+.hero { margin-bottom: 2.5rem; padding-top: 1rem; }
+.eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-ter); margin-bottom: 0.75rem; }
+.hero-title { font-size: 52px; font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+.hero-title .y { background: var(--c1); color: #111; padding: 0 6px; }
+.hero-title .r { color: var(--c2); }
+.hero-title-zh { font-family: 'Noto Serif TC', serif; font-size: 42px; font-weight: 700; line-height: 1.2; margin-bottom: 1.25rem; display: none; }
+.hero-title-zh .r { color: var(--c2); }
+.hero-desc { font-size: 14px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
+.hero-desc-zh { font-family: 'Noto Serif TC', serif; font-size: 14px; line-height: 2; color: var(--text-sec); max-width: 500px; display: none; }
+
+/* TICKER STRIP */
+.strip {
+  display: flex; border-top: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text);
+  margin-bottom: 2.5rem;
+}
+.strip-item { flex: 1; padding: 0.6rem 0.75rem; border-right: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+.strip-item:last-child { border-right: none; }
+.strip-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); margin-bottom: 3px; }
+.strip-val { font-size: 12px; font-weight: 500; color: var(--text); }
+
+/* SECTION HEADER */
+.sec-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 1rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.sec-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); }
+.sec-count { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
+
+/* WORKS GRID */
+.works-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); margin-bottom: 2.5rem; }
+.card { background: var(--bg); padding: 1.25rem; transition: background 0.15s; text-decoration: none; color: inherit; display: block; }
+.card:hover { background: var(--hover-bg); }
+.card:hover .card-arrow { opacity: 1; }
+.card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+.color-bar { height: 5px; width: 36px; border-radius: 1px; margin-bottom: 0.75rem; }
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); margin-bottom: 0.4rem; }
+.card-title { font-size: 16px; font-weight: 700; line-height: 1.2; margin-bottom: 0.6rem; }
+.card-title-zh { font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 0.6rem; display: none; }
+.card-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.card-tag { font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 6px; border: 0.5px solid var(--border-med); color: var(--text-sec); border-radius: 2px; }
+.card-anno { font-size: 12px; line-height: 1.65; color: var(--text-sec); margin-bottom: 0.75rem; }
+.card-anno-zh { font-family: 'Noto Serif TC', serif; font-size: 12px; line-height: 2; color: var(--text-sec); margin-bottom: 0.75rem; display: none; }
+.card-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.card-link { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 9px; border: 0.5px solid var(--border-med); border-radius: 2px; color: var(--text-sec); text-decoration: none; transition: all 0.12s; }
+.card-link:hover { border-color: var(--text); color: var(--text); }
+.card-arrow { font-size: 16px; color: var(--text-ter); opacity: 0; transition: opacity 0.12s; margin-top: 0.25rem; }
+
+/* MINI MAP SVG */
+.card-visual { display: flex; flex-direction: column; gap: 8px; }
+.mini-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 2px; color: var(--text-sec); }
+
+/* ABOUT */
+.about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+.about-text { font-size: 13px; line-height: 1.85; color: var(--text-sec); }
+.about-text-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; line-height: 2.1; color: var(--text-sec); display: none; }
+.skills { display: flex; flex-direction: column; gap: 0.4rem; }
+.skill { display: flex; align-items: center; gap: 8px; }
+.skill-name { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); width: 100px; flex-shrink: 0; }
+.skill-track { flex: 1; height: 3px; background: var(--border); border-radius: 2px; }
+.skill-fill { height: 3px; border-radius: 2px; }
+
+/* FOOTER */
+footer {
+  border-top: 1.5px solid var(--text); padding: 1rem 0 2.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-links { display: flex; gap: 1rem; }
+.footer-link { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-sec); text-decoration: none; }
+.footer-link:hover { color: var(--text); }
+.footer-loc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
+</style>
 </head>
-<body class="lang-zh">
-    <nav>
-        <div class="logo">AMELIA CHUNG</div>
-        <div class="menu">
-            <a href="#">Works</a>
-            <a href="#">Article Archive</a>
-            <a href="#">Abouts</a>
-            <button class="lang-btn" onclick="toggleLang()">EN / 中文</button>
+<body>
+<div class="wrap">
+
+<!-- NAV -->
+<nav>
+  <span class="logo" id="logo">AMELIA CHUNG</span>
+  <div class="nav-right">
+    <a class="nav-link" href="#works" id="nav-works">Works</a>
+    <a class="nav-link" href="articles.html" id="nav-articles">Articles</a>
+    <a class="nav-link" href="#about" id="nav-about">About</a>
+    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">Contact</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="eyebrow" id="eyebrow">Data journalist · Visual storyteller · Based in Taipei</p>
+  <h1 class="hero-title" id="hero-en">
+    Stories that make<br>
+    <span class="y">Asia's data</span><br>
+    <span class="r">visible.</span>
+  </h1>
+  <h1 class="hero-title-zh" id="hero-zh">
+    讓亞洲的數據，<br><span class="r">被看見。</span>
+  </h1>
+  <p class="hero-desc" id="desc-en">I work at the intersection of investigative journalism, geospatial analysis, and interactive design — building data stories about elections, media censorship, and environmental politics across Taiwan and Asia.</p>
+  <p class="hero-desc-zh" id="desc-zh">我的工作站在調查新聞、地理空間分析與互動設計的交叉點——用數據說故事，關於台灣與亞洲的選舉、媒體審查與環境政治。</p>
+</div>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-item"><div class="strip-label" id="s1">Tools</div><div class="strip-val">QGIS · Python · Flourish</div></div>
+  <div class="strip-item"><div class="strip-label" id="s2">Methods</div><div class="strip-val">GIS · Scrollytelling · Data viz</div></div>
+  <div class="strip-item"><div class="strip-label" id="s3">Languages</div><div class="strip-val">中文 · English</div></div>
+  <div class="strip-item"><div class="strip-label" id="s4">Status</div><div class="strip-val" id="s4val">Open to relocation</div></div>
+</div>
+
+<!-- WORKS -->
+<div id="works">
+  <div class="sec-head">
+    <span class="sec-label" id="works-label">Selected works</span>
+    <span class="sec-count">04 projects</span>
+  </div>
+
+  <div class="works-grid">
+
+    <!-- 01 FEATURED -->
+    <div class="card card-featured">
+      <div>
+        <div class="color-bar" style="background:var(--c1)"></div>
+        <div class="card-num">01 — Featured</div>
+        <div class="card-title" id="t1-en">Geospatial Analysis of Taiwan's 2021 Nuclear Power Referendum</div>
+        <div class="card-title-zh" id="t1-zh">台灣2021年核能公投的地理空間分析</div>
+        <div class="card-tags">
+          <span class="card-tag">QGIS</span>
+          <span class="card-tag">Interactive map</span>
+          <span class="card-tag">Nuclear energy</span>
         </div>
-    </nav>
+        <p class="card-anno" id="a1-en">Built an interactive choropleth map showing township-level voting patterns across Taiwan, then layered in nuclear plant proximity and demographic data to surface who lives closest to the risk — and how they voted. My first attempt at combining geospatial risk assessment with democratic data.</p>
+        <p class="card-anno-zh" id="a1-zh">製作互動式分區地圖，呈現台灣各鄉鎮的投票行為，並疊加核電廠距離與人口結構數據，揭示誰住得離風險最近——以及他們如何投票。這是我首次嘗試將地理空間風險評估與民主數據結合。</p>
+        <div class="card-links">
+          <a class="card-link" href="https://ameliachung.github.io/nuclear-risk-tw/" target="_blank" rel="noopener" id="l1a-en">Interactive map ↗</a>
+          <a class="card-link" href="https://e-info.org.tw/node/241997" target="_blank" rel="noopener" id="l1b-en">Read the story ↗</a>
+        </div>
+      </div>
+      <div class="card-visual">
+        <svg viewBox="0 0 220 175" style="width:100%;border-radius:4px;background:#E8F4E8;">
+          <ellipse cx="110" cy="95" rx="60" ry="75" fill="#C5E0C5" stroke="#8BC08B" stroke-width="1"/>
+          <ellipse cx="105" cy="83" rx="33" ry="44" fill="#A8D4A8" stroke="#6BA86B" stroke-width="0.8"/>
+          <ellipse cx="122" cy="120" rx="24" ry="17" fill="#FFE135" opacity="0.75" stroke="#D4B800" stroke-width="0.8"/>
+          <ellipse cx="97" cy="72" rx="20" ry="24" fill="#FFE135" opacity="0.55" stroke="#D4B800" stroke-width="0.8"/>
+          <circle cx="91" cy="80" r="4.5" fill="#E8533A" opacity="0.9"/>
+          <circle cx="117" cy="126" r="4" fill="#E8533A" opacity="0.9"/>
+          <circle cx="130" cy="108" r="3.5" fill="#E8533A" opacity="0.7"/>
+          <text x="110" y="22" text-anchor="middle" font-family="monospace" font-size="8" fill="#4A7A4A">Taiwan — Nuclear Referendum 2021</text>
+          <rect x="14" y="145" width="10" height="6" fill="#FFE135" opacity="0.85" rx="1"/>
+          <text x="28" y="151" font-family="monospace" font-size="7" fill="#4A7A4A">High yes vote</text>
+          <circle cx="18" cy="163" r="3.5" fill="#E8533A"/>
+          <text x="28" y="166" font-family="monospace" font-size="7" fill="#4A7A4A">Nuclear plant</text>
+        </svg>
+        <div class="mini-chips">
+          <span class="chip" style="background:#FFE13520;border:0.5px solid #D4B800;">4.3M yes votes</span>
+          <span class="chip" style="background:#E8533A15;border:0.5px solid #E8533A;">3 plant sites mapped</span>
+        </div>
+      </div>
+    </div>
 
-    <header>
-        <h1 class="zh">文章存檔</h1>
-        <h1 class="en">ARTICLE ARCHIVE</h1>
-        <hr>
-    </header>
+    <!-- 02 CENSORED -->
+    <div class="card">
+      <div class="color-bar" style="background:var(--c2)"></div>
+      <div class="card-num">02</div>
+      <div class="card-title" id="t2-en">The Big [Censored] Theory</div>
+      <div class="card-title-zh" id="t2-zh">生活大嗦嗦：中國美劇中的敏感詞</div>
+      <div class="card-tags">
+        <span class="card-tag">Media monitoring</span>
+        <span class="card-tag">Data viz</span>
+        <span class="card-tag">Deep reporting</span>
+      </div>
+      <p class="card-anno" id="a2-en">Tracked censorship patterns in Chinese-dubbed American TV series, cross-referencing dubbed scripts with originals to identify systematic patterns. Combined author interviews with data visualisation to show what gets silenced — and why.</p>
+      <p class="card-anno-zh" id="a2-zh">追蹤中國配音美劇中的審查模式，將配音腳本與原版對照，識別系統性規律。結合作者採訪與數據視覺化，呈現什麼被消音——以及為什麼。</p>
+      <div class="card-links">
+        <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E4%BD%9C%E8%80%85%E6%8E%A1%E8%A8%AA%E7%AF%87-1fb99b54b37a" target="_blank" rel="noopener" id="l2a-en">Author interview ↗</a>
+        <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E6%95%B8%E4%BD%8D%E6%95%98%E4%BA%8B%E5%9C%96%E8%A1%A8%E8%A7%80%E5%AF%9F-%E4%B8%8A%E9%9B%86-d7cd8a5a7ce9" target="_blank" rel="noopener" id="l2b-en">Data charts ↗</a>
+      </div>
+    </div>
 
-    <main>
-        <h3 class="zh">發佈作品：</h3>
-        <h3 class="en">Published Works:</h3>
+    <!-- 03 ELECTIONS -->
+    <div class="card">
+      <div class="color-bar" style="background:var(--c3)"></div>
+      <div class="card-num">03</div>
+      <div class="card-title" id="t3-en">Rise of Women's Power in Taiwan's 2024 Elections</div>
+      <div class="card-title-zh" id="t3-zh">台灣2024大選的女力崛起</div>
+      <div class="card-tags">
+        <span class="card-tag">Election data</span>
+        <span class="card-tag">Gender</span>
+        <span class="card-tag">Trend analysis</span>
+      </div>
+      <p class="card-anno" id="a3-en">Four-cycle longitudinal analysis of female legislative representation, using small multiples to show which districts lead and which stall progress. Part of a ten-keyword series contextualising Taiwan's 2024 general election.</p>
+      <p class="card-anno-zh" id="a3-zh">四屆選舉的縱向分析，以小倍數圖表呈現哪些選區推動、哪些阻礙了女性代表性的進展。是2024台灣大選十關鍵字系列的一部分。</p>
+      <div class="card-links">
+        <a class="card-link" href="https://theinitium.com/20231225-taiwan-election-keywords/" target="_blank" rel="noopener">Read on Initium ↗</a>
+      </div>
+    </div>
 
-        <ol>
-            <li>
-                <a href="#" class="zh">數說2024台灣大選之二：藍綠立委席次消長，民眾黨坐大第三勢力？ <span class="date">(2023.12.22)</span></a>
-                <a href="#" class="en">Data Analysis of 2024 Taiwan Election II: The Rise of TPP <span class="date">(2023.12.22)</span></a>
-                <span class="desc zh">分析了主要政黨之間的立法席位變化以及台灣民眾黨的崛起。</span>
-                <span class="desc en">Analyzed the shifting legislative seats and the rise of the Taiwan People's Party.</span>
-            </li>
-            <li>
-                <a href="#" class="zh">一念十年：台灣20世代的太陽花記憶，會是什麼模樣？ <span class="date">(2024.03.14)</span></a>
-                <a href="#" class="en">Ten Years After: Sunflower Movement Memories of Taiwan's Gen Z <span class="date">(2024.03.14)</span></a>
-                <span class="desc zh">紀念太陽花學運十週年，反映其對台灣青年的影響。</span>
-                <span class="desc en">Commemorated the 10th anniversary of the Sunflower Movement.</span>
-            </li>
-        </ol>
-    </main>
+    <!-- 04 INDONESIA -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <div class="color-bar" style="background:var(--c4)"></div>
+      <div class="card-num">04</div>
+      <div class="card-title" id="t4-en">Mapping Taiwanese Corporate Environmental Impact in Indonesia</div>
+      <div class="card-title-zh" id="t4-zh">台灣企業在印尼的環境足跡地理調查</div>
+      <div class="card-tags">
+        <span class="card-tag">QGIS</span>
+        <span class="card-tag">Investigative</span>
+        <span class="card-tag">Cross-border</span>
+        <span class="card-tag">Supply chain</span>
+      </div>
+      <p class="card-anno" id="a4-en">Geospatial investigation cross-referencing Taiwanese corporate registry data with Indonesian environmental incident records by province. Surfaced clusters of manufacturing presence in regions with documented pollution and labour rights violations — a story that existing reporting had not mapped visually.</p>
+      <p class="card-anno-zh" id="a4-zh">地理空間調查，將台灣企業登記數據與印尼各省環境事件紀錄交叉比對，找出製造業聚集地與已記錄污染及勞權侵害案例的重疊區域——一個從未被視覺化呈現的跨境故事。</p>
+      <div class="card-links">
+        <a class="card-link" href="https://e-info.org.tw/node/240288" target="_blank" rel="noopener">Read the investigation ↗</a>
+      </div>
+    </div>
 
-    <footer>
-        yichingchung910@gmail.com | +886 972790330
-    </footer>
+  </div>
+</div>
 
-    <script>
-        function toggleLang() {
-            const zhElements = document.querySelectorAll('.zh');
-            const enElements = document.querySelectorAll('.en');
-            const isZh = zhElements[0].style.display !== 'none';
+<!-- ABOUT -->
+<div id="about">
+  <div class="sec-head">
+    <span class="sec-label" id="about-label">About</span>
+  </div>
+  <div class="about-grid">
+    <p class="about-text" id="about-en">Data journalist and visual storyteller based in Taipei. I combine investigative reporting with geospatial analysis and interactive design to tell stories about power, policy, and people across Asia. Fluent in Chinese and English, with experience covering Taiwan's environmental politics, elections, and media landscape. Currently deepening skills in Python, creative coding, and scrollytelling — and interested in roles that bridge rigorous data work with human-centred narrative, particularly at the intersection of climate, governance, and social justice in Asia.</p>
+    <p class="about-text-zh" id="about-zh">駐台北的資料記者與視覺說書人。結合調查報導、地理空間分析與互動設計，說關於亞洲的權力、政策與人的故事。中英文流利，長期報導台灣環境政治、選舉與媒體生態。目前正深化 Python、創意編程與 scrollytelling 技能，尋找能在亞洲氣候、治理與社會正義議題上結合嚴謹數據分析與人本敘事的工作機會。</p>
+    <div class="skills">
+      <div class="skill"><span class="skill-name">QGIS</span><div class="skill-track"><div class="skill-fill" style="width:90%;background:var(--c4)"></div></div></div>
+      <div class="skill"><span class="skill-name">Data analysis</span><div class="skill-track"><div class="skill-fill" style="width:82%;background:var(--c3)"></div></div></div>
+      <div class="skill"><span class="skill-name">Flourish</span><div class="skill-track"><div class="skill-fill" style="width:60%;background:var(--c1)"></div></div></div>
+      <div class="skill"><span class="skill-name">Datawrapper</span><div class="skill-track"><div class="skill-fill" style="width:55%;background:var(--c1)"></div></div></div>
+      <div class="skill"><span class="skill-name">Python</span><div class="skill-track"><div class="skill-fill" style="width:50%;background:var(--c2)"></div></div></div>
+      <div class="skill"><span class="skill-name">HTML / CSS / JS</span><div class="skill-track"><div class="skill-fill" style="width:45%;background:var(--c2)"></div></div></div>
+    </div>
+  </div>
+</div>
 
-            zhElements.forEach(el => el.style.display = isZh ? 'none' : 'block');
-            enElements.forEach(el => el.style.display = isZh ? 'block' : 'none');
-        }
-    </script>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a class="footer-link" href="https://github.com/ameliachung" target="_blank" rel="noopener">GitHub</a>
+    <a class="footer-link" href="https://www.linkedin.com/in/yichingchung/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="footer-link" href="mailto:yichingchung910@gmail.com">Email</a>
+  </div>
+  <span class="footer-loc">Taipei, Taiwan · 2026</span>
+</footer>
+
+</div>
+<script>
+let lang = 'en';
+const zh = {
+  logo: '鍾依靜',
+  eyebrow: '資料記者 · 視覺說書人 · 台北',
+  s1: '工具', s2: '方法', s3: '語言', s4: '狀態', s4val: '可異地工作',
+  works: '精選作品', about: '關於我',
+  nav: ['作品集','文章','關於','聯絡'],
+  filters: ['全部','資料與地圖','專題','專訪','新聞'],
+};
+const en = {
+  logo: 'AMELIA CHUNG',
+  eyebrow: 'Data journalist · Visual storyteller · Based in Taipei',
+  s1: 'Tools', s2: 'Methods', s3: 'Languages', s4: 'Status', s4val: 'Open to relocation',
+  works: 'Selected works', about: 'About',
+  nav: ['Works','Articles','About','Contact'],
+};
+
+function setLang(l) {
+  lang = l;
+  const isZh = l === 'zh';
+  const d = isZh ? zh : en;
+
+  document.getElementById('btn-en').classList.toggle('active', !isZh);
+  document.getElementById('btn-zh').classList.toggle('active', isZh);
+  document.getElementById('logo').textContent = d.logo;
+  document.getElementById('eyebrow').textContent = d.eyebrow;
+  document.getElementById('s1').textContent = d.s1;
+  document.getElementById('s2').textContent = d.s2;
+  document.getElementById('s3').textContent = d.s3;
+  document.getElementById('s4').textContent = d.s4;
+  document.getElementById('s4val').textContent = d.s4val;
+  document.getElementById('works-label').textContent = d.works;
+  document.getElementById('about-label').textContent = d.about;
+
+  const navIds = ['nav-works','nav-articles','nav-about','nav-contact'];
+  navIds.forEach((id,i) => { document.getElementById(id).textContent = d.nav[i]; });
+
+  // toggle bilingual elements
+  ['hero-en','desc-en','about-en','t1-en','t2-en','t3-en','t4-en','a1-en','a2-en','a3-en','a4-en'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.style.display = isZh ? 'none' : '';
+  });
+  ['hero-zh','desc-zh','about-zh','t1-zh','t2-zh','t3-zh','t4-zh','a1-zh','a2-zh','a3-zh','a4-zh'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.style.display = isZh ? '' : 'none';
+  });
+
+  // card link labels
+  if(isZh) {
+    const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = '互動地圖 ↗';
+    const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = '閱讀報導 ↗';
+    const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = '作者採訪 ↗';
+    const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = '數位圖表 ↗';
+  } else {
+    const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = 'Interactive map ↗';
+    const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = 'Read the story ↗';
+    const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = 'Author interview ↗';
+    const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = 'Data charts ↗';
+  }
+}
+</script>
 </body>
 </html>
