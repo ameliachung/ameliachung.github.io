@@ -41,7 +41,13 @@ nav {
 .lang-btn.active { background: var(--text); color: var(--bg); }
 
 /* HERO */
-.hero { margin-bottom: 2.5rem; padding-top: 1rem; }
+.hero { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; padding-top: 1rem; }
+.hero-text { flex: 1; min-width: 0; }
+.hero-memoji { width: 150px; height: auto; flex-shrink: 0; }
+@media (max-width: 560px) {
+  .hero { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; }
+  .hero-memoji { width: 104px; }
+}
 .eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-ter); margin-bottom: 0.75rem; }
 .hero-title { font-size: 52px; font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
 .hero-title .y { background: var(--c1); color: #111; padding: 0 6px; }
@@ -89,6 +95,13 @@ nav {
 .card-link:hover { border-color: var(--text); color: var(--text); }
 .card-arrow { font-size: 16px; color: var(--text-ter); opacity: 0; transition: opacity 0.12s; margin-top: 0.25rem; }
 
+/* CUSTOM WORK ICONS */
+.card-titlerow { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 0.6rem; }
+.card-titlerow .card-title, .card-titlerow .card-title-zh { margin-bottom: 0; }
+.work-icon { width: 22px; height: 22px; flex-shrink: 0; margin-top: 2px; transition: transform 0.18s ease; }
+.card:hover .work-icon { transform: scale(1.1); }
+.about-icon { width: 15px; height: 15px; flex-shrink: 0; }
+
 /* MINI MAP SVG */
 .card-visual { display: flex; flex-direction: column; gap: 8px; }
 .mini-chips { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -135,6 +148,7 @@ footer {
 
 <!-- HERO -->
 <div class="hero">
+  <div class="hero-text">
   <p class="eyebrow" id="eyebrow">Data journalist · Visual storyteller · Based in Taipei</p>
   <h1 class="hero-title" id="hero-en">
     Stories that make<br>
@@ -144,15 +158,17 @@ footer {
   <h1 class="hero-title-zh" id="hero-zh">
     讓亞洲的數據，<br><span class="r">被看見。</span>
   </h1>
-  <p class="hero-desc" id="desc-en">I work at the intersection of investigative journalism, geospatial analysis, and interactive design — building data stories about elections, media censorship, and environmental politics across Taiwan and Asia.</p>
-  <p class="hero-desc-zh" id="desc-zh">我的工作站在調查新聞、地理空間分析與互動設計的交叉點——用數據說故事，關於台灣與亞洲的選舉、媒體審查與環境政治。</p>
+  <p class="hero-desc" id="desc-en">I work at the intersection of investigative journalism, geospatial analysis, and interactive design — building data stories about elections, and environmental politics across Taiwan and Asia.</p>
+  <p class="hero-desc-zh" id="desc-zh">我是鍾依靜，駐台北的資料記者。<br>擅長用數據說故事，說關於亞洲政治、科技與環境、性別的那些故事。</p>
+  </div>
+  <img class="hero-memoji" src="Amelia.png" alt="Amelia Chung">
 </div>
 
 <!-- STRIP -->
 <div class="strip">
   <div class="strip-item"><div class="strip-label" id="s1">Tools</div><div class="strip-val">QGIS · Python · Flourish</div></div>
   <div class="strip-item"><div class="strip-label" id="s2">Methods</div><div class="strip-val">GIS · Scrollytelling · Data viz</div></div>
-  <div class="strip-item"><div class="strip-label" id="s3">Languages</div><div class="strip-val">中文 · English</div></div>
+  <div class="strip-item"><div class="strip-label" id="s3">Languages</div><div class="strip-val">中文 · English · Français</div></div>
   <div class="strip-item"><div class="strip-label" id="s4">Status</div><div class="strip-val" id="s4val">Open to relocation</div></div>
 </div>
 
@@ -170,15 +186,24 @@ footer {
       <div>
         <div class="color-bar" style="background:var(--c1)"></div>
         <div class="card-num">01 — Featured</div>
-        <div class="card-title" id="t1-en">Geospatial Analysis of Taiwan's 2025 Nuclear Power Referendum</div>
-        <div class="card-title-zh" id="t1-zh">台灣2025年核能公投的地理空間分析</div>
+        <div class="card-titlerow">
+          <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#C8A000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 21c4-3.6 6.5-6.8 6.5-10.5a6.5 6.5 0 1 0-13 0C5.5 14.2 8 17.4 12 21z"/>
+            <circle cx="12" cy="10.5" r="2.3" fill="#C8A000" stroke="none"/>
+            <ellipse cx="12" cy="21.6" rx="5.4" ry="1.5" stroke-dasharray="2 2.2" opacity="0.5"/>
+          </svg>
+          <div>
+            <div class="card-title" id="t1-en">Geospatial Analysis of Taiwan's 2025 Nuclear Power Referendum</div>
+            <div class="card-title-zh" id="t1-zh">台灣2025年核能公投的地理空間分析</div>
+          </div>
+        </div>
         <div class="card-tags">
           <span class="card-tag">QGIS</span>
           <span class="card-tag">Interactive map</span>
           <span class="card-tag">Nuclear energy</span>
         </div>
-        <p class="card-anno" id="a1-en">A two-part visual story on Taiwan's 2025 nuclear referendum. One interactive map animates the yes-vote share across all 22 counties, revealing the geography of public opinion. The other models the risk most voters never weighed: the 15 villages and ~24,000 residents inside the 8km emergency evacuation zone around the Maanshan plant. Together they ask — what does the map of consent leave out?</p>
-        <p class="card-anno-zh" id="a1-zh">關於台灣2025核三公投的雙重視覺敘事。一張互動地圖以動畫呈現22縣市的同意票比例，揭示民意的地理分布；另一張則模擬多數選民從未權衡的代價：核電廠8公里緊急疏散範圍內的15個村落、約2.4萬居民。兩者並置提問——這張「同意地圖」，遺漏了什麼？</p>
+        <p class="card-anno" id="a1-en">On 23 August 2025, Taiwan held its third nuclear referendum — asking whether the Maanshan plant, which formally shut down in May, should be allowed to restart once safety regulators give the green light.<br><br>Two interactive maps. The first animates yes-vote share across all 22 counties, tracing the geography of public opinion. The second is a risk map: the hidden cost most voters never factored in — how many villages and residents fall inside the 8km emergency evacuation zone if something goes wrong at Maanshan?</p>
+        <p class="card-anno-zh" id="a1-zh">2025年8月23日，台灣舉行第三次核能公投，主題是已在5月停機的核三廠——該不該在主管機關確認沒有安全疑慮後，重新運轉。<br><br>我做了兩張互動地圖。一張用動畫帶出22縣市的同意票比例，看見民意的地理樣貌；另一張風險地圖，畫出多數人投票時沒算進去的隱形成本——萬一核三廠出事，8公里疏散範圍內有多少村落、約幾萬人會受影響？</p>
         <div class="card-links">
           <a class="card-link" href="https://ameliachung.github.io/2025-nuclear-referendum/" target="_blank" rel="noopener" id="l1a-en">Referendum map ↗</a>
           <a class="card-link" href="https://ameliachung.github.io/nuclear-risk-tw/" target="_blank" rel="noopener" id="l1b-en">Risk zone map ↗</a>
@@ -198,15 +223,24 @@ footer {
     <div class="card">
       <div class="color-bar" style="background:var(--c2)"></div>
       <div class="card-num">02</div>
-      <div class="card-title" id="t2-en">The Big [Censored] Theory</div>
-      <div class="card-title-zh" id="t2-zh">生活大嗦嗦：中國美劇中的敏感詞</div>
+      <div class="card-titlerow">
+        <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#E8533A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="7" x2="20" y2="7"/>
+          <rect x="4" y="10.4" width="12" height="3.2" rx="1.6" fill="#E8533A" stroke="none"/>
+          <line x1="4" y1="17" x2="14" y2="17"/>
+        </svg>
+        <div>
+          <div class="card-title" id="t2-en">The Big [Censored] Theory</div>
+          <div class="card-title-zh" id="t2-zh">生活大［嗶嗶］？中國美劇中的敏感詞</div>
+        </div>
+      </div>
       <div class="card-tags">
         <span class="card-tag">Media monitoring</span>
         <span class="card-tag">Data viz</span>
         <span class="card-tag">Deep reporting</span>
       </div>
-      <p class="card-anno" id="a2-en">Tracked censorship patterns in Chinese-dubbed American TV series, cross-referencing dubbed scripts with originals to identify systematic patterns. Combined author interviews with data visualisation to show what gets silenced — and why.</p>
-      <p class="card-anno-zh" id="a2-zh">追蹤中國配音美劇中的審查模式，將配音腳本與原版對照，識別系統性規律。結合作者採訪與數據視覺化，呈現什麼被消音——以及為什麼。</p>
+      <p class="card-anno" id="a2-en">The Big [Censored] Theory is a data journalism piece by The Pudding. Its author, Mandy, first watched The Big Bang Theory in 2011 — and when she returned to it eleven years later on Chinese streaming platform Youku, she kept noticing strange, jarring pauses.<br><br>She compared all 100 episodes of the original against the Youku cuts, using charts to quantify exactly what Chinese regulators had excised.</p>
+      <p class="card-anno-zh" id="a2-zh">《The Big [Censored] Theory》是 The Pudding 推出的資料專題。作者 Mandy 在2011年第一次看美劇《生活大爆炸》，11年後重看，卻發現中國串流平台優酷上的版本常出現不連貫的停頓。<br><br>她把100集原版和優酷剪輯版逐集比對，分析原始影音資料庫（集數、秒數、審查理由），同時利用互動式幻燈片和顏色編碼分類，讓讀者理解中國如何監管文化影視作品。</p>
       <div class="card-links">
         <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E4%BD%9C%E8%80%85%E6%8E%A1%E8%A8%AA%E7%AF%87-1fb99b54b37a" target="_blank" rel="noopener" id="l2a-en">Author interview ↗</a>
         <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E6%95%B8%E4%BD%8D%E6%95%98%E4%BA%8B%E5%9C%96%E8%A1%A8%E8%A7%80%E5%AF%9F-%E4%B8%8A%E9%9B%86-d7cd8a5a7ce9" target="_blank" rel="noopener" id="l2b-en">Data charts ↗</a>
@@ -217,15 +251,27 @@ footer {
     <div class="card">
       <div class="color-bar" style="background:var(--c3)"></div>
       <div class="card-num">03</div>
-      <div class="card-title" id="t3-en">Rise of Women's Power in Taiwan's 2024 Elections</div>
-      <div class="card-title-zh" id="t3-zh">台灣2024大選的女力崛起</div>
+      <div class="card-titlerow">
+        <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#3A7DE8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3.5" y1="20.5" x2="20.5" y2="20.5"/>
+          <rect x="4.5" y="14.5" width="3" height="6" rx="1"/>
+          <rect x="9" y="11.5" width="3" height="9" rx="1"/>
+          <rect x="13.5" y="8" width="3" height="12.5" rx="1"/>
+          <rect x="18" y="4.5" width="3" height="16" rx="1" fill="#3A7DE8" stroke="none"/>
+        </svg>
+        <div>
+          <div class="card-title" id="t3-en">Rise of Women's Power in Taiwan's 2024 Elections</div>
+          <div class="card-title-zh" id="t3-zh">台灣2024大選的女力崛起</div>
+        </div>
+      </div>
       <div class="card-tags">
         <span class="card-tag">Election data</span>
         <span class="card-tag">Gender</span>
         <span class="card-tag">Trend analysis</span>
       </div>
-      <p class="card-anno" id="a3-en">Four-cycle longitudinal analysis of female legislative representation, using small multiples to show which districts lead and which stall progress. Part of a ten-keyword series contextualising Taiwan's 2024 general election.</p>
-      <p class="card-anno-zh" id="a3-zh">四屆選舉的縱向分析，以小倍數圖表呈現哪些選區推動、哪些阻礙了女性代表性的進展。是2024台灣大選十關鍵字系列的一部分。</p>
+      <p class="card-anno" id="a3-en">This investigative report analyzes the evolving landscape of women’s political participation in Taiwan. Since 2022, a record-breaking 24 female candidates ran for local government heads across 22 counties and cities—a 30-year high that marked a new chapter in Taiwan’s "Women Power."<br></br>A key data chart from the "Ten Keywords for Taiwan's 2024 Election" series, focusing on the rise of women's political representation.</p>
+      <p class="card-anno-zh" id="a3-zh">從2022年開始，全台灣22個縣市長選舉中，共有24位女性候選人，創下女性參政人數30年來的新高，開啟台灣「女力」的政治新篇章。
+<br></br>台灣2024大選「十個關鍵字」系列中，聚焦女力崛起的一張關鍵數據圖表。</p>
       <div class="card-links">
         <a class="card-link" href="https://theinitium.com/20231225-taiwan-election-keywords/" target="_blank" rel="noopener">Read on Initium ↗</a>
       </div>
@@ -235,16 +281,28 @@ footer {
     <div class="card" style="grid-column: 1 / -1;">
       <div class="color-bar" style="background:var(--c4)"></div>
       <div class="card-num">04</div>
-      <div class="card-title" id="t4-en">Mapping Taiwanese Corporate Environmental Impact in Indonesia</div>
-      <div class="card-title-zh" id="t4-zh">台灣企業在印尼的環境足跡地理調查</div>
+      <div class="card-titlerow">
+        <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#2ECC8A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="8" y1="7.6" x2="15.6" y2="8.8"/>
+          <line x1="7.6" y1="9" x2="11" y2="15.6"/>
+          <line x1="16.4" y1="10.8" x2="13" y2="15.8"/>
+          <circle cx="6" cy="7" r="2.3"/>
+          <circle cx="18" cy="9.2" r="2.3"/>
+          <circle cx="12" cy="18" r="2.3" fill="#2ECC8A" stroke="none"/>
+        </svg>
+        <div>
+          <div class="card-title" id="t4-en">Mapping Taiwanese Corporate Environmental Impact in Indonesia</div>
+          <div class="card-title-zh" id="t4-zh">台灣企業在印尼的環境足跡地理調查</div>
+        </div>
+      </div>
       <div class="card-tags">
         <span class="card-tag">QGIS</span>
         <span class="card-tag">Investigative</span>
         <span class="card-tag">Cross-border</span>
         <span class="card-tag">Supply chain</span>
       </div>
-      <p class="card-anno" id="a4-en">Geospatial investigation cross-referencing Taiwanese corporate registry data with Indonesian environmental incident records by province. Surfaced clusters of manufacturing presence in regions with documented pollution and labour rights violations — a story that existing reporting had not mapped visually.</p>
-      <p class="card-anno-zh" id="a4-zh">地理空間調查，將台灣企業登記數據與印尼各省環境事件紀錄交叉比對，找出製造業聚集地與已記錄污染及勞權侵害案例的重疊區域——一個從未被視覺化呈現的跨境故事。</p>
+      <p class="card-anno" id="a4-en">Investigative reporting on the human rights and environmental impact of Taiwanese companies operating in Indonesia.<br><br>I used Google My Maps and QGIS to build a supply chain map — plotting the locations of affected communities across garment manufacturing, circuit board assembly, and nickel mining sites, and turning abstract cross-border harm into coordinates you can see.</p>
+      <p class="card-anno-zh" id="a4-zh">一篇關於台灣企業在印尼造成人權與環境衝擊的調查報導。我利用 Google My Maps 和 QGIS 建了一張供應鏈地圖，把成衣製造、電路板組裝、鎳礦開採的受害地點一一標出來，讓抽象的跨國侵害成為看得見的座標。</p>
       <div class="card-links">
         <a class="card-link" href="https://e-info.org.tw/node/240288" target="_blank" rel="noopener">Read the investigation ↗</a>
       </div>
@@ -256,11 +314,17 @@ footer {
 <!-- ABOUT -->
 <div id="about">
   <div class="sec-head">
-    <span class="sec-label" id="about-label">About</span>
+    <span style="display:inline-flex;align-items:center;gap:7px;">
+      <svg class="about-icon" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6"/>
+        <line x1="15" y1="15" x2="20" y2="20"/>
+      </svg>
+      <span class="sec-label" id="about-label">About</span>
+    </span>
   </div>
   <div class="about-grid">
-    <p class="about-text" id="about-en">Data journalist and visual storyteller based in Taipei. I combine investigative reporting with geospatial analysis and interactive design to tell stories about power, policy, and people across Asia. Fluent in Chinese and English, with experience covering Taiwan's environmental politics, elections, and media landscape. Currently deepening skills in Python, creative coding, and scrollytelling — and interested in roles that bridge rigorous data work with human-centred narrative, particularly at the intersection of climate, governance, and social justice in Asia.</p>
-    <p class="about-text-zh" id="about-zh">駐台北的資料記者與視覺說書人。結合調查報導、地理空間分析與互動設計，說關於亞洲的權力、政策與人的故事。中英文流利，長期報導台灣環境政治、選舉與媒體生態。目前正深化 Python、創意編程與 scrollytelling 技能，尋找能在亞洲氣候、治理與社會正義議題上結合嚴謹數據分析與人本敘事的工作機會。</p>
+    <p class="about-text" id="about-en">Fluent in Chinese, English, and French, with years covering Taiwan's elections and environmental politics — previously at The Initium (端傳媒) and the Environmental Information Center (環境資訊中心).<br><br>Currently deepening creative coding and scrollytelling, and drawn to roles that pair rigorous data work with human-centred narrative — especially where climate, governance, and social justice intersect across Asia.</p>
+    <p class="about-text-zh" id="about-zh">中英法文流利，曾任職於《端傳媒》與《環境資訊中心》，長期跑選舉與環境線。<br><br>目前持續深化Creative Coding，熱衷於地圖製作🗺️</p>
     <div class="skills">
       <div class="skill"><span class="skill-name">QGIS</span><div class="skill-track"><div class="skill-fill" style="width:90%;background:var(--c4)"></div></div></div>
       <div class="skill"><span class="skill-name">Data analysis</span><div class="skill-track"><div class="skill-fill" style="width:82%;background:var(--c3)"></div></div></div>
@@ -288,7 +352,7 @@ let lang = 'en';
 const zh = {
   logo: '鍾依靜',
   eyebrow: '資料記者 · 視覺說書人 · 台北',
-  s1: '工具', s2: '方法', s3: '語言', s4: '狀態', s4val: '可異地工作',
+  s1: '工具', s2: '方法', s3: '語言', s4: '狀態', s4val: '可遷居海外',
   works: '精選作品', about: '關於我',
   nav: ['作品集','文章','關於','聯絡'],
   filters: ['全部','資料與地圖','專題','專訪','新聞'],
@@ -323,10 +387,10 @@ function setLang(l) {
 
   // toggle bilingual elements
   ['hero-en','desc-en','about-en','t1-en','t2-en','t3-en','t4-en','a1-en','a2-en','a3-en','a4-en'].forEach(id => {
-    const el = document.getElementById(id); if(el) el.style.display = isZh ? 'none' : '';
+    const el = document.getElementById(id); if(el) el.style.display = isZh ? 'none' : 'block';
   });
   ['hero-zh','desc-zh','about-zh','t1-zh','t2-zh','t3-zh','t4-zh','a1-zh','a2-zh','a3-zh','a4-zh'].forEach(id => {
-    const el = document.getElementById(id); if(el) el.style.display = isZh ? '' : 'none';
+    const el = document.getElementById(id); if(el) el.style.display = isZh ? 'block' : 'none';
   });
 
   // card link labels
