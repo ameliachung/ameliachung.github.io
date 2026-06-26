@@ -6,6 +6,11 @@
 <title>Amelia Chung — Data Journalist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Serif+TC:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- 引入 Mapbox GL JS 資源，使用 defer 確保不阻塞首屏渲染 -->
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js" defer></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -102,8 +107,47 @@ nav {
 .card:hover .work-icon { transform: scale(1.1); }
 .about-icon { width: 15px; height: 15px; flex-shrink: 0; }
 
-/* MINI MAP SVG */
+/* MAP EMBED STYLES */
 .card-visual { display: flex; flex-direction: column; gap: 8px; }
+
+/* CARD COVER (shared frame for 02 animation + 03 chart) */
+.card-cover {
+  width: 100%; height: 175px; border-radius: 4px;
+  border: 1px solid var(--border); overflow: hidden;
+  margin-bottom: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-lottie { background: rgba(232, 83, 58, 0.06); }
+.card-lottie svg { display: block; width: 100%; height: 100%; }
+.card-cover-03 { background: rgba(58, 125, 232, 0.05); }
+.card-cover-03 svg { display: block; width: 100%; height: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  .card-lottie { background: rgba(232, 83, 58, 0.04); }
+}
+.map-wrapper { width: 100%; height: 340px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border); position: relative; }
+.map-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(17, 17, 17, 0.45); display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.3s ease; z-index: 2;
+}
+.map-overlay .map-btn {
+  font-family: "Gordita", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  background-color: #ff5b28;
+  color: #fff;
+  border-radius: 8px;
+  padding: 12px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: background-color 0.2s ease;
+}
+.map-overlay .map-btn:hover { background-color: #ff4910; }
+.map-iframe { width: 100%; height: 100%; border: none; display: block; background-color: #faf7f5; }
+.mini-map-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none; }
+
+.ScutePillGroup { display: flex; flex-wrap: wrap; }
+.ChelonePill { font-size: 12px; line-height: 16px; font-family: "Gordita", "Trebuchet MS", sans-serif; font-weight: 500; display: inline-flex; align-items: center; padding: 6px 8px; color: var(--text-sec); background-color: transparent; border: 1px solid var(--border-med); border-radius: 2px; cursor: default; }
 .mini-chips { display: flex; gap: 6px; flex-wrap: wrap; }
 .chip { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 2px; color: var(--text-sec); }
 
@@ -119,8 +163,8 @@ nav {
 
 /* FOOTER */
 footer {
-  border-top: 1.5px solid var(--text); padding: 1rem 0 2.5rem;
   display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 0; border-top: 1.5px solid var(--text); padding: 1rem 0 2.5rem;
 }
 .footer-links { display: flex; gap: 1rem; }
 .footer-link { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-sec); text-decoration: none; }
@@ -210,8 +254,23 @@ footer {
           <a class="card-link" href="https://e-info.org.tw/node/241997" target="_blank" rel="noopener" id="l1c-en">Read the story ↗</a>
         </div>
       </div>
+      
+      <!-- 互動地圖容器與延遲載入遮罩 -->
       <div class="card-visual">
-        <img src="work01-map-preview.png" alt="Taiwan nuclear referendum map by county" style="width:100%;border-radius:4px;display:block;border:1px solid var(--border);">
+        <div class="map-wrapper" id="map-container">
+          <!-- 初始覆蓋遮罩與按鈕 -->
+          <div class="map-overlay" id="map-cover">
+            <button type="button" class="map-btn" onclick="initInteractiveMap(event)" id="map-trigger-btn">
+              點擊互動地圖 / Explore Map
+            </button>
+          </div>
+          <!-- 輕量預覽底圖 -->
+          <img id="map-static-img" src="work01-map-preview.png" alt="Taiwan nuclear referendum map preview" style="width:100%; height:100%; object-fit:cover; display:block;">
+          <!-- 真正的 Mapbox 地圖渲染節點 -->
+          <div id="mapbox-canvas" style="width:100%; height:100%; display:none;"></div>
+          <!-- 載入中骨架提示 -->
+          <div id="map-spinner" class="mini-map-loading" style="font-family:'DM Mono', monospace; font-size:11px; color:var(--text-sec);">Loading Mapbox Engine...</div>
+        </div>
         <div class="mini-chips">
           <span class="chip" style="background:#FFE13520;border:0.5px solid #D4B800;">4.3M yes votes</span>
           <span class="chip" style="background:#8b6fae15;border:0.5px solid #8b6fae;">22 counties mapped</span>
@@ -223,6 +282,7 @@ footer {
     <div class="card">
       <div class="color-bar" style="background:var(--c2)"></div>
       <div class="card-num">02</div>
+      <div class="card-cover card-lottie" id="lottie-02" role="img" aria-label="The Big [Censored] Theory — animated cover"></div>
       <div class="card-titlerow">
         <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#E8533A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="4" y1="7" x2="20" y2="7"/>
@@ -251,6 +311,25 @@ footer {
     <div class="card">
       <div class="color-bar" style="background:var(--c3)"></div>
       <div class="card-num">03</div>
+      <div class="card-cover card-cover-03" role="img" aria-label="Women's legislative seats rising across four election cycles">
+        <svg viewBox="0 0 330 200" xmlns="http://www.w3.org/2000/svg">
+          <text x="26" y="24" font-family="'DM Mono', monospace" font-size="9" letter-spacing="1" fill="#3A7DE8">WOMEN IN THE LEGISLATURE ↗</text>
+          <line x1="26" y1="168" x2="304" y2="168" stroke="#3A7DE8" stroke-opacity="0.25" stroke-width="1"/>
+          <rect x="26"  y="122" width="44" height="46"  rx="3" fill="#3A7DE8" fill-opacity="0.40"/>
+          <rect x="104" y="104" width="44" height="64"  rx="3" fill="#3A7DE8" fill-opacity="0.58"/>
+          <rect x="182" y="82"  width="44" height="86"  rx="3" fill="#3A7DE8" fill-opacity="0.78"/>
+          <rect x="260" y="64"  width="44" height="104" rx="3" fill="#3A7DE8"/>
+          <polyline points="48,122 126,104 204,82 282,64" fill="none" stroke="#3A7DE8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="48"  cy="122" r="2.5" fill="#fff" stroke="#3A7DE8" stroke-width="1.5"/>
+          <circle cx="126" cy="104" r="2.5" fill="#fff" stroke="#3A7DE8" stroke-width="1.5"/>
+          <circle cx="204" cy="82"  r="2.5" fill="#fff" stroke="#3A7DE8" stroke-width="1.5"/>
+          <circle cx="282" cy="64"  r="3"   fill="#3A7DE8"/>
+          <text x="48"  y="186" text-anchor="middle" font-family="'DM Mono', monospace" font-size="9" fill="#999">’12</text>
+          <text x="126" y="186" text-anchor="middle" font-family="'DM Mono', monospace" font-size="9" fill="#999">’16</text>
+          <text x="204" y="186" text-anchor="middle" font-family="'DM Mono', monospace" font-size="9" fill="#999">’20</text>
+          <text x="282" y="186" text-anchor="middle" font-family="'DM Mono', monospace" font-size="9" fill="#3A7DE8">’24</text>
+        </svg>
+      </div>
       <div class="card-titlerow">
         <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#3A7DE8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="3.5" y1="20.5" x2="20.5" y2="20.5"/>
@@ -269,9 +348,8 @@ footer {
         <span class="card-tag">Gender</span>
         <span class="card-tag">Trend analysis</span>
       </div>
-      <p class="card-anno" id="a3-en">This investigative report analyzes the evolving landscape of women’s political participation in Taiwan. Since 2022, a record-breaking 24 female candidates ran for local government heads across 22 counties and cities—a 30-year high that marked a new chapter in Taiwan’s "Women Power."<br></br>A key data chart from the "Ten Keywords for Taiwan's 2024 Election" series, focusing on the rise of women's political representation.</p>
-      <p class="card-anno-zh" id="a3-zh">從2022年開始，全台灣22個縣市長選舉中，共有24位女性候選人，創下女性參政人數30年來的新高，開啟台灣「女力」的政治新篇章。
-<br></br>台灣2024大選「十個關鍵字」系列中，聚焦女力崛起的一張關鍵數據圖表。</p>
+      <p class="card-anno" id="a3-en">This investigative report analyzes the evolving landscape of women’s political participation in Taiwan. Since 2022, a record-breaking 24 female candidates ran for local government heads across 22 counties and cities—a 30-year high that marked a new chapter in Taiwan’s "Women Power."<br><br>A key data chart from the "Ten Keywords for Taiwan's 2024 Election" series, focusing on the rise of women's political representation.</p>
+      <p class="card-anno-zh" id="a3-zh">從2022年開始，全台灣22個縣市長選舉中，共有24位女性候選人，創下女性參政人數30年來的新高，開啟台灣「女力」的政治新篇章。<br><br>台灣2024大選「十個關鍵字」系列中，聚焦女力崛起的一張關鍵數據圖表。</p>
       <div class="card-links">
         <a class="card-link" href="https://theinitium.com/20231225-taiwan-election-keywords/" target="_blank" rel="noopener">Read on Initium ↗</a>
       </div>
@@ -347,6 +425,7 @@ footer {
 </footer>
 
 </div>
+
 <script>
 let lang = 'en';
 const zh = {
@@ -400,14 +479,118 @@ function setLang(l) {
     const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = '閱讀報導 ↗';
     const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = '作者採訪 ↗';
     const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = '數位圖表 ↗';
+    
+    const triggerBtn = document.getElementById('map-trigger-btn');
+    if(triggerBtn && !mapInstance) triggerBtn.textContent = '點擊開啟互動地圖';
   } else {
     const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = 'Referendum map ↗';
     const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = 'Risk zone map ↗';
     const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = 'Read the story ↗';
     const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = 'Author interview ↗';
     const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = 'Data charts ↗';
+    
+    const triggerBtn = document.getElementById('map-trigger-btn');
+    if(triggerBtn && !mapInstance) triggerBtn.textContent = 'Explore Interactive Map';
   }
 }
+
+// ==========================================
+// MAPBOX INTERACTIVE ENGINE (LAZY LOADING)
+// ==========================================
+let mapInstance = null;
+
+function initInteractiveMap(event) {
+  // 防止事件冒泡觸發作品集 A 標籤卡片的整塊跳轉
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  if (mapInstance) return;
+
+  const cover = document.getElementById('map-cover');
+  const staticImg = document.getElementById('map-static-img');
+  const canvasNodes = document.getElementById('mapbox-canvas');
+  const spinner = document.getElementById('map-spinner');
+
+  // 1. 顯示載入文字，隱藏按鈕
+  cover.style.background = 'rgba(250, 247, 245, 0.8)';
+  document.getElementById('map-trigger-btn').style.display = 'none';
+  spinner.style.display = 'block';
+
+  // 2. 填入你的 Mapbox 公鑰 Access Token
+  mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN'; 
+
+  // 3. 實例化 Mapbox（這時網頁才會開始下載圖資）
+  mapInstance = new mapboxgl.Map({
+    container: 'mapbox-canvas',
+    style: 'mapbox://styles/mapbox/light-v11', // 使用契合你極簡風格的淡色底圖
+    center: [120.9605, 23.6978], // 以台灣為中心點
+    zoom: 6.2,
+    scrollZoom: false // 禁用滾輪縮放，避免讀者滑動網頁時地圖卡住
+  });
+
+  // 加上地圖控制元件
+  mapInstance.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+  // 4. 地圖載入完成後的渲染回調
+  mapInstance.on('load', () => {
+    // 隱藏全部覆蓋層、截圖，完全展現 WebGL 地圖 Canvas
+    cover.style.display = 'none';
+    staticImg.style.display = 'none';
+    canvasNodes.style.display = 'block';
+    spinner.style.display = 'none';
+
+    // 💡 提示：你可以在此處把你在 QGIS 產出的縣市公投邊界
+    // 或是核三廠 8km 的疏散範圍資料（GeoJSON 格式）透過 addSource / addLayer 疊加進來。
+  });
+}
+</script>
+
+<!-- Card 02 cover animation (Lottie) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<script>
+(function () {
+  var el = document.getElementById('lottie-02');
+  if (!el || typeof lottie === 'undefined') return;
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var anim = null;
+
+  function init() {
+    if (anim) return;
+    anim = lottie.loadAnimation({
+      container: el,
+      renderer: 'svg',
+      loop: true,
+      autoplay: !reduce,
+      path: 'censored-theory.json',
+      rendererSettings: { preserveAspectRatio: 'xMidYMid slice', progressiveLoad: true }
+    });
+    // Reduced motion: hold the final, settled frame instead of looping
+    if (reduce) {
+      anim.addEventListener('DOMLoaded', function () {
+        anim.goToAndStop(Math.max(0, anim.getDuration(true) - 1), true);
+      });
+    }
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          init();
+          if (anim && !reduce) anim.play();
+        } else if (anim && !reduce) {
+          anim.pause();
+        }
+      });
+    }, { threshold: 0.2 });
+    io.observe(el);
+  } else {
+    init();
+  }
+})();
 </script>
 </body>
 </html>
