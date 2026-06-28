@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amelia Chung — Data Journalist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Serif+TC:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- 引入 Mapbox GL JS 資源，使用 defer 確保不阻塞首屏渲染 -->
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --text-sec: #555555;
+  --text-ter: #999999;
+  --border: #e0e0e0;
+  --border-med: #cccccc;
+  --hover-bg: #f5f5f5;
+  --c1: #FFE135;
+  --c2: #E8533A;
+  --c3: #3A7DE8;
+  --c4: #2ECC8A;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; padding: 0 1.5rem; }
+.wrap { max-width: 720px; margin: 0 auto; }
+
+/* NAV */
+nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 0; margin-bottom: 2.5rem;
+  border-bottom: 1.5px solid var(--text);
+  position: sticky; top: 0; background: var(--bg); z-index: 100;
+}
+.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; transition: color 0.1s; }
+.nav-link:hover { color: var(--text); }
+.lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
+.lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 3px 10px; border: none; cursor: pointer; background: transparent; color: var(--text-sec); transition: all 0.15s; }
+.lang-btn.active { background: var(--text); color: var(--bg); }
+
+/* HERO */
+.hero { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; padding-top: 1rem; }
+.hero-text { flex: 1; min-width: 0; }
+.hero-memoji { width: 150px; height: auto; flex-shrink: 0; }
+@media (max-width: 560px) {
+  .hero { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; }
+  .hero-memoji { width: 104px; }
+}
+.eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-ter); margin-bottom: 0.75rem; }
+.hero-title { font-size: 52px; font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+.hero-title .y { background: var(--c1); color: #111; padding: 0 6px; }
+.hero-title .r { color: var(--c2); }
+.hero-title-zh { font-family: 'Noto Serif TC', serif; font-size: 42px; font-weight: 700; line-height: 1.2; margin-bottom: 1.25rem; display: none; }
+.hero-title-zh .r { color: var(--c2); }
+.hero-desc { font-size: 14px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
+.hero-desc-zh { font-family: 'Noto Serif TC', serif; font-size: 14px; line-height: 2; color: var(--text-sec); max-width: 500px; display: none; }
+
+/* TICKER STRIP */
+.strip {
+  display: flex; border-top: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text);
+  margin-bottom: 2.5rem;
+}
+.strip-item { flex: 1; padding: 0.6rem 0.75rem; border-right: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+.strip-item:last-child { border-right: none; }
+.strip-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); margin-bottom: 3px; }
+.strip-val { font-size: 12px; font-weight: 500; color: var(--text); }
+
+/* SECTION HEADER */
+.sec-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 1rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.sec-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); }
+.sec-count { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
+
+/* WORKS GRID */
+.works-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); margin-bottom: 2.5rem; }
+.card { background: var(--bg); padding: 1.25rem; transition: background 0.15s; text-decoration: none; color: inherit; display: block; }
+.card:hover { background: var(--hover-bg); }
+.card:hover .card-arrow { opacity: 1; }
+.card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+.color-bar { height: 5px; width: 36px; border-radius: 1px; margin-bottom: 0.75rem; }
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); margin-bottom: 0.4rem; }
+.card-title { font-size: 16px; font-weight: 700; line-height: 1.2; margin-bottom: 0.6rem; }
+.card-title-zh { font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 0.6rem; display: none; }
+.card-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.card-tag { font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 6px; border: 0.5px solid var(--border-med); color: var(--text-sec); border-radius: 2px; }
+.card-anno { font-size: 12px; line-height: 1.65; color: var(--text-sec); margin-bottom: 0.75rem; }
+.card-anno-zh { font-family: 'Noto Serif TC', serif; font-size: 12px; line-height: 2; color: var(--text-sec); margin-bottom: 0.75rem; display: none; }
+.card-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.card-link { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 9px; border: 0.5px solid var(--border-med); border-radius: 2px; color: var(--text-sec); text-decoration: none; transition: all 0.12s; }
+.card-link:hover { border-color: var(--text); color: var(--text); }
+.card-arrow { font-size: 16px; color: var(--text-ter); opacity: 0; transition: opacity 0.12s; margin-top: 0.25rem; }
+
+/* CUSTOM WORK ICONS */
+.card-titlerow { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 0.6rem; }
+.card-titlerow .card-title, .card-titlerow .card-title-zh { margin-bottom: 0; }
+.work-icon { width: 22px; height: 22px; flex-shrink: 0; margin-top: 2px; transition: transform 0.18s ease; }
+.card:hover .work-icon { transform: scale(1.1); }
+.about-icon { width: 15px; height: 15px; flex-shrink: 0; }
+
+/* MAP EMBED STYLES */
+.card-visual { display: flex; flex-direction: column; gap: 8px; }
+
+/* CARD COVER (shared frame for 02 animation + 03 chart) */
+.card-cover { width: 100%; height: 220px; border-radius: 4px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: center; }
+.card-lottie { background: rgba(232, 83, 58, 0.06); }
+.card-lottie svg { display: block; width: 100%; height: 100%; }
+.card-cover-03 { background: rgba(58, 125, 232, 0.05); }
+.card-cover-03 svg { display: block; width: 100%; height: 100%; }
+.chart03 .dot { transform-box: fill-box; transform-origin: center; }
+.chart03 .ln { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.chart03.play .ln { stroke-dashoffset: 1; animation: c03draw 1.5s cubic-bezier(.45,0,.2,1) forwards; }
+.chart03.play .ln.kmt { animation-delay: .18s; }
+.chart03.play .dot { opacity: 0; transform: scale(0); animation: c03pop .45s cubic-bezier(.34,1.56,.64,1) .55s forwards; }
+.chart03.play .lab { opacity: 0; animation: c03fade .5s ease 1.35s forwards; }
+@keyframes c03draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes c03pop  { to { opacity: 1; transform: scale(1); } }
+@keyframes c03fade { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .chart03.play .ln, .chart03.play .dot, .chart03.play .lab { animation: none; opacity: 1; transform: none; stroke-dashoffset: 0; }
+}
+/* WORK 01 — animated choropleth */
+.choro-link { text-decoration: none; display: block; }
+.choro-box { position: relative; width: 100%; height: 320px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: #fbfbfb; display: flex; align-items: center; justify-content: center; }
+.choro-box svg { width: 100%; height: 100%; display: block; }
+.cty { fill: var(--c); stroke: #fff; stroke-width: 0.6; }
+.choro.armed .cty { fill: #e6e6e6; transition: none; }
+.choro.armed.play .cty { fill: var(--c); transition: fill .5s ease; }
+.choro-cap { position: absolute; top: 10px; left: 12px; display: flex; flex-direction: column; gap: 1px; pointer-events: none; }
+.choro-cap-t { font-family: 'DM Mono', monospace; font-size: 10px; color: #555; letter-spacing: .04em; }
+.choro-cap-s { font-family: 'Noto Serif TC', serif; font-size: 10px; color: #999; }
+.choro-hover { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(17,17,17,.42); color: #fff; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: .03em; opacity: 0; transition: opacity .2s ease; }
+.choro-link:hover .choro-hover { opacity: 1; }
+.choro-legend { display: flex; align-items: center; gap: 8px; }
+.choro-legend .cl-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
+.choro-legend .cl-bar { height: 8px; width: 90px; border-radius: 2px; background: linear-gradient(to right, #cdbfe0, #e8d080, #8b6800); }
+.choro-legend .cl-ticks { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text-ter); }
+@media (prefers-reduced-motion: reduce) { .choro.armed .cty, .choro.armed.play .cty { fill: var(--c); transition: none; } }
+/* choro-box overrides shared card-cover height */
+.choro-box.card-cover { height: 320px; margin-bottom: 0; }
+@media (prefers-reduced-motion: reduce) { .card-lottie { background: rgba(232, 83, 58, 0.04); } }
+.map-wrapper { width: 100%; height: 340px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border); position: relative; }
+.map-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(17, 17, 17, 0.45); display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.3s ease; z-index: 2;
+}
+.map-overlay .map-btn {
+  font-family: "Gordita", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  background-color: #ff5b28;
+  color: #fff;
+  border-radius: 8px;
+  padding: 12px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: background-color 0.2s ease;
+}
+.map-overlay .map-btn:hover { background-color: #ff4910; }
+.map-iframe { width: 100%; height: 100%; border: none; display: block; background-color: #faf7f5; }
+.mini-map-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none; }
+
+.ScutePillGroup { display: flex; flex-wrap: wrap; }
+.ChelonePill { font-size: 12px; line-height: 16px; font-family: "Gordita", "Trebuchet MS", sans-serif; font-weight: 500; display: inline-flex; align-items: center; padding: 6px 8px; color: var(--text-sec); background-color: transparent; border: 1px solid var(--border-med); border-radius: 2px; cursor: default; }
+.mini-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 2px; color: var(--text-sec); }
+
+/* ABOUT */
+.about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+.about-text { font-size: 13px; line-height: 1.85; color: var(--text-sec); }
+.about-text-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; line-height: 2.1; color: var(--text-sec); display: none; }
+.skills { display: flex; flex-direction: column; gap: 0.4rem; }
+.skill { display: flex; align-items: center; gap: 8px; }
+.skill-name { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); width: 100px; flex-shrink: 0; }
+.skill-track { flex: 1; height: 3px; background: var(--border); border-radius: 2px; }
+.skill-fill { height: 3px; border-radius: 2px; }
+
+/* FOOTER */
+footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 0; border-top: 1.5px solid var(--text); padding: 1rem 0 2.5rem;
+}
+.footer-links { display: flex; gap: 1rem; }
+.footer-link { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-sec); text-decoration: none; }
+.footer-link:hover { color: var(--text); }
+.footer-loc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- NAV -->
+<nav>
+  <span class="logo" id="logo">AMELIA CHUNG</span>
+  <div class="nav-right">
+    <a class="nav-link" href="#works" id="nav-works">Works</a>
+    <a class="nav-link" href="articles.html" id="nav-articles">Articles</a>
+    <a class="nav-link" href="#about" id="nav-about">About</a>
+    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">Contact</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+  <p class="eyebrow" id="eyebrow">Data journalist · Visual storyteller · Based in Taipei</p>
+  <h1 class="hero-title" id="hero-en">
+    Stories that make<br>
+    <span class="y">Asia's data</span><br>
+    <span class="r">visible.</span>
+  </h1>
+  <h1 class="hero-title-zh" id="hero-zh">
+    讓亞洲的數據，<br><span class="r">被看見。</span>
+  </h1>
+  <p class="hero-desc" id="desc-en">I work at the intersection of investigative journalism, geospatial analysis, and interactive design — building data stories about elections, and environmental politics across Taiwan and Asia.</p>
+  <p class="hero-desc-zh" id="desc-zh">我是鍾依靜，駐台北的資料記者。<br>擅長用數據說故事，說關於亞洲政治、科技與環境、性別的那些故事。</p>
+  </div>
+  <img class="hero-memoji" src="Amelia.png" alt="Amelia Chung">
+</div>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-item"><div class="strip-label" id="s1">Tools</div><div class="strip-val">QGIS · Python · Flourish</div></div>
+  <div class="strip-item"><div class="strip-label" id="s2">Methods</div><div class="strip-val">GIS · Scrollytelling · Data viz</div></div>
+  <div class="strip-item"><div class="strip-label" id="s3">Languages</div><div class="strip-val">中文 · English · Français</div></div>
+  <div class="strip-item"><div class="strip-label" id="s4">Status</div><div class="strip-val" id="s4val">Open to relocation</div></div>
+</div>
+
+<!-- WORKS -->
+<div id="works">
+  <div class="sec-head">
+    <span class="sec-label" id="works-label">Selected works</span>
+    <span class="sec-count">04 projects</span>
+  </div>
+
+  <div class="works-grid">
+
+    <!-- 01 FEATURED -->
+    <div class="card card-featured">
+      <div>
+        <div class="color-bar" style="background:var(--c1)"></div>
+        <div class="card-num">01 — Featured</div>
+        <div class="card-titlerow">
+          <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#C8A000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 21c4-3.6 6.5-6.8 6.5-10.5a6.5 6.5 0 1 0-13 0C5.5 14.2 8 17.4 12 21z"/>
+            <circle cx="12" cy="10.5" r="2.3" fill="#C8A000" stroke="none"/>
+            <ellipse cx="12" cy="21.6" rx="5.4" ry="1.5" stroke-dasharray="2 2.2" opacity="0.5"/>
+          </svg>
+          <div>
+            <div class="card-title" id="t1-en">Geospatial Analysis of Taiwan's 2025 Nuclear Power Referendum</div>
+            <div class="card-title-zh" id="t1-zh">台灣2025年核能公投的地理空間分析</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="card-tag">QGIS</span>
+          <span class="card-tag">Interactive map</span>
+          <span class="card-tag">Nuclear energy</span>
+        </div>
+        <p class="card-anno" id="a1-en">On 23 August 2025, Taiwan held its third nuclear referendum — asking whether the Maanshan plant, which formally shut down in May, should be allowed to restart once safety regulators give the green light.<br><br>Two interactive maps. The first animates yes-vote share across all 22 counties, tracing the geography of public opinion. The second is a risk map: the hidden cost most voters never factored in — how many villages and residents fall inside the 8km emergency evacuation zone if something goes wrong at Maanshan?</p>
+        <p class="card-anno-zh" id="a1-zh">2025年8月23日，台灣舉行第三次核能公投，主題是已在5月停機的核三廠——該不該在主管機關確認沒有安全疑慮後，重新運轉。<br><br>我做了兩張互動地圖。一張用動畫帶出22縣市的同意票比例，看見民意的地理樣貌；另一張風險地圖，畫出多數人投票時沒算進去的隱形成本——萬一核三廠出事，8公里疏散範圍內有多少村落、約幾萬人會受影響？</p>
+        <div class="card-links">
+          <a class="card-link" href="https://ameliachung.github.io/2025-nuclear-referendum/" target="_blank" rel="noopener" id="l1a-en">Referendum map ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/nuclear-risk-tw/" target="_blank" rel="noopener" id="l1b-en">Risk zone map ↗</a>
+          <a class="card-link" href="https://e-info.org.tw/node/241997" target="_blank" rel="noopener" id="l1c-en">Read the story ↗</a>
+        </div>
+      </div>
+      
+      <!-- 互動地圖容器與延遲載入遮罩 -->
+      <div class="card-visual">
+        <a class="choro-link" href="https://ameliachung.github.io/2025-nuclear-referendum/" target="_blank" rel="noopener" aria-label="Explore the interactive referendum map">
+          <div class="card-cover choro-box">
+            <svg viewBox="0 0 360 340" xmlns="http://www.w3.org/2000/svg" class="choro" preserveAspectRatio="xMidYMid meet">
+<g class="cties">
+<path class="cty" style="--c:#ceb35d;transition-delay:0ms" d="M267.4,25.1 L268.5,25.4 L270.0,24.7 L271.3,25.1 L270.3,25.6 L272.1,26.1 L271.6,26.2 L272.5,26.8 L272.2,26.1 L273.7,26.2 L273.2,26.8 L273.2,28.5 L272.5,28.2 L272.8,29.3 L270.7,28.7 L270.2,29.4 L268.7,29.7 L269.6,30.5 L269.7,32.6 L270.9,33.4 L269.9,34.6 L268.1,35.0 L267.0,34.9 L265.5,33.6 L263.5,33.2 L262.7,32.6 L262.9,31.7 L262.3,32.2 L260.7,31.2 L259.6,28.0 L258.2,26.9 L262.6,25.4 L265.3,23.5 L265.1,24.6 L267.1,24.7 L267.4,25.1Z"><title>基隆市 · Yes 79.2%</title></path>
+<path class="cty" style="--c:#e1c876;transition-delay:55ms" d="M252.5,20.4 L253.6,21.7 L254.6,21.8 L254.0,24.4 L255.1,24.7 L255.1,25.7 L256.6,27.8 L255.7,29.7 L258.2,31.0 L258.3,32.2 L257.3,34.0 L258.0,34.7 L257.3,35.2 L257.6,35.9 L259.9,37.3 L261.6,37.1 L261.3,37.8 L258.7,37.5 L257.9,38.3 L256.7,37.9 L255.7,38.5 L255.9,41.9 L257.7,42.7 L256.1,43.5 L252.7,43.2 L251.9,41.1 L251.3,41.4 L250.4,40.3 L249.7,41.1 L250.2,39.2 L249.0,38.0 L248.2,37.9 L246.8,39.0 L246.3,36.8 L247.7,35.4 L248.0,32.9 L246.5,30.9 L243.8,29.8 L243.9,28.5 L247.7,23.8 L249.1,24.2 L249.3,23.3 L250.9,22.5 L252.5,20.4Z"><title>台北市 · Yes 75.5%</title></path>
+<path class="cty" style="--c:#e7cf7f;transition-delay:110ms" d="M272.4,49.2 L271.4,50.2 L271.7,51.6 L270.9,52.4 L268.4,53.6 L267.1,53.3 L264.2,55.2 L263.4,56.2 L263.5,57.0 L261.8,56.8 L261.1,57.5 L258.2,57.6 L258.1,58.9 L255.3,59.6 L255.8,61.0 L255.0,62.6 L255.6,63.3 L255.2,63.6 L255.7,65.2 L254.9,65.9 L254.1,65.7 L253.8,66.8 L253.4,66.5 L251.1,67.2 L250.6,68.8 L245.7,70.2 L245.3,68.1 L243.2,67.2 L241.8,65.0 L240.9,62.0 L243.2,59.8 L243.2,59.3 L242.1,58.8 L242.0,57.3 L239.2,54.4 L236.7,55.4 L235.1,54.4 L233.5,54.4 L235.4,53.5 L234.3,52.2 L235.1,51.6 L234.0,49.9 L232.2,49.2 L232.7,48.3 L231.9,47.7 L233.8,46.5 L232.3,46.6 L231.8,45.6 L233.1,44.9 L232.8,42.5 L232.4,42.4 L234.1,41.5 L236.3,42.0 L237.7,41.2 L237.6,40.3 L239.2,40.0 L238.2,38.8 L240.0,38.1 L238.8,37.1 L239.0,36.4 L238.1,36.0 L239.0,35.9 L238.4,35.3 L239.0,35.1 L237.6,35.0 L237.9,34.0 L235.1,33.8 L234.4,33.4 L235.0,33.1 L234.7,32.8 L233.9,33.0 L234.6,32.2 L229.7,30.4 L229.0,29.7 L229.0,29.0 L229.9,28.8 L230.1,28.2 L233.2,28.3 L237.8,26.4 L237.9,25.8 L238.6,25.9 L238.5,25.2 L238.6,25.8 L239.1,25.2 L238.2,24.3 L239.1,25.1 L239.7,24.6 L239.4,24.3 L240.0,24.3 L239.4,23.0 L240.1,22.8 L239.4,22.8 L240.6,22.0 L242.4,19.4 L243.0,17.0 L245.3,16.2 L245.7,15.0 L248.3,13.5 L248.2,12.9 L248.6,13.4 L249.8,13.3 L250.6,12.0 L251.5,12.8 L253.1,12.8 L253.2,12.2 L254.0,12.2 L255.8,12.8 L258.6,15.3 L258.9,17.6 L259.9,18.7 L260.4,18.2 L260.2,19.1 L261.2,20.6 L262.6,21.2 L263.3,20.5 L263.3,21.0 L264.6,19.7 L263.2,22.2 L263.8,23.2 L265.2,23.6 L262.6,25.4 L258.2,26.9 L259.6,28.0 L260.1,30.4 L260.9,31.4 L262.3,32.2 L262.9,31.7 L262.7,32.6 L263.5,33.2 L265.5,33.6 L267.0,34.9 L268.1,35.0 L269.9,34.6 L270.9,33.4 L269.7,32.6 L269.6,30.5 L268.7,29.7 L270.2,29.4 L270.7,28.7 L272.5,29.4 L272.9,28.8 L272.5,28.2 L273.4,28.2 L273.3,27.3 L275.2,27.3 L274.5,27.9 L274.8,28.6 L276.5,27.9 L281.4,28.8 L283.5,27.8 L282.6,29.3 L283.4,29.3 L283.5,30.3 L282.6,31.7 L282.8,32.8 L284.2,34.0 L283.7,34.5 L284.2,34.7 L283.8,36.2 L284.2,36.9 L285.5,38.0 L288.0,37.5 L289.1,37.9 L289.2,38.8 L289.8,38.0 L290.5,38.5 L290.4,39.6 L287.2,41.5 L286.7,41.0 L285.3,41.0 L281.7,42.3 L280.5,43.3 L277.0,43.6 L276.3,45.0 L277.5,46.8 L275.7,48.7 L274.0,48.6 L272.4,49.2Z"><title>新北市 · Yes 74.2%</title></path>
+<path class="cty" style="--c:#c7ac53;transition-delay:165ms" d="M221.0,31.2 L223.0,29.8 L225.3,29.2 L225.2,28.7 L225.3,29.2 L225.9,28.9 L225.3,28.4 L225.6,28.9 L229.0,29.0 L229.0,29.7 L229.7,30.4 L234.6,32.2 L233.9,33.0 L234.7,32.8 L235.0,33.1 L234.4,33.4 L235.1,33.8 L237.9,34.0 L237.6,35.0 L238.3,34.8 L239.0,35.1 L238.5,35.5 L239.2,35.7 L238.1,36.0 L239.0,36.4 L238.8,37.1 L240.0,38.1 L238.3,38.5 L239.2,40.0 L238.4,40.5 L237.6,40.3 L237.7,41.2 L236.3,42.0 L234.1,41.5 L232.7,41.9 L232.4,42.5 L232.8,42.5 L233.1,44.9 L231.8,45.6 L232.3,46.6 L233.8,46.5 L231.9,47.7 L232.7,48.3 L232.2,49.2 L234.0,49.9 L235.1,51.6 L234.3,52.2 L235.4,53.5 L233.5,54.4 L235.1,54.4 L236.7,55.4 L238.4,54.4 L239.5,54.6 L240.3,55.2 L240.4,56.1 L242.0,57.3 L242.2,58.9 L243.2,59.3 L240.9,62.0 L241.8,65.0 L243.2,67.2 L245.3,68.1 L245.7,70.2 L244.0,70.3 L243.1,71.3 L243.3,72.3 L241.3,76.5 L240.0,76.7 L238.4,78.2 L235.8,76.8 L235.4,75.5 L236.1,74.1 L234.9,73.0 L235.0,70.7 L233.8,70.9 L233.7,69.6 L232.5,68.2 L230.4,68.2 L231.1,65.9 L230.3,64.7 L231.1,62.6 L230.5,61.9 L227.0,60.1 L227.1,59.1 L226.0,58.8 L225.6,57.7 L223.8,58.5 L223.6,57.4 L222.3,57.8 L222.2,56.9 L219.7,55.9 L219.9,55.5 L217.7,54.3 L218.6,52.9 L218.1,51.0 L214.8,50.9 L214.1,50.5 L214.2,49.4 L212.7,49.8 L209.8,48.7 L209.9,45.8 L208.8,45.1 L206.5,45.4 L205.5,44.9 L204.3,45.9 L203.7,45.5 L206.0,42.3 L205.7,40.9 L206.4,41.0 L205.7,40.8 L209.3,36.0 L211.9,35.1 L212.6,34.1 L215.1,32.9 L221.0,31.2Z"><title>桃園市 · Yes 80.7%</title></path>
+<path class="cty" style="--c:#c9ad55;transition-delay:220ms" d="M197.3,55.9 L198.2,54.5 L197.5,53.6 L198.4,54.3 L198.5,53.8 L197.6,53.4 L198.8,53.6 L199.2,54.4 L199.4,53.6 L201.1,55.3 L203.4,55.6 L204.9,56.4 L207.1,58.5 L206.6,59.0 L207.7,62.0 L206.6,62.5 L206.1,61.2 L204.3,60.3 L203.5,60.9 L203.9,61.4 L202.3,61.7 L201.3,63.5 L200.1,63.6 L199.4,66.6 L197.5,66.1 L197.0,63.9 L196.0,64.7 L194.8,64.7 L195.0,63.7 L196.3,62.2 L195.6,60.8 L195.7,59.5 L197.3,55.9Z"><title>新竹市 · Yes 80.4%</title></path>
+<path class="cty" style="--c:#ceb25c;transition-delay:275ms" d="M200.6,50.9 L203.3,45.5 L204.3,45.9 L205.5,44.9 L206.5,45.4 L208.2,44.9 L209.9,45.8 L209.8,48.7 L212.7,49.8 L214.2,49.4 L214.1,50.5 L214.8,50.9 L218.1,51.0 L218.6,52.9 L217.7,54.3 L219.9,55.5 L219.7,55.9 L222.2,56.9 L222.3,57.8 L223.6,57.4 L223.8,58.5 L225.6,57.7 L226.0,58.8 L227.1,59.1 L227.0,60.1 L230.6,61.9 L231.1,62.6 L230.3,64.7 L231.1,65.9 L230.4,68.2 L232.5,68.2 L233.7,69.6 L233.8,70.9 L235.0,70.7 L234.9,73.0 L236.1,74.1 L235.4,75.5 L235.8,76.8 L237.8,78.3 L239.2,77.8 L240.0,79.5 L238.5,81.1 L239.1,83.6 L237.5,85.4 L236.7,85.4 L236.5,86.5 L235.3,87.6 L234.1,88.0 L231.5,92.1 L227.0,92.9 L227.2,90.5 L223.5,86.5 L223.9,85.7 L223.3,84.9 L219.3,86.1 L217.2,85.2 L216.5,85.7 L214.8,85.5 L213.3,86.7 L211.0,86.5 L210.6,84.2 L211.6,83.7 L211.7,82.5 L209.7,80.8 L210.9,80.4 L212.0,78.0 L211.3,75.9 L210.2,75.0 L209.3,75.6 L207.1,73.2 L205.6,72.9 L205.8,71.8 L204.7,72.0 L203.8,71.1 L202.8,69.2 L201.9,69.3 L202.7,68.0 L202.7,66.6 L200.9,67.4 L200.6,66.7 L200.0,67.1 L199.4,66.6 L200.1,63.6 L201.3,63.5 L202.3,61.7 L203.9,61.4 L203.7,60.6 L204.3,60.3 L205.7,60.9 L206.6,62.5 L207.7,61.8 L206.6,59.0 L207.1,58.5 L205.6,57.0 L203.4,55.6 L201.1,55.3 L199.2,53.6 L199.2,52.7 L200.6,50.9Z"><title>新竹縣 · Yes 79.4%</title></path>
+<path class="cty" style="--c:#e2cc95;transition-delay:330ms" d="M286.9,55.0 L285.3,55.1 L284.4,54.1 L285.2,54.5 L285.6,53.8 L286.2,53.9 L286.9,55.0ZM276.8,72.9 L278.3,75.9 L280.3,76.7 L280.0,77.5 L278.7,76.6 L277.9,77.0 L278.3,77.7 L278.8,77.3 L278.8,79.1 L279.0,77.9 L279.4,78.3 L279.9,77.7 L279.1,78.5 L279.7,78.9 L278.9,79.4 L279.3,83.1 L276.4,84.8 L276.3,86.4 L277.3,86.8 L277.3,87.8 L278.2,88.1 L276.6,88.5 L274.8,89.8 L274.8,90.6 L272.9,92.7 L271.9,98.1 L270.5,101.5 L270.6,103.6 L263.5,101.8 L263.2,101.1 L262.3,101.4 L260.3,99.3 L260.1,100.3 L258.6,98.4 L257.7,99.0 L258.2,100.3 L259.0,100.5 L258.7,101.7 L257.6,100.7 L257.4,101.8 L255.6,102.0 L256.4,104.0 L255.7,103.4 L253.1,103.1 L251.3,101.4 L249.4,100.9 L247.0,101.2 L243.3,98.8 L242.1,97.1 L238.9,97.5 L237.2,98.6 L236.3,98.1 L235.9,96.6 L233.7,96.6 L232.6,95.6 L232.8,92.6 L231.8,91.7 L232.1,91.2 L234.1,88.0 L235.3,87.6 L236.5,86.5 L236.7,85.4 L237.5,85.4 L239.1,83.6 L238.5,81.1 L240.0,79.5 L239.2,77.8 L240.0,76.7 L241.3,76.5 L243.3,72.3 L243.1,71.3 L244.0,70.2 L246.9,70.2 L248.5,69.2 L250.6,68.8 L251.1,67.2 L252.8,66.6 L253.8,66.8 L254.1,65.7 L254.9,65.9 L255.8,65.1 L255.2,63.6 L255.6,63.3 L255.0,62.6 L255.8,61.0 L255.3,59.6 L258.1,58.9 L258.2,57.6 L261.1,57.5 L261.8,56.8 L263.5,57.0 L263.4,56.2 L264.2,55.2 L267.1,53.3 L268.4,53.6 L270.9,52.4 L271.7,51.6 L271.4,50.2 L272.3,49.2 L274.0,48.6 L275.7,48.7 L277.5,46.8 L276.3,45.0 L277.0,43.6 L280.5,43.3 L282.8,41.8 L286.8,41.0 L287.1,41.5 L283.7,42.7 L281.8,45.5 L280.6,45.7 L280.2,47.5 L277.4,50.0 L276.5,52.3 L276.1,52.0 L275.8,52.6 L276.4,52.4 L275.1,55.3 L274.5,60.7 L274.9,63.8 L276.1,66.5 L276.8,72.9Z"><title>宜蘭縣 · Yes 69.9%</title></path>
+<path class="cty" style="--c:#af9032;transition-delay:385ms" d="M222.2,85.2 L223.3,84.9 L223.9,85.7 L223.5,86.5 L227.2,90.5 L227.0,92.9 L225.6,93.7 L225.6,95.1 L224.6,97.1 L223.2,97.5 L222.7,96.0 L221.6,95.9 L219.2,99.2 L216.9,99.4 L215.2,102.1 L214.1,102.0 L212.3,103.3 L211.8,102.7 L211.1,102.8 L208.7,105.3 L206.6,104.0 L205.2,101.9 L202.0,101.8 L199.4,100.9 L197.8,101.7 L198.3,104.5 L197.4,105.5 L190.7,105.8 L188.5,103.5 L184.7,102.5 L182.0,100.1 L178.7,98.7 L176.3,95.4 L174.8,94.5 L174.2,93.0 L172.7,91.8 L175.2,90.0 L174.8,89.9 L175.4,89.8 L175.1,89.5 L176.6,87.8 L176.8,86.5 L177.4,86.6 L176.8,86.4 L178.3,84.2 L181.3,76.5 L184.4,75.8 L184.3,75.0 L183.7,75.3 L185.2,72.2 L185.5,72.4 L185.2,72.0 L190.3,70.6 L190.7,69.6 L192.8,67.8 L192.5,67.6 L193.0,67.7 L193.5,65.5 L194.6,64.5 L195.8,64.8 L197.0,63.9 L197.6,66.1 L199.0,66.2 L200.0,67.1 L200.6,66.7 L200.9,67.4 L201.8,66.7 L202.8,66.7 L202.7,68.0 L201.9,69.3 L202.8,69.2 L203.8,71.1 L204.7,72.0 L205.8,71.8 L205.6,72.9 L207.1,73.2 L209.3,75.6 L210.2,75.0 L211.3,75.9 L212.0,78.0 L210.9,80.4 L209.7,80.8 L211.7,82.5 L211.6,83.7 L210.6,84.2 L211.0,86.5 L213.3,86.7 L215.4,85.4 L216.5,85.7 L217.2,85.2 L219.3,86.1 L222.2,85.2Z"><title>苗栗縣 · Yes 85.6%</title></path>
+<path class="cty" style="--c:#e7cf7e;transition-delay:440ms" d="M160.8,110.8 L160.4,111.1 L161.5,109.1 L161.2,108.9 L161.8,108.1 L162.2,108.3 L163.0,106.5 L161.7,105.2 L163.3,105.6 L164.4,104.1 L164.0,103.7 L166.5,104.4 L166.6,103.4 L165.6,102.8 L166.9,102.6 L167.6,99.4 L169.9,96.6 L170.5,94.7 L172.4,93.1 L172.7,91.8 L174.2,93.0 L174.8,94.5 L176.3,95.4 L178.7,98.7 L182.0,100.1 L184.7,102.5 L188.5,103.5 L191.1,105.9 L197.4,105.5 L198.3,104.5 L197.8,101.7 L199.4,100.9 L202.0,101.8 L205.2,101.9 L207.8,105.1 L209.1,105.3 L209.6,103.9 L210.8,103.4 L211.1,102.8 L212.7,103.2 L214.1,102.0 L215.2,102.0 L216.9,99.4 L219.2,99.2 L221.6,95.9 L222.7,96.0 L223.2,97.5 L224.6,97.1 L225.8,93.5 L230.8,92.6 L231.8,91.7 L232.8,92.5 L232.7,95.7 L233.7,96.6 L235.9,96.6 L236.6,98.5 L237.3,98.6 L238.9,97.5 L241.7,97.1 L242.5,98.1 L242.9,97.9 L243.3,98.8 L241.9,100.4 L241.8,102.8 L240.8,104.1 L239.3,104.1 L238.6,105.9 L237.2,106.7 L237.6,109.0 L234.9,110.1 L234.1,112.0 L230.5,110.7 L229.8,111.4 L228.7,111.4 L227.4,109.9 L226.6,110.1 L225.1,112.3 L223.6,111.4 L220.3,113.0 L219.1,111.8 L218.6,112.7 L217.5,112.9 L216.5,114.5 L213.5,114.5 L212.1,116.3 L209.3,118.3 L208.1,118.0 L207.7,118.9 L207.3,117.9 L206.5,117.9 L204.0,121.7 L202.8,121.9 L200.6,120.9 L198.1,122.8 L195.7,122.0 L195.6,123.7 L194.5,124.9 L194.6,122.6 L194.0,121.9 L192.9,122.0 L192.5,121.2 L191.7,121.2 L190.5,123.2 L190.4,126.1 L188.6,126.6 L187.2,129.9 L185.4,131.9 L183.3,132.9 L182.1,131.9 L178.6,132.0 L174.7,129.6 L174.7,130.4 L173.0,130.0 L173.0,126.4 L172.4,125.8 L171.9,123.2 L166.6,122.2 L165.1,121.0 L163.0,115.4 L161.1,114.4 L161.8,112.9 L161.3,113.7 L159.0,112.7 L159.6,113.0 L159.0,112.6 L159.7,112.8 L160.8,110.8Z"><title>台中市 · Yes 74.2%</title></path>
+<path class="cty" style="--c:#d0b55e;transition-delay:495ms" d="M173.3,139.1 L174.0,139.8 L173.3,141.0 L173.8,142.7 L173.2,143.0 L172.5,145.0 L173.2,146.0 L172.2,147.6 L173.1,147.4 L173.0,147.9 L173.7,148.2 L172.9,148.6 L174.0,148.3 L174.3,149.0 L173.7,148.9 L175.2,150.2 L177.3,149.6 L178.0,151.0 L174.5,152.7 L166.7,151.2 L163.1,151.3 L158.3,149.7 L156.7,148.5 L146.0,149.5 L140.4,147.4 L142.1,145.0 L143.3,145.2 L144.2,144.4 L146.9,138.7 L145.7,138.3 L147.3,135.9 L147.9,133.8 L149.5,133.7 L149.7,131.7 L151.1,129.9 L150.7,129.5 L151.3,129.8 L152.1,128.7 L151.8,128.4 L154.4,127.6 L152.0,127.4 L151.9,125.7 L153.5,124.8 L156.1,125.0 L156.8,124.4 L156.5,124.3 L156.8,124.1 L156.5,123.9 L156.9,121.5 L155.3,121.5 L154.8,123.2 L153.3,122.9 L152.1,123.9 L155.0,120.5 L154.7,120.3 L155.5,120.1 L157.2,118.0 L159.3,117.8 L159.6,117.4 L159.1,117.1 L159.9,116.3 L159.5,116.1 L161.1,114.4 L163.0,115.4 L164.5,118.9 L164.4,119.8 L166.2,121.9 L171.9,123.2 L172.4,125.8 L173.0,126.4 L173.0,130.0 L174.7,130.4 L174.8,129.6 L177.5,131.5 L176.8,131.8 L177.0,132.2 L174.1,132.1 L174.0,133.2 L175.1,134.3 L174.8,136.2 L174.0,137.2 L173.1,136.8 L173.7,137.1 L173.2,137.2 L174.1,138.8 L173.3,139.1Z"><title>彰化縣 · Yes 79.0%</title></path>
+<path class="cty" style="--c:#e3cd92;transition-delay:550ms" d="M225.1,112.3 L226.6,110.1 L227.4,109.9 L228.7,111.4 L229.8,111.4 L230.5,110.7 L233.4,111.5 L234.1,112.0 L234.6,114.1 L232.6,114.6 L231.1,116.0 L229.3,116.3 L229.4,118.1 L228.8,118.1 L229.1,118.6 L228.8,120.2 L232.8,122.1 L232.0,123.9 L232.4,124.9 L229.0,127.7 L229.2,129.1 L227.0,133.7 L227.4,135.0 L228.2,135.1 L228.5,135.9 L228.0,137.6 L228.4,141.2 L227.1,141.8 L227.7,143.6 L225.3,147.6 L225.2,149.3 L224.1,151.1 L224.5,152.4 L222.3,153.9 L222.5,154.8 L224.7,156.1 L224.3,157.4 L225.3,158.4 L225.4,159.9 L225.3,161.8 L224.7,162.7 L224.9,164.2 L223.1,169.9 L222.4,170.3 L221.4,169.9 L220.1,171.5 L217.9,171.1 L217.8,172.4 L218.5,173.0 L217.3,174.1 L217.7,176.7 L216.4,177.8 L214.9,177.2 L213.2,177.2 L212.4,177.9 L210.7,177.5 L210.2,179.2 L208.2,181.6 L209.9,182.8 L209.3,183.8 L206.2,185.2 L205.8,184.3 L206.2,183.7 L205.6,182.7 L203.3,182.1 L200.4,182.3 L196.7,181.4 L195.2,181.5 L194.7,182.2 L190.7,181.6 L189.6,177.2 L188.6,175.9 L190.0,171.2 L189.4,170.0 L187.4,170.2 L183.9,168.5 L182.0,168.9 L180.9,167.1 L180.5,168.0 L178.6,168.0 L178.0,168.9 L176.0,168.9 L175.3,168.4 L175.4,167.2 L174.8,167.0 L173.7,168.1 L173.3,166.7 L174.9,162.2 L174.2,157.9 L174.6,157.2 L175.6,157.3 L175.6,155.5 L174.3,152.6 L178.0,151.2 L177.3,149.6 L175.2,150.2 L173.7,148.9 L174.3,149.0 L174.0,148.3 L172.9,148.6 L173.7,148.2 L173.0,147.9 L173.1,147.4 L172.2,147.6 L173.2,146.0 L172.5,145.0 L173.8,142.2 L173.3,141.0 L174.0,139.8 L173.2,139.1 L174.1,138.7 L173.2,137.2 L173.7,137.1 L173.1,136.8 L174.0,137.2 L174.8,136.2 L175.1,134.3 L174.0,133.2 L174.1,132.1 L177.0,132.2 L176.8,131.8 L177.6,131.4 L179.9,132.3 L182.1,131.9 L183.3,132.9 L185.4,131.9 L187.2,129.9 L188.6,126.6 L190.4,126.1 L190.5,123.2 L191.7,121.2 L192.5,121.2 L192.9,122.0 L194.0,121.9 L194.6,122.6 L194.5,124.9 L195.6,123.7 L195.7,122.0 L198.1,122.8 L200.6,120.9 L202.8,121.9 L204.0,121.7 L206.5,117.9 L207.3,117.9 L207.7,118.9 L208.1,118.0 L209.3,118.3 L212.1,116.3 L213.5,114.5 L216.5,114.5 L217.5,112.9 L218.6,112.7 L219.1,111.8 L220.3,113.0 L223.6,111.4 L225.1,112.3Z"><title>南投縣 · Yes 70.4%</title></path>
+<path class="cty" style="--c:#b09233;transition-delay:605ms" d="M237.0,199.3 L237.1,200.6 L235.5,202.2 L234.9,204.2 L235.3,204.9 L234.4,205.5 L233.4,209.1 L232.4,209.0 L231.9,210.3 L232.7,211.5 L232.2,212.8 L232.3,214.8 L231.8,215.4 L229.7,215.5 L228.1,216.6 L227.4,216.0 L227.6,215.1 L226.8,213.9 L226.1,213.4 L225.2,213.7 L224.5,212.7 L222.9,212.2 L223.0,211.3 L221.0,206.7 L219.8,206.1 L217.4,207.1 L216.8,206.9 L215.9,204.9 L211.6,204.0 L209.7,198.7 L208.2,197.7 L207.3,198.0 L208.8,197.0 L209.0,195.4 L207.2,194.3 L206.6,193.1 L205.8,193.5 L205.0,192.6 L203.8,192.3 L203.8,191.6 L205.6,189.9 L205.2,189.0 L207.3,188.1 L207.0,187.1 L207.4,186.4 L206.0,185.4 L209.3,183.8 L209.8,182.9 L208.2,181.6 L210.2,179.2 L210.7,177.5 L212.4,177.9 L213.2,177.2 L214.9,177.2 L216.4,177.8 L217.8,176.7 L217.3,174.1 L218.5,173.0 L217.8,172.4 L217.9,171.1 L220.1,171.5 L221.4,169.9 L222.5,170.3 L223.9,167.8 L224.0,166.3 L225.0,164.1 L224.7,162.8 L225.4,160.8 L225.3,158.4 L224.4,157.8 L224.7,155.9 L222.5,154.8 L222.3,153.9 L224.5,152.4 L224.1,151.1 L225.2,149.3 L225.3,147.6 L227.7,143.6 L227.1,141.8 L228.4,141.2 L228.0,137.6 L228.5,135.9 L228.2,135.1 L227.4,135.0 L227.0,133.5 L229.2,129.1 L229.0,127.7 L232.4,124.9 L232.0,123.9 L232.8,122.3 L228.8,120.2 L229.1,118.6 L228.8,118.1 L229.4,118.1 L229.2,116.3 L231.1,116.0 L232.6,114.6 L234.6,114.2 L234.1,112.0 L234.9,110.1 L237.6,109.0 L237.2,106.7 L238.6,105.9 L239.3,104.1 L240.8,104.1 L241.8,102.8 L241.9,100.4 L243.3,98.8 L247.3,101.3 L249.4,100.9 L251.3,101.4 L253.1,103.1 L255.7,103.4 L256.4,104.0 L255.6,102.0 L257.4,101.8 L257.6,100.7 L258.7,101.7 L259.0,100.5 L258.2,100.3 L257.7,99.0 L258.6,98.4 L260.1,100.3 L260.3,99.3 L262.3,101.4 L263.2,101.1 L263.5,101.8 L268.3,102.8 L270.7,103.9 L268.7,106.4 L268.1,108.6 L261.5,114.5 L260.9,116.8 L261.6,119.0 L261.4,120.0 L260.9,119.9 L261.3,120.3 L258.4,123.2 L257.5,124.8 L257.6,128.0 L260.0,132.0 L258.3,135.6 L259.5,132.7 L259.2,132.3 L258.9,133.8 L257.8,134.6 L258.1,135.2 L257.6,134.8 L256.5,136.7 L256.9,138.9 L255.8,145.7 L253.7,151.1 L253.7,155.0 L251.6,159.2 L252.0,160.7 L250.1,167.1 L249.7,172.0 L248.4,174.3 L247.7,177.4 L247.9,179.7 L248.6,180.0 L248.6,180.8 L247.6,182.4 L247.1,185.3 L246.0,185.7 L245.2,184.7 L242.9,184.4 L240.7,186.6 L238.9,189.8 L239.3,191.5 L240.9,192.2 L240.8,192.6 L237.1,197.7 L237.0,199.3Z"><title>花蓮縣 · Yes 85.4%</title></path>
+<path class="cty" style="--c:#ddc471;transition-delay:660ms" d="M129.0,175.5 L128.6,175.1 L129.3,174.1 L131.1,173.2 L130.9,174.4 L130.5,173.7 L129.0,175.5ZM131.0,176.4 L130.5,176.3 L130.9,174.7 L131.4,175.2 L130.6,176.2 L131.0,176.4ZM128.1,177.2 L127.5,176.5 L128.2,175.3 L129.0,176.0 L128.6,176.3 L129.3,176.5 L128.3,176.5 L128.1,177.2ZM124.9,180.2 L125.3,180.4 L125.1,181.0 L124.4,181.2 L124.7,180.8 L124.3,180.3 L124.0,181.4 L123.4,181.4 L124.2,179.9 L123.8,179.6 L123.3,181.2 L122.8,180.8 L122.8,181.3 L121.9,181.5 L121.8,183.0 L121.0,182.9 L121.3,182.0 L120.5,182.6 L121.5,185.2 L119.5,182.4 L119.9,181.6 L126.7,176.8 L127.7,177.5 L127.9,178.2 L126.8,178.0 L126.4,179.0 L125.5,179.1 L126.1,179.3 L125.4,179.3 L125.9,179.8 L125.6,180.1 L125.4,179.7 L124.4,179.9 L124.9,180.2ZM174.6,163.6 L173.3,166.6 L173.5,167.9 L175.4,167.2 L175.3,168.4 L176.7,169.1 L178.0,168.9 L178.6,168.0 L180.2,168.1 L180.9,167.1 L182.0,168.2 L181.5,169.6 L182.1,170.2 L182.4,172.7 L178.8,172.1 L177.3,172.7 L176.8,171.9 L175.1,172.5 L174.5,172.1 L175.0,170.5 L172.8,170.8 L172.5,171.4 L169.2,171.6 L165.2,170.2 L163.2,168.1 L162.7,166.6 L158.4,167.5 L157.6,167.1 L156.0,168.2 L155.6,167.6 L154.4,167.6 L154.2,166.7 L152.1,169.0 L151.0,169.2 L150.3,170.4 L148.3,170.6 L147.6,172.3 L145.9,172.3 L146.2,173.2 L144.5,173.4 L144.5,174.5 L143.3,175.2 L142.9,176.3 L141.6,174.9 L140.5,175.1 L140.8,177.8 L140.1,178.5 L135.2,178.3 L132.2,177.3 L132.6,176.2 L131.5,173.4 L132.0,172.9 L132.1,170.2 L131.8,168.8 L131.1,168.5 L131.8,168.0 L131.1,168.1 L131.7,167.9 L132.0,165.3 L133.7,162.2 L135.0,160.5 L135.7,160.6 L134.4,160.3 L134.4,158.6 L133.7,159.0 L133.7,158.3 L133.4,158.9 L133.7,158.3 L134.4,158.5 L135.1,155.4 L136.7,155.4 L136.7,153.9 L137.2,153.3 L135.9,154.9 L134.4,155.5 L133.6,153.2 L133.9,154.4 L133.9,154.0 L134.5,154.2 L135.6,151.3 L134.0,152.0 L134.5,151.3 L133.1,152.8 L134.7,151.0 L134.3,150.7 L137.3,149.3 L136.3,149.8 L137.2,149.3 L136.8,149.2 L139.5,149.8 L137.9,149.3 L138.8,148.0 L138.4,147.5 L139.2,147.0 L139.6,147.8 L140.4,147.4 L146.0,149.5 L156.7,148.5 L158.3,149.7 L163.1,151.3 L166.7,151.2 L174.3,152.6 L175.6,155.6 L175.6,157.4 L174.6,157.2 L174.2,157.9 L174.9,162.2 L174.6,163.6Z"><title>雲林縣 · Yes 76.3%</title></path>
+<path class="cty" style="--c:#dec572;transition-delay:715ms" d="M70.4,206.7 L69.5,205.5 L72.8,205.2 L72.4,207.0 L71.3,207.4 L71.3,208.3 L70.3,207.5 L70.4,206.7ZM86.3,155.9 L86.7,155.2 L87.8,156.6 L87.1,157.1 L86.6,156.8 L87.0,157.1 L86.4,157.1 L86.0,158.3 L85.4,157.0 L86.3,155.9ZM91.3,201.6 L92.5,201.2 L91.9,203.0 L91.2,202.4 L91.3,201.6ZM76.6,190.2 L76.9,189.6 L76.4,188.8 L77.3,189.5 L77.7,189.0 L77.9,190.6 L78.4,190.6 L77.9,191.1 L78.6,190.9 L77.8,191.9 L78.3,192.9 L76.1,192.6 L76.8,191.7 L76.6,190.2ZM79.2,191.6 L80.4,190.7 L81.0,191.7 L80.0,191.6 L79.3,192.5 L78.8,191.8 L79.2,191.6ZM78.2,180.8 L78.1,180.0 L78.5,180.5 L79.7,179.6 L81.0,179.7 L78.2,180.8ZM84.1,164.2 L83.3,164.1 L82.6,165.1 L81.9,164.6 L80.6,166.9 L78.8,167.2 L79.2,169.7 L78.3,170.6 L78.6,173.2 L76.9,172.9 L74.4,173.5 L75.6,172.2 L76.5,172.7 L77.5,171.8 L77.4,170.8 L76.3,170.4 L76.7,169.7 L77.1,170.3 L77.6,170.2 L77.5,169.4 L78.0,168.7 L77.2,168.0 L78.3,165.4 L78.9,165.4 L78.4,164.8 L79.3,164.7 L79.1,165.9 L80.5,166.2 L81.8,164.6 L81.9,163.5 L84.2,162.7 L85.7,163.1 L86.2,163.6 L85.8,163.8 L86.6,164.0 L86.7,165.5 L85.8,165.4 L85.5,166.2 L86.0,166.8 L86.6,166.6 L85.9,167.3 L86.9,168.0 L86.8,169.7 L88.4,169.2 L87.9,169.9 L87.8,171.8 L88.3,171.8 L88.9,170.0 L89.5,171.1 L89.8,169.3 L90.4,169.1 L90.4,170.0 L91.3,170.3 L90.8,170.3 L91.0,170.9 L91.9,169.8 L92.8,171.4 L92.8,173.1 L93.6,173.3 L93.9,174.2 L92.4,174.4 L91.8,173.4 L89.6,173.6 L88.7,174.9 L86.2,176.5 L86.7,177.2 L86.2,177.7 L86.4,178.5 L85.0,178.0 L83.3,178.4 L83.4,177.1 L82.1,177.0 L81.4,175.6 L80.7,175.6 L80.8,174.7 L81.4,174.2 L81.9,176.5 L83.3,176.2 L83.6,177.4 L84.3,176.2 L85.4,176.7 L85.7,176.2 L85.3,175.7 L86.0,175.5 L86.1,174.7 L85.1,174.2 L83.5,175.0 L83.1,174.4 L82.7,174.8 L82.5,173.9 L83.3,174.3 L83.8,173.8 L83.4,173.3 L84.0,173.3 L83.6,172.9 L83.0,173.4 L82.0,173.3 L83.0,172.2 L82.5,171.3 L83.6,171.3 L84.3,170.4 L84.2,171.8 L84.8,171.7 L84.6,172.6 L85.2,172.3 L85.5,172.8 L85.9,172.0 L85.6,171.5 L86.4,171.2 L86.0,169.8 L86.8,169.4 L85.5,168.4 L86.1,167.6 L84.8,167.8 L85.4,166.6 L84.1,164.2Z"><title>澎湖縣 · Yes 76.0%</title></path>
+<path class="cty" style="--c:#e4ce8e;transition-delay:770ms" d="M156.3,178.3 L156.7,178.3 L156.7,177.6 L157.3,178.1 L157.3,177.5 L157.8,177.5 L158.7,177.8 L159.3,179.3 L160.1,178.6 L160.9,178.7 L161.0,179.6 L162.4,180.1 L163.1,181.8 L161.9,183.6 L159.7,182.8 L157.2,184.8 L156.3,182.8 L153.3,182.7 L153.8,181.2 L152.9,179.3 L153.9,179.3 L154.6,178.6 L154.8,179.3 L156.3,178.3Z"><title>嘉義市 · Yes 71.2%</title></path>
+<path class="cty" style="--c:#e5ce8c;transition-delay:825ms" d="M175.3,198.6 L174.6,198.2 L174.1,200.6 L175.4,204.8 L173.3,204.3 L171.7,205.0 L170.6,204.4 L170.2,203.4 L169.0,205.7 L167.9,205.1 L167.0,205.4 L164.6,204.2 L164.0,203.4 L165.1,201.9 L164.1,200.4 L164.6,198.2 L164.3,196.7 L165.7,195.2 L165.2,194.4 L162.8,193.6 L162.7,192.7 L163.4,192.5 L162.8,191.4 L161.0,191.3 L161.0,190.4 L162.2,189.7 L161.9,189.0 L160.6,189.6 L160.1,188.7 L157.2,187.2 L155.5,188.2 L154.5,187.2 L152.2,188.2 L149.5,188.4 L147.3,190.0 L146.6,189.6 L146.3,190.8 L144.7,190.8 L144.1,191.5 L144.1,193.1 L142.5,192.8 L142.0,193.6 L142.5,194.0 L141.7,194.8 L140.0,195.3 L138.6,198.2 L137.3,198.6 L135.8,197.7 L135.9,198.7 L135.1,198.6 L134.1,197.1 L132.5,196.5 L132.3,195.9 L129.8,194.0 L131.6,190.9 L133.1,190.8 L133.2,190.4 L132.3,190.7 L132.4,190.1 L132.0,190.5 L131.7,189.9 L132.8,189.6 L133.2,190.4 L133.9,189.1 L133.4,187.9 L132.7,188.6 L132.5,187.9 L132.5,186.4 L133.1,186.0 L132.2,185.8 L133.0,184.0 L132.7,183.4 L131.3,184.1 L131.1,183.7 L132.1,182.9 L132.1,181.7 L133.0,180.7 L133.0,180.0 L134.3,180.0 L133.2,179.7 L130.4,180.2 L130.0,177.6 L132.2,177.3 L135.2,178.3 L136.7,178.0 L138.8,178.8 L140.0,178.6 L140.8,177.8 L140.5,175.1 L141.6,174.9 L142.9,176.3 L143.3,175.2 L144.5,174.5 L144.5,173.4 L146.2,173.2 L145.9,172.3 L147.6,172.3 L148.3,170.6 L150.3,170.4 L151.0,169.2 L152.1,169.0 L152.6,168.0 L154.1,167.4 L154.0,166.9 L156.0,168.2 L157.6,167.1 L158.4,167.5 L162.6,166.6 L163.2,168.1 L165.5,170.4 L169.3,171.6 L172.5,171.4 L172.8,170.8 L175.0,170.5 L174.5,172.1 L175.2,172.5 L176.8,171.9 L177.3,172.7 L178.8,172.1 L182.4,172.7 L182.1,170.2 L181.5,169.6 L181.9,168.9 L183.8,168.5 L187.4,170.2 L189.3,169.9 L190.0,171.2 L188.6,175.9 L189.6,177.2 L190.7,181.6 L194.7,182.2 L195.2,181.5 L196.6,181.4 L201.3,182.0 L198.8,183.3 L196.4,183.5 L195.3,185.3 L192.1,186.6 L190.0,191.1 L188.2,191.2 L186.5,193.9 L184.3,193.7 L183.9,195.3 L182.1,196.5 L182.0,197.3 L179.9,197.3 L179.3,199.2 L175.8,198.2 L175.3,198.6Z"><title>嘉義縣 · Yes 71.6%</title></path>
+<path class="cty" style="--c:#ddc9a8;transition-delay:880ms" d="M169.0,205.7 L170.2,203.4 L170.6,204.4 L171.7,205.0 L173.7,204.3 L175.5,204.8 L175.6,205.4 L174.0,207.9 L174.3,208.6 L173.9,209.4 L170.9,212.3 L168.0,218.0 L161.0,224.1 L160.6,225.4 L159.0,225.3 L159.0,226.5 L158.5,226.5 L158.3,227.7 L157.5,227.7 L155.2,233.4 L154.6,233.8 L153.7,232.8 L152.3,233.0 L149.7,236.1 L148.1,235.9 L147.4,234.9 L147.0,235.4 L144.0,234.5 L143.4,234.5 L143.6,235.3 L141.8,234.8 L141.4,235.5 L139.6,234.4 L139.3,233.4 L138.3,234.0 L136.1,233.0 L134.7,233.8 L134.4,230.5 L133.7,228.9 L133.0,228.9 L133.3,228.4 L132.8,228.4 L133.4,228.1 L132.6,226.9 L129.1,223.8 L124.5,221.3 L122.5,218.9 L122.8,216.2 L125.0,212.3 L125.3,208.7 L125.7,208.6 L125.4,208.5 L126.6,206.6 L126.1,206.0 L126.8,206.1 L126.1,205.9 L126.8,205.1 L126.7,203.8 L127.2,203.5 L127.9,198.7 L129.0,198.0 L129.7,194.1 L132.3,195.9 L132.5,196.5 L134.1,197.1 L135.0,198.5 L135.9,198.7 L135.8,197.7 L137.9,198.5 L138.7,197.9 L140.0,195.3 L141.6,194.9 L142.5,194.0 L142.0,193.6 L142.4,192.9 L144.1,193.1 L143.9,192.0 L144.7,190.8 L146.3,190.8 L146.4,189.7 L148.2,189.8 L149.5,188.4 L152.2,188.2 L154.5,187.2 L155.5,188.2 L157.2,187.2 L160.1,188.7 L160.6,189.6 L161.9,189.0 L162.2,189.7 L161.0,190.4 L161.0,191.3 L162.8,191.4 L163.4,192.5 L162.7,192.7 L162.8,193.6 L165.2,194.4 L165.7,195.2 L164.3,196.7 L164.6,198.2 L164.1,200.4 L165.1,201.9 L164.0,203.4 L167.0,205.4 L167.9,205.1 L169.0,205.7Z"><title>台南市 · Yes 66.1%</title></path>
+<path class="cty" style="--c:#dac7b0;transition-delay:935ms" d="M158.5,246.8 L158.6,251.8 L157.2,255.5 L156.7,260.6 L157.7,263.0 L157.6,265.6 L155.8,270.4 L155.9,274.2 L153.6,274.2 L152.1,272.7 L152.3,272.3 L152.0,272.6 L149.1,270.2 L148.7,270.4 L148.3,269.3 L147.5,269.3 L148.0,268.9 L147.4,269.3 L148.0,268.8 L146.6,267.7 L145.2,267.7 L146.8,267.3 L146.0,266.7 L145.4,267.3 L145.9,266.7 L145.6,266.1 L141.5,261.0 L142.2,260.3 L141.1,257.5 L142.3,255.6 L142.2,254.5 L141.4,254.0 L142.3,254.4 L142.8,255.4 L143.2,252.9 L142.3,252.7 L142.2,253.8 L141.6,253.9 L142.1,253.7 L141.8,252.2 L139.5,247.9 L138.0,243.7 L136.6,243.7 L136.0,243.0 L137.1,243.6 L136.6,243.4 L137.1,243.6 L137.6,242.4 L136.8,240.1 L135.9,240.3 L136.7,239.9 L136.2,239.7 L135.9,238.6 L136.4,238.4 L134.7,233.8 L136.1,233.0 L138.3,234.0 L139.3,233.4 L139.6,234.4 L141.4,235.5 L141.8,234.8 L143.6,235.3 L143.4,234.5 L144.0,234.5 L147.0,235.4 L147.4,234.9 L148.1,235.9 L149.7,236.1 L152.3,233.0 L153.7,232.8 L154.6,233.8 L155.2,233.4 L157.5,227.7 L158.3,227.7 L158.5,226.5 L159.0,226.5 L159.0,225.3 L160.6,225.4 L161.0,224.1 L167.0,219.2 L168.7,217.2 L170.9,212.3 L174.3,208.6 L174.0,207.9 L175.6,205.4 L174.1,200.6 L174.6,198.1 L179.3,199.2 L179.9,197.3 L182.0,197.3 L182.1,196.5 L183.9,195.3 L184.3,193.7 L186.5,193.9 L188.2,191.2 L190.0,191.1 L192.1,186.6 L195.3,185.3 L196.4,183.5 L198.8,183.3 L199.5,182.6 L202.1,181.8 L205.6,182.7 L206.2,183.7 L205.8,184.2 L206.0,185.4 L207.4,186.4 L207.0,187.1 L207.3,188.1 L205.2,189.0 L205.6,189.9 L203.9,191.2 L203.8,192.3 L205.1,192.7 L205.8,193.5 L206.6,193.1 L207.2,194.3 L209.0,195.4 L209.0,196.5 L206.9,198.4 L203.8,199.6 L202.5,199.5 L199.6,202.9 L197.7,203.5 L196.9,207.1 L197.3,208.7 L196.3,209.2 L196.0,210.7 L194.4,211.6 L195.2,212.2 L195.5,215.4 L195.2,217.4 L193.8,220.1 L194.7,221.2 L194.7,222.3 L193.1,222.8 L193.0,224.9 L192.2,225.2 L192.0,226.1 L189.6,229.2 L189.7,231.7 L190.7,233.8 L190.3,234.5 L191.3,236.6 L193.4,237.5 L192.9,238.3 L193.8,238.9 L193.4,240.2 L192.4,238.9 L191.9,239.4 L191.1,238.3 L190.0,238.0 L188.0,239.5 L187.3,239.4 L187.2,240.4 L186.1,240.9 L184.1,238.2 L181.5,236.7 L179.7,236.7 L178.6,238.2 L177.0,239.0 L176.0,238.6 L175.8,236.8 L175.0,237.1 L174.7,236.3 L171.3,237.4 L166.9,241.6 L164.9,241.1 L163.2,241.6 L160.3,240.7 L159.7,241.4 L158.5,246.8Z"><title>高雄市 · Yes 64.5%</title></path>
+<path class="cty" style="--c:#bb9e42;transition-delay:990ms" d="M247.5,258.5 L248.2,259.7 L247.1,259.7 L246.4,258.9 L245.1,258.5 L245.4,257.3 L244.4,256.3 L244.4,255.5 L248.2,255.5 L248.5,256.6 L247.5,258.5ZM242.9,184.4 L245.2,184.7 L246.0,185.7 L247.1,185.3 L245.3,189.7 L244.3,196.4 L243.0,196.8 L241.5,199.1 L240.1,204.0 L240.7,204.7 L238.6,206.7 L239.6,210.2 L238.9,211.8 L239.0,213.5 L239.8,214.2 L241.0,213.9 L239.1,215.1 L238.6,214.7 L237.5,216.8 L237.2,216.4 L235.8,217.0 L231.9,227.3 L230.0,229.9 L229.0,230.4 L226.2,236.2 L225.2,236.9 L224.8,238.2 L222.6,238.2 L221.0,239.7 L220.7,241.2 L221.8,242.8 L222.0,244.6 L220.5,245.4 L219.7,248.3 L215.5,251.9 L211.6,253.8 L207.1,257.6 L205.7,263.8 L203.7,265.6 L202.9,267.0 L200.3,276.0 L196.0,287.4 L195.7,292.2 L196.1,295.6 L193.5,297.2 L192.9,296.1 L190.8,295.7 L189.2,294.1 L187.8,294.6 L187.6,293.4 L187.7,292.8 L188.4,292.8 L188.3,292.1 L187.3,292.0 L185.9,290.4 L187.6,289.0 L187.2,287.3 L186.6,286.4 L185.1,286.2 L184.7,285.2 L183.1,284.4 L184.2,282.4 L183.9,280.9 L186.2,280.5 L187.0,279.7 L185.8,276.7 L183.7,275.9 L183.7,274.0 L184.8,272.5 L183.9,271.0 L182.7,266.2 L183.5,265.4 L183.3,263.8 L184.0,262.7 L184.0,261.2 L186.7,257.1 L187.2,255.4 L186.7,254.2 L188.6,254.6 L191.0,253.8 L192.0,251.9 L195.0,251.9 L196.0,249.9 L195.7,247.6 L196.7,246.5 L196.7,244.2 L195.6,243.1 L194.0,242.8 L193.1,241.8 L193.8,238.9 L192.9,238.3 L193.5,237.7 L193.0,236.9 L191.3,236.6 L190.3,234.6 L190.7,233.8 L189.7,231.7 L189.6,229.2 L192.0,226.1 L192.2,225.2 L193.0,224.9 L193.1,222.8 L194.7,222.4 L194.7,221.2 L193.8,220.1 L195.2,217.4 L195.5,215.4 L195.2,212.2 L194.4,211.6 L196.0,210.7 L196.3,209.2 L197.3,208.7 L196.9,207.1 L197.7,203.6 L199.6,202.9 L202.5,199.5 L203.8,199.6 L208.2,197.7 L210.0,199.1 L210.2,200.9 L211.6,204.0 L215.9,204.9 L216.8,206.9 L217.4,207.1 L219.8,206.1 L221.0,206.7 L223.0,211.3 L222.9,212.2 L224.5,212.7 L225.2,213.7 L226.1,213.4 L226.8,213.9 L227.6,215.1 L227.4,216.0 L228.1,216.5 L229.7,215.5 L231.8,215.4 L232.3,214.8 L232.2,212.8 L232.7,211.5 L232.0,210.0 L232.4,209.0 L233.4,209.1 L234.4,205.5 L235.3,204.9 L234.9,204.2 L235.5,202.2 L237.1,200.6 L237.1,197.7 L240.8,192.6 L240.9,192.2 L239.3,191.5 L239.0,189.7 L240.7,186.6 L242.9,184.4ZM248.3,312.1 L247.4,311.0 L247.9,310.5 L250.0,311.2 L252.5,311.0 L253.3,310.5 L253.3,312.3 L253.9,312.9 L253.1,313.1 L252.9,313.9 L253.2,314.7 L255.9,316.4 L255.4,318.2 L253.4,318.3 L252.3,316.4 L250.5,316.2 L248.7,314.2 L248.2,314.2 L248.3,312.1Z"><title>台東縣 · Yes 83.2%</title></path>
+<path class="cty" style="--c:#cfc0d8;transition-delay:1045ms" d="M150.3,288.6 L149.8,288.2 L150.7,286.9 L150.5,286.3 L151.9,285.5 L152.9,286.0 L152.7,286.8 L150.3,288.6ZM178.7,317.6 L178.2,315.7 L179.2,314.7 L179.2,313.4 L180.0,313.3 L179.3,310.8 L180.7,310.0 L180.7,308.7 L179.2,305.5 L178.2,299.1 L177.0,296.8 L175.0,294.8 L175.3,293.6 L174.5,290.4 L169.6,283.9 L158.3,277.1 L156.8,275.4 L157.5,275.1 L157.0,275.3 L157.2,274.9 L156.8,275.1 L155.9,274.2 L155.8,270.4 L157.4,266.5 L157.8,264.0 L156.7,261.1 L156.9,257.1 L158.5,252.0 L158.4,247.1 L159.7,241.4 L160.3,240.7 L163.2,241.6 L164.9,241.1 L166.9,241.6 L171.3,237.4 L174.7,236.3 L175.0,237.1 L175.8,236.8 L176.0,238.6 L177.0,239.0 L178.6,238.2 L179.7,236.7 L181.5,236.7 L184.1,238.2 L186.1,240.9 L187.2,240.4 L187.3,239.4 L190.7,238.1 L191.6,239.2 L192.4,238.9 L193.0,239.4 L193.4,240.9 L193.1,241.8 L193.7,242.6 L195.6,243.1 L196.7,244.4 L196.7,246.5 L195.7,247.6 L196.0,249.9 L195.0,251.9 L192.0,251.9 L191.0,253.7 L188.6,254.6 L186.7,254.2 L187.2,255.4 L186.7,257.1 L184.0,261.2 L184.0,262.7 L183.3,263.8 L183.5,265.4 L182.9,265.7 L182.7,267.1 L184.8,272.5 L183.7,274.0 L183.7,275.9 L185.8,276.7 L187.0,279.7 L186.2,280.5 L183.9,280.9 L184.2,282.4 L183.1,284.4 L184.7,285.2 L185.1,286.2 L186.6,286.4 L187.2,287.3 L187.6,289.0 L186.0,289.9 L186.0,290.8 L188.3,292.1 L188.4,292.8 L187.7,292.8 L187.6,293.4 L187.8,294.6 L189.2,294.1 L190.8,295.7 L192.9,296.1 L193.2,297.1 L194.7,296.7 L196.1,295.6 L196.3,296.8 L195.6,300.4 L195.6,304.8 L196.1,305.2 L195.1,306.3 L195.7,308.4 L196.6,308.7 L195.6,310.4 L195.8,314.0 L196.5,315.3 L194.4,317.4 L194.3,318.5 L191.7,319.6 L191.3,322.3 L193.5,327.8 L192.3,328.0 L191.9,326.6 L191.0,326.3 L189.8,324.6 L186.4,323.7 L185.0,322.3 L184.0,322.6 L183.1,323.7 L183.4,324.9 L182.7,326.0 L181.5,325.9 L180.2,324.1 L180.6,320.3 L178.7,317.6Z"><title>屏東縣 · Yes 56.6%</title></path>
+</g>
+</svg>
+            <div class="choro-cap"><span class="choro-cap-t">Yes-vote share by county</span><span class="choro-cap-s">同意票比例· 2025 核三公投</span></div>
+            <div class="choro-hover">Explore interactive map ↗</div>
+          </div>
+        </a>
+        <div class="choro-legend"><span class="cl-label">Yes share</span><span class="cl-bar"></span><span class="cl-ticks">55% — 93%</span></div>
+        <div class="mini-chips">
+          <span class="chip" style="background:#FFE13520;border:0.5px solid #D4B800;">4.3M yes votes</span>
+          <span class="chip" style="background:#8b6fae15;border:0.5px solid #8b6fae;">22 counties mapped</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 CENSORED -->
+    <div class="card">
+      <div class="color-bar" style="background:var(--c2)"></div>
+      <div class="card-num">02</div>
+      <div class="card-cover card-lottie" id="lottie-02" role="img" aria-label="The Big [Censored] Theory — animated cover"></div>
+      <div class="card-titlerow">
+        <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#E8533A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="7" x2="20" y2="7"/>
+          <rect x="4" y="10.4" width="12" height="3.2" rx="1.6" fill="#E8533A" stroke="none"/>
+          <line x1="4" y1="17" x2="14" y2="17"/>
+        </svg>
+        <div>
+          <div class="card-title" id="t2-en">The Big [Censored] Theory</div>
+          <div class="card-title-zh" id="t2-zh">生活大［嗶嗶］？中國美劇中的敏感詞</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag">Media monitoring</span>
+        <span class="card-tag">Data viz</span>
+        <span class="card-tag">Deep reporting</span>
+      </div>
+      <p class="card-anno" id="a2-en">The Big [Censored] Theory is a data journalism piece by The Pudding. Its author, Mandy, first watched The Big Bang Theory in 2011 — and when she returned to it eleven years later on Chinese streaming platform Youku, she kept noticing strange, jarring pauses.<br><br>She compared all 100 episodes of the original against the Youku cuts, using charts to quantify exactly what Chinese regulators had excised.</p>
+      <p class="card-anno-zh" id="a2-zh">《The Big [Censored] Theory》是 The Pudding 推出的資料專題。作者 Mandy 在2011年第一次看美劇《生活大爆炸》，11年後重看，卻發現中國串流平台優酷上的版本常出現不連貫的停頓。<br><br>她把100集原版和優酷剪輯版逐集比對，分析原始影音資料庫（集數、秒數、審查理由），同時利用互動式幻燈片和顏色編碼分類，讓讀者理解中國如何監管文化影視作品。</p>
+      <div class="card-links">
+        <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E4%BD%9C%E8%80%85%E6%8E%A1%E8%A8%AA%E7%AF%87-1fb99b54b37a" target="_blank" rel="noopener" id="l2a-en">Author interview ↗</a>
+        <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E6%95%B8%E4%BD%8D%E6%95%98%E4%BA%8B%E5%9C%96%E8%A1%A8%E8%A7%80%E5%AF%9F-%E4%B8%8A%E9%9B%86-d7cd8a5a7ce9" target="_blank" rel="noopener" id="l2b-en">Data charts ↗</a>
+      </div>
+    </div>
+
+    <!-- 03 ELECTIONS -->
+    <div class="card">
+      <div class="color-bar" style="background:var(--c3)"></div>
+      <div class="card-num">03</div>
+      <div class="card-cover card-cover-03" role="img" aria-label="Share of women among parties’ district-legislator nominations, 2008–2020">
+        <svg viewBox="0 0 330 200" xmlns="http://www.w3.org/2000/svg" class="chart03">
+  <g stroke="#9fb2c8" stroke-opacity="0.32" stroke-width="1" stroke-dasharray="2 3">
+    <line x1="40" y1="26" x2="40" y2="172"/><line x1="118" y1="26" x2="118" y2="172"/>
+    <line x1="196" y1="26" x2="196" y2="172"/><line x1="274" y1="26" x2="274" y2="172"/>
+  </g>
+  <g font-family="'DM Mono', monospace" font-size="8" fill="#555">
+    <circle cx="16" cy="12" r="3" fill="#1B9DE0"/><text x="21" y="15">KMT</text>
+    <circle cx="58" cy="12" r="3" fill="#20B24B"/><text x="63" y="15">DPP</text>
+    <circle cx="100" cy="12" r="3" fill="#3FC8E6"/><text x="105" y="15">TPP</text>
+  </g>
+  <text x="322" y="15" text-anchor="end" font-family="'Noto Serif TC', serif" font-size="8.5" fill="#999">女性提名比例 ↗</text>
+  <path class="ln dpp" pathLength="1" d="M40,143.4 L118,94.1 L196,94.1 L274,64.6" fill="none" stroke="#20B24B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ln kmt" pathLength="1" d="M40,130.3 L118,107.3 L196,117.1 L274,64.6" fill="none" stroke="#1B9DE0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="dot" cx="40" cy="143.4" r="3" fill="#fff" stroke="#20B24B" stroke-width="2"/>
+  <circle class="dot" cx="118" cy="94.1" r="3" fill="#fff" stroke="#20B24B" stroke-width="2"/>
+  <circle class="dot" cx="196" cy="94.1" r="3" fill="#fff" stroke="#20B24B" stroke-width="2"/>
+  <circle class="dot" cx="40" cy="130.3" r="3" fill="#fff" stroke="#1B9DE0" stroke-width="2"/>
+  <circle class="dot" cx="118" cy="107.3" r="3" fill="#fff" stroke="#1B9DE0" stroke-width="2"/>
+  <circle class="dot" cx="196" cy="117.1" r="3" fill="#fff" stroke="#1B9DE0" stroke-width="2"/>
+  <circle class="dot" cx="274" cy="64.6" r="3.6" fill="#1B9DE0"/>
+  <circle class="dot" cx="274" cy="64.6" r="2" fill="#20B24B"/>
+  <circle class="dot" cx="274" cy="130.3" r="3.6" fill="#3FC8E6"/>
+  <g class="lab" font-family="'DM Mono', monospace" font-weight="500">
+    <text x="40" y="122" text-anchor="middle" font-size="9" fill="#1B9DE0">18%</text>
+    <text x="40" y="157" text-anchor="middle" font-size="9" fill="#20B24B">14%</text>
+    <text x="287" y="60" text-anchor="start" font-size="10" font-weight="700" fill="#222">38%</text>
+    <text x="287" y="134" text-anchor="start" font-size="9" fill="#2BAACB">18%</text>
+  </g>
+  <g font-family="'DM Mono', monospace" font-size="8.5" fill="#777" text-anchor="middle">
+    <text x="40" y="190">2008</text><text x="118" y="190">2012</text>
+    <text x="196" y="190">2016</text><text x="274" y="190">2020</text>
+  </g>
+</svg>
+      </div>
+      <div class="card-titlerow">
+        <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#3A7DE8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3.5" y1="20.5" x2="20.5" y2="20.5"/>
+          <rect x="4.5" y="14.5" width="3" height="6" rx="1"/>
+          <rect x="9" y="11.5" width="3" height="9" rx="1"/>
+          <rect x="13.5" y="8" width="3" height="12.5" rx="1"/>
+          <rect x="18" y="4.5" width="3" height="16" rx="1" fill="#3A7DE8" stroke="none"/>
+        </svg>
+        <div>
+          <div class="card-title" id="t3-en">Rise of Women's Power in Taiwan's 2024 Elections</div>
+          <div class="card-title-zh" id="t3-zh">台灣2024大選的女力崛起</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag">Election data</span>
+        <span class="card-tag">Gender</span>
+        <span class="card-tag">Trend analysis</span>
+      </div>
+      <p class="card-anno" id="a3-en">This investigative report analyzes the evolving landscape of women’s political participation in Taiwan. Since 2022, a record-breaking 24 female candidates ran for local government heads across 22 counties and cities—a 30-year high that marked a new chapter in Taiwan’s "Women Power."<br><br>A key data chart from the "Ten Keywords for Taiwan's 2024 Election" series, focusing on the rise of women's political representation.</p>
+      <p class="card-anno-zh" id="a3-zh">從2022年開始，全台灣22個縣市長選舉中，共有24位女性候選人，創下女性參政人數30年來的新高，開啟台灣「女力」的政治新篇章。<br><br>台灣2024大選「十個關鍵字」系列中，聚焦女力崛起的一張關鍵數據圖表。</p>
+      <div class="card-links">
+        <a class="card-link" href="https://theinitium.com/20231225-taiwan-election-keywords/" target="_blank" rel="noopener">Read on Initium ↗</a>
+      </div>
+    </div>
+
+    <!-- 04 INDONESIA -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <div class="color-bar" style="background:var(--c4)"></div>
+      <div class="card-num">04</div>
+      <div class="card-titlerow">
+        <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#2ECC8A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="8" y1="7.6" x2="15.6" y2="8.8"/>
+          <line x1="7.6" y1="9" x2="11" y2="15.6"/>
+          <line x1="16.4" y1="10.8" x2="13" y2="15.8"/>
+          <circle cx="6" cy="7" r="2.3"/>
+          <circle cx="18" cy="9.2" r="2.3"/>
+          <circle cx="12" cy="18" r="2.3" fill="#2ECC8A" stroke="none"/>
+        </svg>
+        <div>
+          <div class="card-title" id="t4-en">Mapping Taiwanese Corporate Environmental Impact in Indonesia</div>
+          <div class="card-title-zh" id="t4-zh">台灣企業在印尼的環境足跡地理調查</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag">QGIS</span>
+        <span class="card-tag">Investigative</span>
+        <span class="card-tag">Cross-border</span>
+        <span class="card-tag">Supply chain</span>
+      </div>
+      <p class="card-anno" id="a4-en">Investigative reporting on the human rights and environmental impact of Taiwanese companies operating in Indonesia.<br><br>I used Google My Maps and QGIS to build a supply chain map — plotting the locations of affected communities across garment manufacturing, circuit board assembly, and nickel mining sites, and turning abstract cross-border harm into coordinates you can see.</p>
+      <p class="card-anno-zh" id="a4-zh">一篇關於台灣企業在印尼造成人權與環境衝擊的調查報導。我利用 Google My Maps 和 QGIS 建了一張供應鏈地圖，把成衣製造、電路板組裝、鎳礦開採的受害地點一一標出來，讓抽象的跨國侵害成為看得見的座標。</p>
+      <div class="card-links">
+        <a class="card-link" href="https://e-info.org.tw/node/240288" target="_blank" rel="noopener">Read the investigation ↗</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about">
+  <div class="sec-head">
+    <span style="display:inline-flex;align-items:center;gap:7px;">
+      <svg class="about-icon" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6"/>
+        <line x1="15" y1="15" x2="20" y2="20"/>
+      </svg>
+      <span class="sec-label" id="about-label">About</span>
+    </span>
+  </div>
+  <div class="about-grid">
+    <p class="about-text" id="about-en">Fluent in Chinese, English, and French, with years covering Taiwan's elections and environmental politics — previously at The Initium (端傳媒) and the Environmental Information Center (環境資訊中心).<br><br>Currently deepening creative coding and scrollytelling, and drawn to roles that pair rigorous data work with human-centred narrative — especially where climate, governance, and social justice intersect across Asia.</p>
+    <p class="about-text-zh" id="about-zh">中英法文流利，曾任職於《端傳媒》與《環境資訊中心》，長期跑選舉與環境線。<br><br>目前持續深化Creative Coding，熱衷於地圖製作🗺️</p>
+    <div class="skills">
+      <div class="skill"><span class="skill-name">QGIS</span><div class="skill-track"><div class="skill-fill" style="width:90%;background:var(--c4)"></div></div></div>
+      <div class="skill"><span class="skill-name">Data analysis</span><div class="skill-track"><div class="skill-fill" style="width:82%;background:var(--c3)"></div></div></div>
+      <div class="skill"><span class="skill-name">Flourish</span><div class="skill-track"><div class="skill-fill" style="width:60%;background:var(--c1)"></div></div></div>
+      <div class="skill"><span class="skill-name">Datawrapper</span><div class="skill-track"><div class="skill-fill" style="width:55%;background:var(--c1)"></div></div></div>
+      <div class="skill"><span class="skill-name">Python</span><div class="skill-track"><div class="skill-fill" style="width:50%;background:var(--c2)"></div></div></div>
+      <div class="skill"><span class="skill-name">HTML / CSS / JS</span><div class="skill-track"><div class="skill-fill" style="width:45%;background:var(--c2)"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a class="footer-link" href="https://github.com/ameliachung" target="_blank" rel="noopener">GitHub</a>
+    <a class="footer-link" href="https://www.linkedin.com/in/yichingchung/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="footer-link" href="mailto:yichingchung910@gmail.com">Email</a>
+  </div>
+  <span class="footer-loc">Taipei, Taiwan · 2026</span>
+</footer>
+
+</div>
+
+<script>
+let lang = 'en';
+const zh = {
+  logo: '鍾依靜',
+  eyebrow: '資料記者 · 視覺說書人 · 台北',
+  s1: '工具', s2: '方法', s3: '語言', s4: '狀態', s4val: '可遷居海外',
+  works: '精選作品', about: '關於我',
+  nav: ['作品集','文章','關於','聯絡'],
+  filters: ['全部','資料與地圖','專題','專訪','新聞'],
+};
+const en = {
+  logo: 'AMELIA CHUNG',
+  eyebrow: 'Data journalist · Visual storyteller · Based in Taipei',
+  s1: 'Tools', s2: 'Methods', s3: 'Languages', s4: 'Status', s4val: 'Open to relocation',
+  works: 'Selected works', about: 'About',
+  nav: ['Works','Articles','About','Contact'],
+};
+
+function setLang(l) {
+  lang = l;
+  const isZh = l === 'zh';
+  const d = isZh ? zh : en;
+
+  document.getElementById('btn-en').classList.toggle('active', !isZh);
+  document.getElementById('btn-zh').classList.toggle('active', isZh);
+  document.getElementById('logo').textContent = d.logo;
+  document.getElementById('eyebrow').textContent = d.eyebrow;
+  document.getElementById('s1').textContent = d.s1;
+  document.getElementById('s2').textContent = d.s2;
+  document.getElementById('s3').textContent = d.s3;
+  document.getElementById('s4').textContent = d.s4;
+  document.getElementById('s4val').textContent = d.s4val;
+  document.getElementById('works-label').textContent = d.works;
+  document.getElementById('about-label').textContent = d.about;
+
+  const navIds = ['nav-works','nav-articles','nav-about','nav-contact'];
+  navIds.forEach((id,i) => { document.getElementById(id).textContent = d.nav[i]; });
+
+  // toggle bilingual elements
+  ['hero-en','desc-en','about-en','t1-en','t2-en','t3-en','t4-en','a1-en','a2-en','a3-en','a4-en'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.style.display = isZh ? 'none' : 'block';
+  });
+  ['hero-zh','desc-zh','about-zh','t1-zh','t2-zh','t3-zh','t4-zh','a1-zh','a2-zh','a3-zh','a4-zh'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.style.display = isZh ? 'block' : 'none';
+  });
+
+  // card link labels
+  if(isZh) {
+    const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = '公投地圖 ↗';
+    const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = '風險範圍地圖 ↗';
+    const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = '閱讀報導 ↗';
+    const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = '作者採訪 ↗';
+    const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = '數位圖表 ↗';
+    
+    const triggerBtn = document.getElementById('map-trigger-btn');
+    if(triggerBtn && !mapInstance) triggerBtn.textContent = '點擊開啟互動地圖';
+  } else {
+    const l1a = document.getElementById('l1a-en'); if(l1a) l1a.textContent = 'Referendum map ↗';
+    const l1b = document.getElementById('l1b-en'); if(l1b) l1b.textContent = 'Risk zone map ↗';
+    const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = 'Read the story ↗';
+    const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = 'Author interview ↗';
+    const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = 'Data charts ↗';
+    
+    const triggerBtn = document.getElementById('map-trigger-btn');
+    if(triggerBtn && !mapInstance) triggerBtn.textContent = 'Explore Interactive Map';
+  }
+}
+
+</script>
+<!-- Card 02 cover animation (Lottie) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<script>
+(function () {
+  var el = document.getElementById('lottie-02');
+  if (!el || typeof lottie === 'undefined') return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var anim = null;
+  function init() {
+    if (anim) return;
+    anim = lottie.loadAnimation({ container: el, renderer: 'svg', loop: true, autoplay: !reduce,
+      path: 'censored-theory.json', rendererSettings: { preserveAspectRatio: 'xMidYMid slice', progressiveLoad: true } });
+    if (reduce) anim.addEventListener('DOMLoaded', function () { anim.goToAndStop(Math.max(0, anim.getDuration(true) - 1), true); });
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { init(); if (anim && !reduce) anim.play(); } else if (anim && !reduce) anim.pause(); }); }, { threshold: 0.2 });
+    io.observe(el);
+  } else { init(); }
+})();
+</script>
+<!-- Card 01 choropleth draw-in -->
+<script>
+(function () {
+  var maps = document.querySelectorAll('.choro');
+  function play(s){ s.classList.add('play'); }
+  window.replay01 = function(){ maps.forEach(function(s){ s.classList.remove('play'); void s.getBoundingClientRect(); s.classList.add('play'); }); };
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  maps.forEach(function(s){ s.classList.add('armed'); });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { e.isIntersecting ? play(e.target) : e.target.classList.remove('play'); }); }, { threshold: 0.3 });
+    maps.forEach(function (s) { io.observe(s); });
+  } else { maps.forEach(play); }
+})();
+</script>
+<!-- Card 03 line-chart draw-in -->
+<script>
+(function () {
+  var svgs = document.querySelectorAll('.card-cover-03 svg.chart03');
+  function play(svg) { svg.classList.remove('play'); void svg.getBoundingClientRect(); svg.classList.add('play'); }
+  window.replay03 = function () { svgs.forEach(play); };
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) play(e.target); else e.target.classList.remove('play'); });
+    }, { threshold: 0.4 });
+    svgs.forEach(function (s) { io.observe(s); });
+  } else { svgs.forEach(play); }
+})();
+</script>
+</body>
+</html>
