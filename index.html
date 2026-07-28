@@ -203,6 +203,7 @@ footer {
   <div class="nav-right">
     <a class="nav-link" href="#works" id="nav-works">Works</a>
     <a class="nav-link" href="articles.html" id="nav-articles">Articles</a>
+    <a class="nav-link" href="lab.html" id="nav-lab">Lab</a>
     <a class="nav-link" href="#about" id="nav-about">About</a>
     <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">Contact</a>
     <div class="lang-toggle">
@@ -488,7 +489,7 @@ const zh = {
   eyebrow: '資料記者 · 視覺說書人 · 台北',
   s1: '工具', s2: '方法', s3: '語言', s4: '狀態', s4val: '可遷居海外',
   works: '精選作品', about: '關於我',
-  nav: ['作品集','文章','關於','聯絡'],
+  nav: ['作品集','文章','實驗室','關於','聯絡'],
   filters: ['全部','資料與地圖','專題','專訪','新聞'],
 };
 const en = {
@@ -496,7 +497,7 @@ const en = {
   eyebrow: 'Data journalist · Visual storyteller · Based in Taipei',
   s1: 'Tools', s2: 'Methods', s3: 'Languages', s4: 'Status', s4val: 'Open to relocation',
   works: 'Selected works', about: 'About',
-  nav: ['Works','Articles','About','Contact'],
+  nav: ['Works','Articles','Lab','About','Contact'],
 };
 
 function setLang(l) {
@@ -516,7 +517,7 @@ function setLang(l) {
   document.getElementById('works-label').textContent = d.works;
   document.getElementById('about-label').textContent = d.about;
 
-  const navIds = ['nav-works','nav-articles','nav-about','nav-contact'];
+  const navIds = ['nav-works','nav-articles','nav-lab','nav-about','nav-contact'];
   navIds.forEach((id,i) => { document.getElementById(id).textContent = d.nav[i]; });
 
   // toggle bilingual elements

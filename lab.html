@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab — Amelia Chung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Serif+TC:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --text-sec: #555555;
+  --text-ter: #999999;
+  --border: #e0e0e0;
+  --border-med: #cccccc;
+  --hover-bg: #f5f5f5;
+  --c1: #FFE135;
+  --c2: #E8533A;
+  --c3: #3A7DE8;
+  --c4: #2ECC8A;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; padding: 0 1.5rem; }
+.wrap { max-width: 720px; margin: 0 auto; }
+
+/* NAV */
+nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 0; margin-bottom: 2.5rem;
+  border-bottom: 1.5px solid var(--text);
+}
+.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; cursor: pointer; transition: color 0.1s; }
+.nav-link:hover { color: var(--text); }
+.nav-link.current { color: var(--text); border-bottom: 1.5px solid var(--text); padding-bottom: 1px; }
+.lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
+.lang-btn {
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  padding: 3px 10px; border: none; cursor: pointer;
+  background: transparent; color: var(--text-sec); transition: all 0.15s;
+}
+.lang-btn.active { background: var(--text); color: var(--bg); }
+
+/* HERO */
+.hero { margin-bottom: 2rem; }
+.eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-ter); margin-bottom: 0.5rem; }
+.hero-title { font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+.hero-title-zh { font-family: 'Noto Serif TC', serif; font-size: 32px; font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem; display: none; }
+.hero-desc { font-size: 13px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
+.hero-desc-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; line-height: 2; color: var(--text-sec); max-width: 500px; display: none; }
+
+/* SECTION HEAD */
+.sec-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 1rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.sec-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); }
+.sec-count { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
+
+/* LAB GRID */
+.lab-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--border); margin-bottom: 1rem;
+}
+@media (max-width: 560px) { .lab-grid { grid-template-columns: 1fr; } }
+
+.piece { background: var(--bg); }
+.piece-media {
+  aspect-ratio: 4 / 3; width: 100%; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+.piece-media img, .piece-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.piece-embed { container-type: inline-size; width: 100%; height: 100%; overflow: hidden; position: relative; }
+.piece-embed iframe { position: absolute; top: 0; left: 0; border: 0; pointer-events: none; transform-origin: top left; }
+.piece-embed-label {
+  position: absolute; bottom: 6px; right: 8px; z-index: 1;
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.85); background: rgba(0,0,0,0.45);
+  padding: 2px 6px; border-radius: 2px;
+}
+.piece-slideshow { position: relative; width: 100%; height: 100%; }
+.piece-slideshow img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; animation: piece-slideshow-cycle linear infinite;
+}
+@keyframes piece-slideshow-cycle {
+  0% { opacity: 0; }
+  4% { opacity: 1; }
+  21% { opacity: 1; }
+  25% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .piece-slideshow img { animation: none; opacity: 0; }
+  .piece-slideshow img:first-child { opacity: 1; }
+}
+.piece-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em;
+  color: var(--text-ter); padding: 1rem;
+}
+.piece-body { padding: 0.9rem 1rem 1.1rem; }
+.piece-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); margin-bottom: 0.3rem; }
+.piece-title { font-size: 14px; font-weight: 700; line-height: 1.3; margin-bottom: 0.35rem; }
+.piece-title-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; font-weight: 700; line-height: 1.5; margin-bottom: 0.35rem; display: none; }
+.piece-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.piece-tag { font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 6px; border: 0.5px solid var(--border-med); color: var(--text-sec); border-radius: 2px; }
+.piece-desc { font-size: 11.5px; line-height: 1.6; color: var(--text-sec); margin-bottom: 0.65rem; }
+.piece-desc-zh { font-family: 'Noto Serif TC', serif; font-size: 11.5px; line-height: 1.8; color: var(--text-sec); margin-bottom: 0.65rem; display: none; }
+.piece-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.piece-link { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 9px; border: 0.5px solid var(--border-med); border-radius: 2px; color: var(--text-sec); text-decoration: none; transition: all 0.12s; }
+.piece-link:hover { border-color: var(--text); color: var(--text); }
+
+/* FOOTER */
+footer {
+  border-top: 1.5px solid var(--text); padding: 1rem 0 2rem;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 1rem;
+}
+.footer-links { display: flex; gap: 1rem; }
+.footer-link { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-sec); text-decoration: none; }
+.footer-link:hover { color: var(--text); }
+.footer-loc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <span class="logo" id="logo">AMELIA CHUNG</span>
+  <div class="nav-right">
+    <a class="nav-link" href="index.html" id="nav-works">Works</a>
+    <a class="nav-link" href="articles.html" id="nav-articles">Articles</a>
+    <span class="nav-link current" id="nav-lab">Lab</span>
+    <a class="nav-link" href="index.html#about" id="nav-about">About</a>
+    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">Contact</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="eyebrow" id="eyebrow">Experiments · Creative coding · Generative visuals</p>
+  <h1 class="hero-title" id="hero-en">Lab &amp;<br>Sketches</h1>
+  <h1 class="hero-title-zh" id="hero-zh">實驗室與<br>創作草稿</h1>
+  <p class="hero-desc" id="desc-en">Sketches and exercises from creative coding coursework — generative visuals, interaction experiments, and playful data-driven graphics made with p5.js, Processing, and similar tools.</p>
+  <p class="hero-desc-zh" id="desc-zh">Creative Coding 課程中的練習與草稿，包含生成式視覺、互動實驗，以及用 p5.js、Processing 等工具做的資料視覺化小品。</p>
+</div>
+
+<div class="sec-head">
+  <span class="sec-label" id="pieces-label">Sketches</span>
+  <span class="sec-count" id="pieces-count"></span>
+</div>
+
+<div class="lab-grid" id="lab-grid"></div>
+
+<footer>
+  <div class="footer-links">
+    <a class="footer-link" href="https://github.com/ameliachung" target="_blank" rel="noopener">GitHub</a>
+    <a class="footer-link" href="https://www.linkedin.com/in/yichingchung/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="footer-link" href="mailto:yichingchung910@gmail.com">Email</a>
+  </div>
+  <span class="footer-loc">Taipei, Taiwan · 2026</span>
+</footer>
+
+</div>
+<script>
+/*
+  PIECES — one entry per sketch/experiment.
+  To add a real piece: duplicate an object below and fill in the fields.
+    title_en / title_zh : name of the sketch
+    tags                : short tool/technique labels, e.g. ['p5.js','generative']
+    desc_en / desc_zh    : one or two line description
+    media                : { type:'image', src:'lab/foo.jpg' } — static thumbnail
+                            { type:'video', src:'lab/foo.mp4', poster:'lab/foo.jpg' } — autoplaying muted loop, poster shown while it loads
+                            { type:'iframe', src:'https://...', w:2000, h:1400 } — live embed, scaled to fit the card (w/h = the page's actual canvas size)
+                            { type:'slideshow', images:['lab/a.jpg','lab/b.jpg', ...] } — crossfading loop, ~4s per image, pure CSS
+                            null — shows a placeholder box instead
+    links                : array of { label_en, label_zh, url } — rendered as small chips at the bottom of the card. use [] or omit for none.
+*/
+const PIECES = [
+  {
+    title_en: 'In Search of Lansat', title_zh: '尋找Lansat',
+    tags: ['visual essay', 'scrollytelling'],
+    desc_en: 'A scrollytelling essay about my mother’s crossing from Singkawang to Yonghe — and the fruit she never found here.',
+    desc_zh: '一篇視覺散文，關於母親從印尼山口洋嫁來台灣永和的旅程——以及她始終沒能在這裡找到的一顆水果。',
+    media: { type: 'slideshow', images: ['lab/lansat-slide-1.jpg', 'lab/lansat-slide-2.jpg', 'lab/lansat-slide-3.jpg', 'lab/lansat-slide-4.jpg'] },
+    links: [
+      { label_en: 'Read the essay ↗', label_zh: '閱讀散文 ↗', url: 'https://ameliachung.github.io/in-search-of-lansat/' }
+    ],
+    color: 'var(--c2)'
+  },
+  {
+    title_en: 'Tiny Tin House', title_zh: '小小鐵皮屋',
+    tags: ['p5.js', 'generative', '3D scan'],
+    desc_en: 'Started as a p5.js sketch generating a tin-roof pattern — printed out, folded into a physical model, photographed, then 3D-scanned with Scaniverse.',
+    desc_zh: '從 p5.js 生成鐵皮屋屋頂的圖案開始，把圖案印出來組成立體模型、拍照，最後用 Scaniverse 掃描成 3D 模型。',
+    media: { type: 'video', src: 'lab/tiny-tin-house-scan.mp4', poster: 'lab/tiny-tin-house-photo.jpg' },
+    links: [
+      { label_en: 'Live sketch ↗', label_zh: '即時程式 ↗', url: 'https://ameliachung.github.io/2026_0703_TinyTinHouse_demo/' },
+      { label_en: 'Process (Figma) ↗', label_zh: '製作過程 (Figma) ↗', url: 'https://www.figma.com/design/07r4otemnW9NludvMrPKyP/CCC-Office-Hour--w-%E5%BB%BA%E4%B8%AD%E8%80%81%E5%B8%AB?node-id=3-13' }
+    ],
+    color: 'var(--c1)'
+  },
+];
+
+let lang = 'en';
+
+function render() {
+  const isZh = lang === 'zh';
+  const grid = document.getElementById('lab-grid');
+  grid.innerHTML = PIECES.map((p, i) => {
+    const num = String(i + 1).padStart(2, '0');
+    let media;
+    if (!p.media) {
+      media = `<div class="piece-placeholder" style="background:linear-gradient(135deg, ${p.color}22, transparent)">${isZh ? '預覽圖／GIF 待補' : 'Preview image / GIF pending'}</div>`;
+    } else if (p.media.type === 'image') {
+      media = `<img src="${p.media.src}" alt="${isZh ? p.title_zh : p.title_en}" loading="lazy">`;
+    } else if (p.media.type === 'video') {
+      media = `<video src="${p.media.src}" poster="${p.media.poster || ''}" autoplay muted loop playsinline preload="metadata"></video>`;
+    } else if (p.media.type === 'slideshow') {
+      const n = p.media.images.length;
+      const dur = n * 4;
+      media = `<div class="piece-slideshow">${p.media.images.map((src, j) =>
+        `<img src="${src}" alt="${isZh ? p.title_zh : p.title_en}" loading="lazy" style="animation-duration:${dur}s;animation-delay:${j * 4}s">`
+      ).join('')}</div>`;
+    } else if (p.media.type === 'iframe') {
+      media = `<div class="piece-embed">
+        <iframe src="${p.media.src}" width="${p.media.w}" height="${p.media.h}"
+          style="width:${p.media.w}px;height:${p.media.h}px;transform:scale(calc(100cqw / ${p.media.w}));"
+          loading="lazy" title="${isZh ? p.title_zh : p.title_en}" tabindex="-1"></iframe>
+        <span class="piece-embed-label">${isZh ? '即時預覽' : 'Live'}</span>
+      </div>`;
+    }
+    const tags = p.tags.map(t => `<span class="piece-tag">${t}</span>`).join('');
+    const links = (p.links || []).map(l =>
+      `<a class="piece-link" href="${l.url}" target="_blank" rel="noopener">${isZh ? l.label_zh : l.label_en}</a>`
+    ).join('');
+    const mediaAspect = p.media && p.media.type === 'iframe' ? `style="aspect-ratio:${p.media.w}/${p.media.h}"` : '';
+    return `
+      <div class="piece">
+        <div class="piece-media" ${mediaAspect}>${media}</div>
+        <div class="piece-body">
+          <div class="piece-num">${num}</div>
+          <div class="${isZh ? 'piece-title-zh' : 'piece-title'}">${isZh ? p.title_zh : p.title_en}</div>
+          <div class="piece-tags">${tags}</div>
+          <div class="${isZh ? 'piece-desc-zh' : 'piece-desc'}">${isZh ? p.desc_zh : p.desc_en}</div>
+          <div class="piece-links">${links}</div>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('pieces-count').textContent = `${PIECES.length} ${isZh ? '件作品' : 'pieces'}`;
+}
+
+function setLang(l) {
+  lang = l;
+  const isZh = l === 'zh';
+  document.getElementById('btn-en').classList.toggle('active', !isZh);
+  document.getElementById('btn-zh').classList.toggle('active', isZh);
+  document.getElementById('logo').textContent = isZh ? '鍾依靜' : 'AMELIA CHUNG';
+  document.getElementById('eyebrow').textContent = isZh ? '實驗與練習 · Creative Coding · 生成式視覺' : 'Experiments · Creative coding · Generative visuals';
+  document.getElementById('nav-works').textContent = isZh ? '作品集' : 'Works';
+  document.getElementById('nav-articles').textContent = isZh ? '文章' : 'Articles';
+  document.getElementById('nav-lab').textContent = isZh ? '實驗室' : 'Lab';
+  document.getElementById('nav-about').textContent = isZh ? '關於' : 'About';
+  document.getElementById('nav-contact').textContent = isZh ? '聯絡' : 'Contact';
+  document.getElementById('pieces-label').textContent = isZh ? '作品草稿' : 'Sketches';
+  document.getElementById('hero-en').style.display = isZh ? 'none' : '';
+  document.getElementById('hero-zh').style.display = isZh ? '' : 'none';
+  document.getElementById('desc-en').style.display = isZh ? 'none' : '';
+  document.getElementById('desc-zh').style.display = isZh ? '' : 'none';
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

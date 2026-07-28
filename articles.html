@@ -119,6 +119,7 @@ footer {
   <div class="nav-right">
     <a class="nav-link" href="index.html" id="nav-works">Works</a>
     <span class="nav-link current" id="nav-articles">Articles</span>
+    <a class="nav-link" href="lab.html" id="nav-lab">Lab</a>
     <a class="nav-link" href="#about" id="nav-about">About</a>
     <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">Contact</a>
     <div class="lang-toggle">
@@ -333,6 +334,7 @@ function setLang(lang) {
   document.getElementById('desc-zh').style.display = isZh ? '' : 'none';
   document.getElementById('nav-works').textContent = isZh ? '作品集' : 'Works';
   document.getElementById('nav-articles').textContent = isZh ? '文章' : 'Articles';
+  document.getElementById('nav-lab').textContent = isZh ? '實驗室' : 'Lab';
   document.getElementById('nav-about').textContent = isZh ? '關於' : 'About';
   document.getElementById('nav-contact').textContent = isZh ? '聯絡' : 'Contact';
   document.getElementById('f-all').textContent = isZh ? '全部' : 'All';
