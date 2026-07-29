@@ -23,6 +23,7 @@
   --c2: #E8533A;
   --c3: #3A7DE8;
   --c4: #2ECC8A;
+  --c5: #B266FF;
 }
 html { scroll-behavior: smooth; }
 body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; padding: 0 1.5rem; }
@@ -145,6 +146,15 @@ nav {
 @media (prefers-reduced-motion: reduce) { .choro.armed .cty, .choro.armed.play .cty { fill: var(--c); transition: none; } }
 /* choro-box overrides shared card-cover height */
 .choro-box.card-cover { height: 320px; margin-bottom: 0; }
+/* WORK 01 — Taipei Plan B cover (dark image, so the caption inverts) */
+.tpb-box.card-cover { position: relative; height: 320px; margin-bottom: 0; background: #0A0A12; }
+/* contain, not cover — the two panels must both stay whole. The image background
+   is the same #0A0A12, so the letterboxing is invisible. */
+.tpb-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.tpb-box .choro-cap-t { color: #D8D2E4; }
+.tpb-box .choro-cap-s { color: #8B8698; }
+/* placeholder copy awaiting Amelia's own text — delete class + text when filled in */
+.todo { color: #b0a8bd !important; font-style: italic; }
 @media (prefers-reduced-motion: reduce) { .card-lottie { background: rgba(232, 83, 58, 0.04); } }
 .map-wrapper { width: 100%; height: 340px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border); position: relative; }
 .map-overlay {
@@ -243,16 +253,58 @@ footer {
 <div id="works">
   <div class="sec-head">
     <span class="sec-label" id="works-label">Selected works</span>
-    <span class="sec-count">04 projects</span>
+    <span class="sec-count">05 projects</span>
   </div>
 
   <div class="works-grid">
 
-    <!-- 01 FEATURED -->
+    <!-- 01 TAIPEI PLAN B — copy still to be written by Amelia -->
+    <div class="card card-featured">
+      <div>
+        <div class="color-bar" style="background:var(--c5)"></div>
+        <div class="card-num">01 — Featured</div>
+        <div class="card-titlerow">
+          <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#B266FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="5.5" cy="12" r="2.4"/>
+            <circle cx="18.5" cy="12" r="2.4" fill="#B266FF" stroke="none"/>
+            <line x1="9" y1="12" x2="15" y2="12" stroke-dasharray="2 2.2"/>
+            <path d="M5.5 5v3.2M5.5 15.8V19" opacity="0.45"/>
+          </svg>
+          <div>
+            <div class="card-title todo" id="t5-en">[ English title ]</div>
+            <div class="card-title-zh todo" id="t5-zh">［ 待補：中文標題 ］</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="card-tag todo">[ tag ]</span>
+          <span class="card-tag todo">[ tag ]</span>
+          <span class="card-tag todo">[ tag ]</span>
+        </div>
+        <p class="card-anno todo" id="a5-en">[ English description ]</p>
+        <p class="card-anno-zh todo" id="a5-zh">［ 待補：中文說明 ］</p>
+        <div class="card-links">
+          <a class="card-link todo" href="https://ameliachung.github.io/taipei-plan-b/" target="_blank" rel="noopener" id="l5a-en">[ link label ] ↗</a>
+          <a class="card-link todo" href="https://ameliachung.github.io/taipei-plan-b/interactive/" target="_blank" rel="noopener" id="l5b-en">[ link label ] ↗</a>
+          <a class="card-link todo" href="https://ameliachung.github.io/taipei-plan-b/assets/gallery-cut.mp4" target="_blank" rel="noopener" id="l5c-en">[ link label ] ↗</a>
+        </div>
+      </div>
+
+      <div class="card-visual">
+        <a class="choro-link" href="https://ameliachung.github.io/taipei-plan-b/" target="_blank" rel="noopener" aria-label="Open Taipei Plan B">
+          <div class="card-cover tpb-box">
+            <img src="taipei-plan-b-cover.jpg" alt="Taipei Plan B map, the same 456 villages shown under two scenarios side by side">
+            <div class="choro-cap"><span class="choro-cap-t todo">[ caption ]</span><span class="choro-cap-s todo">［ 中文圖說 ］</span></div>
+            <div class="choro-hover">[ hover label ] ↗</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 02 NUCLEAR REFERENDUM -->
     <div class="card card-featured">
       <div>
         <div class="color-bar" style="background:var(--c1)"></div>
-        <div class="card-num">01 — Featured</div>
+        <div class="card-num">02</div>
         <div class="card-titlerow">
           <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#C8A000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 21c4-3.6 6.5-6.8 6.5-10.5a6.5 6.5 0 1 0-13 0C5.5 14.2 8 17.4 12 21z"/>
@@ -318,10 +370,10 @@ footer {
       </div>
     </div>
 
-    <!-- 02 CENSORED -->
+    <!-- 03 CENSORED -->
     <div class="card">
       <div class="color-bar" style="background:var(--c2)"></div>
-      <div class="card-num">02</div>
+      <div class="card-num">03</div>
       <div class="card-cover card-lottie" id="lottie-02" role="img" aria-label="The Big [Censored] Theory — animated cover"></div>
       <div class="card-titlerow">
         <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#E8533A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -347,10 +399,10 @@ footer {
       </div>
     </div>
 
-    <!-- 03 ELECTIONS -->
+    <!-- 04 ELECTIONS -->
     <div class="card">
       <div class="color-bar" style="background:var(--c3)"></div>
-      <div class="card-num">03</div>
+      <div class="card-num">04</div>
       <div class="card-cover card-cover-03" role="img" aria-label="Share of women among parties’ district-legislator nominations, 2008–2020">
         <svg viewBox="0 0 330 200" xmlns="http://www.w3.org/2000/svg" class="chart03">
   <g stroke="#9fb2c8" stroke-opacity="0.32" stroke-width="1" stroke-dasharray="2 3">
@@ -411,10 +463,10 @@ footer {
       </div>
     </div>
 
-    <!-- 04 INDONESIA -->
+    <!-- 05 INDONESIA -->
     <div class="card" style="grid-column: 1 / -1;">
       <div class="color-bar" style="background:var(--c4)"></div>
-      <div class="card-num">04</div>
+      <div class="card-num">05</div>
       <div class="card-titlerow">
         <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#2ECC8A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="8" y1="7.6" x2="15.6" y2="8.8"/>
@@ -521,10 +573,12 @@ function setLang(l) {
   navIds.forEach((id,i) => { document.getElementById(id).textContent = d.nav[i]; });
 
   // toggle bilingual elements
-  ['hero-en','desc-en','about-en','t1-en','t2-en','t3-en','t4-en','a1-en','a2-en','a3-en','a4-en'].forEach(id => {
+  // note: the tN/aN ids are historical and no longer match the displayed card
+  // numbers — t5/a5 is the Taipei Plan B card, which shows as 01.
+  ['hero-en','desc-en','about-en','t1-en','t2-en','t3-en','t4-en','t5-en','a1-en','a2-en','a3-en','a4-en','a5-en'].forEach(id => {
     const el = document.getElementById(id); if(el) el.style.display = isZh ? 'none' : 'block';
   });
-  ['hero-zh','desc-zh','about-zh','t1-zh','t2-zh','t3-zh','t4-zh','a1-zh','a2-zh','a3-zh','a4-zh'].forEach(id => {
+  ['hero-zh','desc-zh','about-zh','t1-zh','t2-zh','t3-zh','t4-zh','t5-zh','a1-zh','a2-zh','a3-zh','a4-zh','a5-zh'].forEach(id => {
     const el = document.getElementById(id); if(el) el.style.display = isZh ? 'block' : 'none';
   });
 
@@ -535,7 +589,11 @@ function setLang(l) {
     const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = '閱讀報導 ↗';
     const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = '作者採訪 ↗';
     const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = '數位圖表 ↗';
-    
+    // Taipei Plan B (card 01) — fill in once the copy is written
+    const l5a = document.getElementById('l5a-en'); if(l5a) l5a.textContent = '［連結文字］ ↗';
+    const l5b = document.getElementById('l5b-en'); if(l5b) l5b.textContent = '［連結文字］ ↗';
+    const l5c = document.getElementById('l5c-en'); if(l5c) l5c.textContent = '［連結文字］ ↗';
+
     const triggerBtn = document.getElementById('map-trigger-btn');
     if(triggerBtn && !mapInstance) triggerBtn.textContent = '點擊開啟互動地圖';
   } else {
@@ -544,14 +602,18 @@ function setLang(l) {
     const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = 'Read the story ↗';
     const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = 'Author interview ↗';
     const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = 'Data charts ↗';
-    
+    // Taipei Plan B (card 01) — fill in once the copy is written
+    const l5a = document.getElementById('l5a-en'); if(l5a) l5a.textContent = '[ link label ] ↗';
+    const l5b = document.getElementById('l5b-en'); if(l5b) l5b.textContent = '[ link label ] ↗';
+    const l5c = document.getElementById('l5c-en'); if(l5c) l5c.textContent = '[ link label ] ↗';
+
     const triggerBtn = document.getElementById('map-trigger-btn');
     if(triggerBtn && !mapInstance) triggerBtn.textContent = 'Explore Interactive Map';
   }
 }
 
 </script>
-<!-- Card 02 cover animation (Lottie) -->
+<!-- Card 03 cover animation (Lottie) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 <script>
 (function () {
@@ -571,7 +633,7 @@ function setLang(l) {
   } else { init(); }
 })();
 </script>
-<!-- Card 01 choropleth draw-in -->
+<!-- Card 02 choropleth draw-in -->
 <script>
 (function () {
   var maps = document.querySelectorAll('.choro');
@@ -585,7 +647,7 @@ function setLang(l) {
   } else { maps.forEach(play); }
 })();
 </script>
-<!-- Card 03 line-chart draw-in -->
+<!-- Card 04 line-chart draw-in -->
 <script>
 (function () {
   var svgs = document.querySelectorAll('.card-cover-03 svg.chart03');
