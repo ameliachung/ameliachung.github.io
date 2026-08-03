@@ -26,10 +26,22 @@ nav {
   padding: 1.25rem 0; margin-bottom: 2.5rem;
   border-bottom: 1.5px solid var(--text);
 }
-.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; }
+.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; white-space: nowrap; }
+/* The avatar sits beside the wordmark rather than inside #logo, because
+   setLang() overwrites that span's textContent and would wipe the image out. */
+.logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
+.logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
 .nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; cursor: pointer; transition: color 0.1s; }
 .nav-link:hover { color: var(--text); }
+/* Same fix index.html already carries: the bar does not fit on a phone —
+   the logo wrapped under the links and Contact plus the language buttons
+   were cut off past the right edge. Wrap onto a second row instead. */
+@media (max-width: 700px) {
+  nav { flex-wrap: wrap; gap: 0.5rem 1rem; }
+  .nav-right { flex-wrap: wrap; gap: 0.9rem; }
+}
+@media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
 .nav-link.current { color: var(--text); border-bottom: 1.5px solid var(--text); padding-bottom: 1px; }
 .lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
 .lang-btn {
@@ -115,7 +127,10 @@ footer {
 <div class="wrap">
 
 <nav>
-  <span class="logo" id="logo">AMELIA CHUNG</span>
+  <span class="logo-lockup">
+    <img class="logo-mark" src="amelia-avatar.png" alt="" aria-hidden="true">
+    <span class="logo" id="logo">AMELIA CHUNG</span>
+  </span>
   <div class="nav-right">
     <a class="nav-link" href="index.html" id="nav-works">Works</a>
     <span class="nav-link current" id="nav-articles">Articles</span>

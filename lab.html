@@ -30,10 +30,22 @@ nav {
   padding: 1.25rem 0; margin-bottom: 2.5rem;
   border-bottom: 1.5px solid var(--text);
 }
-.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; }
+.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; white-space: nowrap; }
+/* The avatar sits beside the wordmark rather than inside #logo, because
+   setLang() overwrites that span's textContent and would wipe the image out. */
+.logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
+.logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
 .nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; cursor: pointer; transition: color 0.1s; }
 .nav-link:hover { color: var(--text); }
+/* Same fix index.html already carries: the bar does not fit on a phone —
+   the logo wrapped under the links and Contact plus the language buttons
+   were cut off past the right edge. Wrap onto a second row instead. */
+@media (max-width: 700px) {
+  nav { flex-wrap: wrap; gap: 0.5rem 1rem; }
+  .nav-right { flex-wrap: wrap; gap: 0.9rem; }
+}
+@media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
 .nav-link.current { color: var(--text); border-bottom: 1.5px solid var(--text); padding-bottom: 1px; }
 .lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
 .lang-btn {
@@ -132,7 +144,10 @@ footer {
 <div class="wrap">
 
 <nav>
-  <span class="logo" id="logo">AMELIA CHUNG</span>
+  <span class="logo-lockup">
+    <img class="logo-mark" src="amelia-avatar.png" alt="" aria-hidden="true">
+    <span class="logo" id="logo">AMELIA CHUNG</span>
+  </span>
   <div class="nav-right">
     <a class="nav-link" href="index.html" id="nav-works">Works</a>
     <a class="nav-link" href="articles.html" id="nav-articles">Articles</a>
@@ -199,12 +214,22 @@ const PIECES = [
   },
   {
     title_en: 'Tiny Tin House', title_zh: '小小鐵皮屋',
-    tags: ['p5.js', 'generative', '3D scan'],
-    desc_en: 'Started as a p5.js sketch generating a tin-roof pattern — printed out, folded into a physical model, photographed, then 3D-scanned with Scaniverse.',
-    desc_zh: '從 p5.js 生成鐵皮屋屋頂的圖案開始，把圖案印出來組成立體模型、拍照，最後用 Scaniverse 掃描成 3D 模型。',
+    tags: ['p5.js', 'generative'],
+    desc_en: 'Started as a p5.js sketch generating a tin-roof pattern.',
+    desc_zh: '從 p5.js 生成鐵皮屋屋頂的圖案開始。',
+    media: { type: 'iframe', src: 'https://ameliachung.github.io/2026_0703_TinyTinHouse_demo/', w: 2000, h: 1400 },
+    links: [
+      { label_en: 'Live sketch ↗', label_zh: '即時程式 ↗', url: 'https://ameliachung.github.io/2026_0703_TinyTinHouse_demo/' }
+    ],
+    color: 'var(--c1)'
+  },
+  {
+    title_en: 'Tiny Tin House — 3D Scan', title_zh: '小小鐵皮屋 — 3D 掃描',
+    tags: ['3D scan', 'Scaniverse'],
+    desc_en: 'Printed out, folded into a physical model, photographed, then 3D-scanned with Scaniverse.',
+    desc_zh: '把圖案印出來組成立體模型、拍照，最後用 Scaniverse 掃描成 3D 模型。',
     media: { type: 'video', src: 'lab/tiny-tin-house-scan.mp4', poster: 'lab/tiny-tin-house-photo.jpg' },
     links: [
-      { label_en: 'Live sketch ↗', label_zh: '即時程式 ↗', url: 'https://ameliachung.github.io/2026_0703_TinyTinHouse_demo/' },
       { label_en: 'Process (Figma) ↗', label_zh: '製作過程 (Figma) ↗', url: 'https://www.figma.com/design/07r4otemnW9NludvMrPKyP/CCC-Office-Hour--w-%E5%BB%BA%E4%B8%AD%E8%80%81%E5%B8%AB?node-id=3-13' }
     ],
     color: 'var(--c1)'

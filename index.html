@@ -36,7 +36,11 @@ nav {
   border-bottom: 1.5px solid var(--text);
   position: sticky; top: 0; background: var(--bg); z-index: 100;
 }
-.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; }
+.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; white-space: nowrap; }
+/* The avatar sits beside the wordmark rather than inside #logo, because
+   setLang() overwrites that span's textContent and would wipe the image out. */
+.logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
+.logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
 .nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; transition: color 0.1s; }
 .nav-link:hover { color: var(--text); }
@@ -245,7 +249,10 @@ footer {
 
 <!-- NAV -->
 <nav>
-  <span class="logo" id="logo">AMELIA CHUNG</span>
+  <span class="logo-lockup">
+    <img class="logo-mark" src="amelia-avatar.png" alt="" aria-hidden="true">
+    <span class="logo" id="logo">AMELIA CHUNG</span>
+  </span>
   <div class="nav-right">
     <a class="nav-link" href="#works" id="nav-works">Works</a>
     <a class="nav-link" href="articles.html" id="nav-articles">Articles</a>
