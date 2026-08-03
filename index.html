@@ -40,6 +40,14 @@ nav {
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
 .nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; transition: color 0.1s; }
 .nav-link:hover { color: var(--text); }
+/* The bar does not fit on a phone: the logo was wrapping onto two lines under
+   the links, and Contact and the language buttons were cut off past the right
+   edge. Let it wrap onto a second row instead of shrinking the type. */
+@media (max-width: 700px) {
+  nav { flex-wrap: wrap; gap: 0.5rem 1rem; }
+  .nav-right { flex-wrap: wrap; gap: 0.9rem; }
+}
+@media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
 .lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
 .lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 3px 10px; border: none; cursor: pointer; background: transparent; color: var(--text-sec); transition: all 0.15s; }
 .lang-btn.active { background: var(--text); color: var(--bg); }
@@ -68,6 +76,14 @@ nav {
 }
 .strip-item { flex: 1; padding: 0.6rem 0.75rem; border-right: 1px solid var(--border); font-family: 'DM Mono', monospace; }
 .strip-item:last-child { border-right: none; }
+/* four columns across a phone leaves under 90px each, which cut "Français" and
+   "Open to relocation" in half — wrap to 2x2 instead */
+@media (max-width: 560px) {
+  .strip { flex-wrap: wrap; }
+  .strip-item { flex: 1 1 45%; }
+  .strip-item:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+  .strip-item:nth-child(2n) { border-right: none; }
+}
 .strip-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); margin-bottom: 3px; }
 .strip-val { font-size: 12px; font-weight: 500; color: var(--text); }
 
@@ -86,6 +102,11 @@ nav {
 .card:hover { background: var(--hover-bg); }
 .card:hover .card-arrow { opacity: 1; }
 .card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+/* Below ~700px the featured card's two columns are too narrow to read: the text
+   runs three or four words to a line and the cover shrinks to a strip. Stack
+   them, and drop the whole grid to one card per row on a phone. */
+@media (max-width: 700px) { .card-featured { grid-template-columns: 1fr; gap: 1.25rem; } }
+@media (max-width: 560px) { .works-grid { grid-template-columns: 1fr; } }
 .color-bar { height: 5px; width: 36px; border-radius: 1px; margin-bottom: 0.75rem; }
 .card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); margin-bottom: 0.4rem; }
 .card-title { font-size: 16px; font-weight: 700; line-height: 1.2; margin-bottom: 0.6rem; }
@@ -153,8 +174,6 @@ nav {
 .tpb-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .tpb-box .choro-cap-t { color: #D8D2E4; }
 .tpb-box .choro-cap-s { color: #8B8698; }
-/* placeholder copy awaiting Amelia's own text — delete class + text when filled in */
-.todo { color: #b0a8bd !important; font-style: italic; }
 @media (prefers-reduced-motion: reduce) { .card-lottie { background: rgba(232, 83, 58, 0.04); } }
 .map-wrapper { width: 100%; height: 340px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border); position: relative; }
 .map-overlay {
@@ -271,21 +290,21 @@ footer {
             <path d="M5.5 5v3.2M5.5 15.8V19" opacity="0.45"/>
           </svg>
           <div>
-            <div class="card-title todo" id="t5-en">[ English title ]</div>
-            <div class="card-title-zh todo" id="t5-zh">［ 待補：中文標題 ］</div>
+            <div class="card-title" id="t5-en">Taipei Plan B: Mapping Emergency Contraception Access Across 456 Villages</div>
+            <div class="card-title-zh" id="t5-zh">Taipei Plan B：台北 456 個里，離一顆藥有多遠</div>
           </div>
         </div>
         <div class="card-tags">
-          <span class="card-tag todo">[ tag ]</span>
-          <span class="card-tag todo">[ tag ]</span>
-          <span class="card-tag todo">[ tag ]</span>
+          <span class="card-tag">Spatial analysis</span>
+          <span class="card-tag">p5.js</span>
+          <span class="card-tag">Reproductive rights</span>
         </div>
-        <p class="card-anno todo" id="a5-en">[ English description ]</p>
-        <p class="card-anno-zh todo" id="a5-zh">［ 待補：中文說明 ］</p>
+        <p class="card-anno" id="a5-en">In July, Taiwan's Food and Drug Administration moved to tighten controls on three emergency contraceptive pills, and the backlash was immediate. Emergency contraception is still a prescription drug here, which means getting it starts with seeing a doctor — so the real question is not whether the pill exists, but how far you have to travel to reach someone who can prescribe it.<br><br>I mapped that distance across all 456 villages in Taipei. Today the nearest access point is one of 111 obstetric clinics and hospitals, a median of 532 metres away. But nearly 250,000 women — about a fifth of the women in this city — have to travel more than a kilometre to reach one, and they live in 94 of those villages.<br><br>Reclassify the drug so pharmacies can sell it and the access points go from 111 to 858, with the median falling to 204 metres. Reclassification does not solve everything, though: in 33 villages women would still be more than a kilometre from the counter, because the remote hill districts are large, thinly populated and short of medical resources to begin with. That is a different problem.<br><br>Facility data comes from Twinkle Hub, village boundaries from the National Land Surveying and Mapping Center's 2026 edition; distances are straight-line, from each village's area-weighted centroid to the nearest access point. Policy is a stone dropped into water: one line of regulation changes the radius a whole city's women move within, and their heartbeat. That heartbeat is in the page's sound design too.</p>
+        <p class="card-anno-zh" id="a5-zh">七月，衛福部食藥署欲嚴加控管三款事後避孕藥，引發軒然大波。在台灣，事後避孕藥仍是處方藥。意味取藥得先看醫生，因此真正的問題並非這顆藥存在與否，而是得走多遠，才能遇到開出處方的醫師。<br><br>我把這段距離畫成台北 456 個里的地圖，現在最近的取得點是 111 家婦產科診所與大醫院，距離中位數 532 公尺，但有近 25 萬名女性，約等於北市女性的五分之一，必須走超過一公里才能取得事後避孕藥，她們就在這其中的 94 個里生活。<br><br>若未來將事後避孕藥改成指示藥、讓藥局能賣，取得點就變成 858 個，中位數降到 204 公尺，但轉類不能解決所有事，仍有 33 個里的女性需走超過一公里，因偏遠山區地廣人稀、醫療資源本來就不足，那又是另一個問題。<br><br>資料取自 Twinkle Hub 與內政部國土測繪中心 2026 年版里界，距離為各里面積加權質心到最近取得點的直線距離。制度猶如投石入水，一紙法規改變的，卻是整座城市女性的行動半徑和心跳。而心跳聲，也做進了頁面的音效裡。</p>
         <div class="card-links">
-          <a class="card-link todo" href="https://ameliachung.github.io/taipei-plan-b/" target="_blank" rel="noopener" id="l5a-en">[ link label ] ↗</a>
-          <a class="card-link todo" href="https://ameliachung.github.io/taipei-plan-b/interactive/" target="_blank" rel="noopener" id="l5b-en">[ link label ] ↗</a>
-          <a class="card-link todo" href="https://ameliachung.github.io/taipei-plan-b/assets/gallery-cut.mp4" target="_blank" rel="noopener" id="l5c-en">[ link label ] ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/taipei-plan-b/" target="_blank" rel="noopener" id="l5a-en">Scrollytelling story ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/taipei-plan-b/interactive/" target="_blank" rel="noopener" id="l5b-en">Interactive map ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/taipei-plan-b/assets/gallery-cut.mp4" target="_blank" rel="noopener" id="l5c-en">Installation film ↗</a>
         </div>
       </div>
 
@@ -293,8 +312,8 @@ footer {
         <a class="choro-link" href="https://ameliachung.github.io/taipei-plan-b/" target="_blank" rel="noopener" aria-label="Open Taipei Plan B">
           <div class="card-cover tpb-box">
             <img src="taipei-plan-b-cover.jpg" alt="Taipei Plan B map, the same 456 villages shown under two scenarios side by side">
-            <div class="choro-cap"><span class="choro-cap-t todo">[ caption ]</span><span class="choro-cap-s todo">［ 中文圖說 ］</span></div>
-            <div class="choro-hover">[ hover label ] ↗</div>
+            <div class="choro-cap"><span class="choro-cap-t">Distance to the nearest access point</span><span class="choro-cap-s">取得距離 · 台北 456 個里</span></div>
+            <div class="choro-hover">Explore the story ↗</div>
           </div>
         </a>
       </div>
@@ -589,10 +608,9 @@ function setLang(l) {
     const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = '閱讀報導 ↗';
     const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = '作者採訪 ↗';
     const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = '數位圖表 ↗';
-    // Taipei Plan B (card 01) — fill in once the copy is written
-    const l5a = document.getElementById('l5a-en'); if(l5a) l5a.textContent = '［連結文字］ ↗';
-    const l5b = document.getElementById('l5b-en'); if(l5b) l5b.textContent = '［連結文字］ ↗';
-    const l5c = document.getElementById('l5c-en'); if(l5c) l5c.textContent = '［連結文字］ ↗';
+    const l5a = document.getElementById('l5a-en'); if(l5a) l5a.textContent = '捲動敘事 ↗';
+    const l5b = document.getElementById('l5b-en'); if(l5b) l5b.textContent = '互動地圖 ↗';
+    const l5c = document.getElementById('l5c-en'); if(l5c) l5c.textContent = '展場影片 ↗';
 
     const triggerBtn = document.getElementById('map-trigger-btn');
     if(triggerBtn && !mapInstance) triggerBtn.textContent = '點擊開啟互動地圖';
@@ -602,10 +620,9 @@ function setLang(l) {
     const l1c = document.getElementById('l1c-en'); if(l1c) l1c.textContent = 'Read the story ↗';
     const l2a = document.getElementById('l2a-en'); if(l2a) l2a.textContent = 'Author interview ↗';
     const l2b = document.getElementById('l2b-en'); if(l2b) l2b.textContent = 'Data charts ↗';
-    // Taipei Plan B (card 01) — fill in once the copy is written
-    const l5a = document.getElementById('l5a-en'); if(l5a) l5a.textContent = '[ link label ] ↗';
-    const l5b = document.getElementById('l5b-en'); if(l5b) l5b.textContent = '[ link label ] ↗';
-    const l5c = document.getElementById('l5c-en'); if(l5c) l5c.textContent = '[ link label ] ↗';
+    const l5a = document.getElementById('l5a-en'); if(l5a) l5a.textContent = 'Scrollytelling story ↗';
+    const l5b = document.getElementById('l5b-en'); if(l5b) l5b.textContent = 'Interactive map ↗';
+    const l5c = document.getElementById('l5c-en'); if(l5c) l5c.textContent = 'Installation film ↗';
 
     const triggerBtn = document.getElementById('map-trigger-btn');
     if(triggerBtn && !mapInstance) triggerBtn.textContent = 'Explore Interactive Map';
