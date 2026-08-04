@@ -1,42 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lab — Amelia Chung</title>
+<title>實驗室 Lab — 鍾依靜</title>
+<link rel="icon" type="image/png" href="amelia-avatar.png">
+<link rel="apple-touch-icon" href="amelia-avatar.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Serif+TC:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #ffffff;
-  --text: #111111;
-  --text-sec: #555555;
-  --text-ter: #999999;
-  --border: #e0e0e0;
-  --border-med: #cccccc;
-  --hover-bg: #f5f5f5;
+  --text: #0A0A0A;
+  --text-sec: #454545;
+  --text-ter: #8C8C8C;
+  --border: #e4e4e4;
+  --border-med: #0A0A0A;
+  --hover-bg: #fafafa;
   --c1: #FFE135;
   --c2: #E8533A;
   --c3: #3A7DE8;
   --c4: #2ECC8A;
 }
-body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; padding: 0 1.5rem; }
-.wrap { max-width: 720px; margin: 0 auto; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', 'Noto Sans TC', sans-serif; padding: 0 1.5rem; }
+.wrap { max-width: 940px; margin: 0 auto; }
 
 /* NAV */
 nav {
   display: flex; justify-content: space-between; align-items: center;
   padding: 1.25rem 0; margin-bottom: 2.5rem;
-  border-bottom: 1.5px solid var(--text);
+  border-bottom: 2px solid var(--text);
 }
-.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; white-space: nowrap; }
+.logo { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; cursor: default; white-space: nowrap; }
 /* The avatar sits beside the wordmark rather than inside #logo, because
    setLang() overwrites that span's textContent and would wipe the image out. */
 .logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
 .logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
-.nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; cursor: pointer; transition: color 0.1s; }
+.nav-link { font-size: 13px; font-weight: 500; color: var(--text-sec); text-decoration: none; cursor: pointer; transition: color 0.1s; }
 .nav-link:hover { color: var(--text); }
 /* Same fix index.html already carries: the bar does not fit on a phone —
    the logo wrapped under the links and Contact plus the language buttons
@@ -46,44 +48,48 @@ nav {
   .nav-right { flex-wrap: wrap; gap: 0.9rem; }
 }
 @media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
-.nav-link.current { color: var(--text); border-bottom: 1.5px solid var(--text); padding-bottom: 1px; }
-.lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
+.nav-link.current { color: var(--text); border-bottom: 2px solid var(--text); padding-bottom: 1px; }
 .lang-btn {
   font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
-  padding: 3px 10px; border: none; cursor: pointer;
+  padding: 3px 10px; cursor: pointer; border: 2px solid var(--text); border-radius: 0;
   background: transparent; color: var(--text-sec); transition: all 0.15s;
 }
-.lang-btn.active { background: var(--text); color: var(--bg); }
+.lang-btn:hover { background: var(--text); color: var(--bg); }
 
 /* HERO */
 .hero { margin-bottom: 2rem; }
-.eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-ter); margin-bottom: 0.5rem; }
-.hero-title { font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
-.hero-title-zh { font-family: 'Noto Serif TC', serif; font-size: 32px; font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem; display: none; }
-.hero-desc { font-size: 13px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
-.hero-desc-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; line-height: 2; color: var(--text-sec); max-width: 500px; display: none; }
+.eyebrow { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+           background: var(--text); color: var(--bg); padding: 4px 10px; margin-bottom: 1rem; }
+.hero-title { display: none; font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+.hero-title-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 46px; font-weight: 900; line-height: 1.22;
+                 letter-spacing: -0.02em; margin-bottom: 0.9rem; }
+.hero-desc { display: none; font-size: 13px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
+.hero-desc-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 15px; line-height: 1.95; color: var(--text-sec); max-width: 34em; }
 
 /* SECTION HEAD */
 .sec-head {
   display: flex; justify-content: space-between; align-items: baseline;
   margin-bottom: 1rem; padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--text);
 }
-.sec-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); }
+.sec-label { display: inline-block; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+             letter-spacing: 0.14em; background: var(--text); color: var(--bg); padding: 4px 11px; }
 .sec-count { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
 
-/* LAB GRID */
+/* LAB GRID — the rules are drawn per piece rather than by letting a coloured
+   grid background show through the gaps, so an odd number of pieces does not
+   leave a filled empty cell in the last row. */
 .lab-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-  background: var(--border); margin-bottom: 1rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  align-items: start; margin-bottom: 1rem;
 }
 @media (max-width: 560px) { .lab-grid { grid-template-columns: 1fr; } }
 
-.piece { background: var(--bg); }
+.piece { background: var(--bg); outline: 2px solid var(--text); }
 .piece-media {
   aspect-ratio: 4 / 3; width: 100%; position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--text);
 }
 .piece-media img, .piece-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .piece-embed { container-type: inline-size; width: 100%; height: 100%; overflow: hidden; position: relative; }
@@ -119,18 +125,19 @@ nav {
 .piece-body { padding: 0.9rem 1rem 1.1rem; }
 .piece-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); margin-bottom: 0.3rem; }
 .piece-title { font-size: 14px; font-weight: 700; line-height: 1.3; margin-bottom: 0.35rem; }
-.piece-title-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; font-weight: 700; line-height: 1.5; margin-bottom: 0.35rem; display: none; }
+.piece-title-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 19px; font-weight: 900; line-height: 1.4;
+                  letter-spacing: -0.01em; margin-bottom: 0.45rem; }
 .piece-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 0.5rem; }
-.piece-tag { font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 6px; border: 0.5px solid var(--border-med); color: var(--text-sec); border-radius: 2px; }
+.piece-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 7px; border: 1.5px solid var(--text); color: var(--text); border-radius: 0; }
 .piece-desc { font-size: 11.5px; line-height: 1.6; color: var(--text-sec); margin-bottom: 0.65rem; }
-.piece-desc-zh { font-family: 'Noto Serif TC', serif; font-size: 11.5px; line-height: 1.8; color: var(--text-sec); margin-bottom: 0.65rem; display: none; }
+.piece-desc-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 13px; line-height: 1.9; color: var(--text-sec); margin-bottom: 0.75rem; }
 .piece-links { display: flex; gap: 8px; flex-wrap: wrap; }
-.piece-link { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 9px; border: 0.5px solid var(--border-med); border-radius: 2px; color: var(--text-sec); text-decoration: none; transition: all 0.12s; }
-.piece-link:hover { border-color: var(--text); color: var(--text); }
+.piece-link { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 10px; border: 1.5px solid var(--text); border-radius: 0; color: var(--text); text-decoration: none; transition: all 0.12s; }
+.piece-link:hover { background: var(--text); color: var(--bg); }
 
 /* FOOTER */
 footer {
-  border-top: 1.5px solid var(--text); padding: 1rem 0 2rem;
+  border-top: 2px solid var(--text); padding: 1rem 0 2rem;
   display: flex; justify-content: space-between; align-items: center;
   margin-top: 1rem;
 }
@@ -149,20 +156,19 @@ footer {
     <span class="logo" id="logo">AMELIA CHUNG</span>
   </span>
   <div class="nav-right">
-    <a class="nav-link" href="index.html" id="nav-works">Works</a>
-    <a class="nav-link" href="articles.html" id="nav-articles">Articles</a>
-    <span class="nav-link current" id="nav-lab">Lab</span>
-    <a class="nav-link" href="index.html#about" id="nav-about">About</a>
-    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">Contact</a>
-    <div class="lang-toggle">
-      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
-    </div>
+    <a class="nav-link" href="index.html" id="nav-works">作品集</a>
+    <a class="nav-link" href="articles.html" id="nav-articles">文章</a>
+    <span class="nav-link current" id="nav-lab">實驗室</span>
+    <a class="nav-link" href="index.html#about" id="nav-about">關於</a>
+    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">聯絡</a>
+    <!-- One tab only: Chinese is the default, so the button always offers
+         the other language rather than showing both states. -->
+    <button class="lang-btn" id="lang-btn" onclick="setLang(lang === 'zh' ? 'en' : 'zh')">EN</button>
   </div>
 </nav>
 
 <div class="hero">
-  <p class="eyebrow" id="eyebrow">Experiments · Creative coding · Generative visuals</p>
+  <p class="eyebrow" id="eyebrow">實驗與練習 · Creative Coding · 生成式視覺</p>
   <h1 class="hero-title" id="hero-en">Lab &amp;<br>Sketches</h1>
   <h1 class="hero-title-zh" id="hero-zh">實驗室與<br>創作草稿</h1>
   <p class="hero-desc" id="desc-en">Sketches and exercises from creative coding coursework — generative visuals, interaction experiments, and playful data-driven graphics made with p5.js, Processing, and similar tools.</p>
@@ -170,7 +176,7 @@ footer {
 </div>
 
 <div class="sec-head">
-  <span class="sec-label" id="pieces-label">Sketches</span>
+  <span class="sec-label" id="pieces-label">作品草稿</span>
   <span class="sec-count" id="pieces-count"></span>
 </div>
 
@@ -236,7 +242,7 @@ const PIECES = [
   },
 ];
 
-let lang = 'en';
+let lang = 'zh';
 
 function render() {
   const isZh = lang === 'zh';
@@ -287,9 +293,8 @@ function render() {
 function setLang(l) {
   lang = l;
   const isZh = l === 'zh';
-  document.getElementById('btn-en').classList.toggle('active', !isZh);
-  document.getElementById('btn-zh').classList.toggle('active', isZh);
-  document.getElementById('logo').textContent = isZh ? '鍾依靜' : 'AMELIA CHUNG';
+  document.documentElement.lang = isZh ? 'zh-Hant' : 'en';
+  document.getElementById('lang-btn').textContent = isZh ? 'EN' : '中';
   document.getElementById('eyebrow').textContent = isZh ? '實驗與練習 · Creative Coding · 生成式視覺' : 'Experiments · Creative coding · Generative visuals';
   document.getElementById('nav-works').textContent = isZh ? '作品集' : 'Works';
   document.getElementById('nav-articles').textContent = isZh ? '文章' : 'Articles';
@@ -297,14 +302,15 @@ function setLang(l) {
   document.getElementById('nav-about').textContent = isZh ? '關於' : 'About';
   document.getElementById('nav-contact').textContent = isZh ? '聯絡' : 'Contact';
   document.getElementById('pieces-label').textContent = isZh ? '作品草稿' : 'Sketches';
-  document.getElementById('hero-en').style.display = isZh ? 'none' : '';
-  document.getElementById('hero-zh').style.display = isZh ? '' : 'none';
-  document.getElementById('desc-en').style.display = isZh ? 'none' : '';
-  document.getElementById('desc-zh').style.display = isZh ? '' : 'none';
+  document.getElementById('hero-en').style.display = isZh ? 'none' : 'block';
+  document.getElementById('hero-zh').style.display = isZh ? 'block' : 'none';
+  document.getElementById('desc-en').style.display = isZh ? 'none' : 'block';
+  document.getElementById('desc-zh').style.display = isZh ? 'block' : 'none';
   render();
 }
 
-render();
+// Chinese is the default; paint it before the first frame.
+setLang('zh');
 </script>
 </body>
 </html>

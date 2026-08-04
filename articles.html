@@ -1,38 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Articles — Amelia Chung</title>
+<title>文章 Articles — 鍾依靜</title>
+<link rel="icon" type="image/png" href="amelia-avatar.png">
+<link rel="apple-touch-icon" href="amelia-avatar.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Serif+TC:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #ffffff;
-  --text: #111111;
-  --text-sec: #555555;
-  --text-ter: #999999;
-  --border: #e0e0e0;
-  --border-med: #cccccc;
-  --hover-bg: #f5f5f5;
+  --text: #0A0A0A;
+  --text-sec: #454545;
+  --text-ter: #8C8C8C;
+  --border: #e4e4e4;
+  --border-med: #0A0A0A;
+  --hover-bg: #fafafa;
 }
-body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; padding: 0 1.5rem; }
-.wrap { max-width: 720px; margin: 0 auto; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', 'Noto Sans TC', sans-serif; padding: 0 1.5rem; }
+.wrap { max-width: 940px; margin: 0 auto; }
 
 /* NAV */
 nav {
   display: flex; justify-content: space-between; align-items: center;
   padding: 1.25rem 0; margin-bottom: 2.5rem;
-  border-bottom: 1.5px solid var(--text);
+  border-bottom: 2px solid var(--text);
 }
-.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; white-space: nowrap; }
+.logo { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; cursor: default; white-space: nowrap; }
 /* The avatar sits beside the wordmark rather than inside #logo, because
    setLang() overwrites that span's textContent and would wipe the image out. */
 .logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
 .logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
-.nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; cursor: pointer; transition: color 0.1s; }
+.nav-link { font-size: 13px; font-weight: 500; color: var(--text-sec); text-decoration: none; cursor: pointer; transition: color 0.1s; }
 .nav-link:hover { color: var(--text); }
 /* Same fix index.html already carries: the bar does not fit on a phone —
    the logo wrapped under the links and Contact plus the language buttons
@@ -42,29 +44,30 @@ nav {
   .nav-right { flex-wrap: wrap; gap: 0.9rem; }
 }
 @media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
-.nav-link.current { color: var(--text); border-bottom: 1.5px solid var(--text); padding-bottom: 1px; }
-.lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
+.nav-link.current { color: var(--text); border-bottom: 2px solid var(--text); padding-bottom: 1px; }
 .lang-btn {
   font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
-  padding: 3px 10px; border: none; cursor: pointer;
+  padding: 3px 10px; cursor: pointer; border: 2px solid var(--text); border-radius: 0;
   background: transparent; color: var(--text-sec); transition: all 0.15s;
 }
-.lang-btn.active { background: var(--text); color: var(--bg); }
+.lang-btn:hover { background: var(--text); color: var(--bg); }
 
 /* HERO */
 .hero { margin-bottom: 2rem; }
-.eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-ter); margin-bottom: 0.5rem; }
-.hero-title { font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
-.hero-title-zh { font-family: 'Noto Serif TC', serif; font-size: 32px; font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem; display: none; }
-.hero-desc { font-size: 13px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
-.hero-desc-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; line-height: 2; color: var(--text-sec); max-width: 500px; display: none; }
+.eyebrow { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+           background: var(--text); color: var(--bg); padding: 4px 10px; margin-bottom: 1rem; }
+.hero-title { display: none; font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+.hero-title-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 46px; font-weight: 900; line-height: 1.22;
+                 letter-spacing: -0.02em; margin-bottom: 0.9rem; }
+.hero-desc { display: none; font-size: 13px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
+.hero-desc-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 15px; line-height: 1.95; color: var(--text-sec); max-width: 34em; }
 
 /* FILTER */
 .filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border); }
 .filter-btn {
   font-family: 'DM Mono', monospace; font-size: 11px; padding: 5px 12px;
-  border: 1px solid var(--border-med); border-radius: 2px;
-  background: transparent; color: var(--text-sec); cursor: pointer; transition: all 0.15s;
+  border: 1.5px solid var(--text); border-radius: 0;
+  background: transparent; color: var(--text); cursor: pointer; transition: all 0.15s;
 }
 .filter-btn:hover { border-color: var(--text); color: var(--text); }
 .filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
@@ -76,11 +79,11 @@ nav {
 .section-head {
   display: flex; align-items: center; gap: 0.75rem;
   margin-bottom: 0.75rem; padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--text);
 }
-.section-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.section-dot { width: 10px; height: 10px; border-radius: 0; flex-shrink: 0; }
 .section-label { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
-.section-label-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; font-weight: 700; }
+.section-label-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 900; letter-spacing: -0.01em; }
 .section-n { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); margin-left: auto; }
 
 /* ARTICLES */
@@ -89,9 +92,9 @@ nav {
 .item {
   display: flex; align-items: baseline; gap: 1rem;
   padding: 0.65rem 0.5rem;
-  border-bottom: 0.5px solid var(--border);
+  border-bottom: 1px solid var(--border);
   text-decoration: none; color: inherit;
-  border-radius: 2px;
+  border-radius: 0;
   transition: background 0.12s, padding-left 0.12s, opacity 0.15s;
 }
 .item:hover { background: var(--hover-bg); padding-left: 0.85rem; }
@@ -101,7 +104,7 @@ nav {
   color: var(--text-ter); flex-shrink: 0; width: 80px;
 }
 .item-title { font-size: 13px; line-height: 1.55; flex: 1; }
-.item-title-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; line-height: 1.75; flex: 1; }
+.item-title-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 14px; line-height: 1.7; flex: 1; }
 .arrow {
   font-size: 13px; color: var(--text-ter);
   opacity: 0; transform: translateX(-4px);
@@ -111,7 +114,7 @@ nav {
 
 /* FOOTER */
 footer {
-  border-top: 1.5px solid var(--text); padding: 1rem 0 2rem;
+  border-top: 2px solid var(--text); padding: 1rem 0 2rem;
   display: flex; justify-content: space-between; align-items: center;
   margin-top: 1rem;
 }
@@ -132,20 +135,19 @@ footer {
     <span class="logo" id="logo">AMELIA CHUNG</span>
   </span>
   <div class="nav-right">
-    <a class="nav-link" href="index.html" id="nav-works">Works</a>
-    <span class="nav-link current" id="nav-articles">Articles</span>
-    <a class="nav-link" href="lab.html" id="nav-lab">Lab</a>
-    <a class="nav-link" href="#about" id="nav-about">About</a>
-    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">Contact</a>
-    <div class="lang-toggle">
-      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
-    </div>
+    <a class="nav-link" href="index.html" id="nav-works">作品集</a>
+    <span class="nav-link current" id="nav-articles">文章</span>
+    <a class="nav-link" href="lab.html" id="nav-lab">實驗室</a>
+    <a class="nav-link" href="#about" id="nav-about">關於</a>
+    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">聯絡</a>
+    <!-- One tab only: Chinese is the default, so the button always offers
+         the other language rather than showing both states. -->
+    <button class="lang-btn" id="lang-btn" onclick="setLang(currentLang === 'zh' ? 'en' : 'zh')">EN</button>
   </div>
 </nav>
 
 <div class="hero">
-  <p class="eyebrow" id="eyebrow">Published work · Environmental journalism · Data reporting</p>
+  <p class="eyebrow" id="eyebrow">刊載作品 · 環境報導 · 資料新聞</p>
   <h1 class="hero-title" id="hero-en">Articles &amp;<br>Reporting</h1>
   <h1 class="hero-title-zh" id="hero-zh">新聞報導<br>與文章</h1>
   <p class="hero-desc" id="desc-en">Reporting on climate, energy, biodiversity, and Taiwan's social movements — published in Environmental Information Center (環境資訊中心), The Initium (端傳媒), and others.</p>
@@ -153,11 +155,11 @@ footer {
 </div>
 
 <div class="filter">
-  <button class="filter-btn active" id="f-all" onclick="filterCat('all')">All</button>
-  <button class="filter-btn" id="f-dataviz" onclick="filterCat('dataviz')">Data &amp; Maps</button>
-  <button class="filter-btn" id="f-series" onclick="filterCat('series')">Special Series</button>
-  <button class="filter-btn" id="f-interview" onclick="filterCat('interview')">Interviews</button>
-  <button class="filter-btn" id="f-news" onclick="filterCat('news')">News</button>
+  <button class="filter-btn active" id="f-all" onclick="filterCat('all')">全部</button>
+  <button class="filter-btn" id="f-dataviz" onclick="filterCat('dataviz')">資料與地圖</button>
+  <button class="filter-btn" id="f-series" onclick="filterCat('series')">專題</button>
+  <button class="filter-btn" id="f-interview" onclick="filterCat('interview')">專訪</button>
+  <button class="filter-btn" id="f-news" onclick="filterCat('news')">新聞</button>
 </div>
 
 <div class="count" id="count"></div>
@@ -300,7 +302,7 @@ const CATS = [
 ];
 
 let currentCat = 'all';
-let currentLang = 'en';
+let currentLang = 'zh';
 
 function build() {
   const isZh = currentLang === 'zh';
@@ -339,14 +341,13 @@ function filterCat(cat) {
 function setLang(lang) {
   currentLang = lang;
   const isZh = lang === 'zh';
-  document.getElementById('btn-en').classList.toggle('active', !isZh);
-  document.getElementById('btn-zh').classList.toggle('active', isZh);
-  document.getElementById('logo').textContent = isZh ? '鍾依靜' : 'AMELIA CHUNG';
+  document.documentElement.lang = isZh ? 'zh-Hant' : 'en';
+  document.getElementById('lang-btn').textContent = isZh ? 'EN' : '中';
   document.getElementById('eyebrow').textContent = isZh ? '刊載作品 · 環境報導 · 資料新聞' : 'Published work · Environmental journalism · Data reporting';
-  document.getElementById('hero-en').style.display = isZh ? 'none' : '';
-  document.getElementById('hero-zh').style.display = isZh ? '' : 'none';
-  document.getElementById('desc-en').style.display = isZh ? 'none' : '';
-  document.getElementById('desc-zh').style.display = isZh ? '' : 'none';
+  document.getElementById('hero-en').style.display = isZh ? 'none' : 'block';
+  document.getElementById('hero-zh').style.display = isZh ? 'block' : 'none';
+  document.getElementById('desc-en').style.display = isZh ? 'none' : 'block';
+  document.getElementById('desc-zh').style.display = isZh ? 'block' : 'none';
   document.getElementById('nav-works').textContent = isZh ? '作品集' : 'Works';
   document.getElementById('nav-articles').textContent = isZh ? '文章' : 'Articles';
   document.getElementById('nav-lab').textContent = isZh ? '實驗室' : 'Lab';
@@ -360,7 +361,8 @@ function setLang(lang) {
   build();
 }
 
-build();
+// Chinese is the default; paint it before the first frame.
+setLang('zh');
 </script>
 </body>
 </html>

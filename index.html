@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Amelia Chung — Data Journalist</title>
+<title>鍾依靜 Amelia Chung</title>
+<link rel="icon" type="image/png" href="amelia-avatar.png">
+<link rel="apple-touch-icon" href="amelia-avatar.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Serif+TC:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- 引入 Mapbox GL JS 資源，使用 defer 確保不阻塞首屏渲染 -->
 
@@ -13,12 +15,12 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #ffffff;
-  --text: #111111;
-  --text-sec: #555555;
-  --text-ter: #999999;
-  --border: #e0e0e0;
-  --border-med: #cccccc;
-  --hover-bg: #f5f5f5;
+  --text: #0A0A0A;
+  --text-sec: #454545;
+  --text-ter: #8C8C8C;
+  --border: #e4e4e4;
+  --border-med: #0A0A0A;
+  --hover-bg: #fafafa;
   --c1: #FFE135;
   --c2: #E8533A;
   --c3: #3A7DE8;
@@ -26,23 +28,23 @@
   --c5: #B266FF;
 }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; padding: 0 1.5rem; }
-.wrap { max-width: 720px; margin: 0 auto; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', 'Noto Sans TC', sans-serif; padding: 0 1.5rem; }
+.wrap { max-width: 940px; margin: 0 auto; }
 
 /* NAV */
 nav {
   display: flex; justify-content: space-between; align-items: center;
   padding: 1.25rem 0; margin-bottom: 2.5rem;
-  border-bottom: 1.5px solid var(--text);
+  border-bottom: 2px solid var(--text);
   position: sticky; top: 0; background: var(--bg); z-index: 100;
 }
-.logo { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; cursor: default; white-space: nowrap; }
+.logo { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; cursor: default; white-space: nowrap; }
 /* The avatar sits beside the wordmark rather than inside #logo, because
    setLang() overwrites that span's textContent and would wipe the image out. */
 .logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
 .logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
-.nav-link { font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; transition: color 0.1s; }
+.nav-link { font-size: 13px; font-weight: 500; color: var(--text-sec); text-decoration: none; transition: color 0.1s; }
 .nav-link:hover { color: var(--text); }
 /* The bar does not fit on a phone: the logo was wrapping onto two lines under
    the links, and Contact and the language buttons were cut off past the right
@@ -52,76 +54,90 @@ nav {
   .nav-right { flex-wrap: wrap; gap: 0.9rem; }
 }
 @media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
-.lang-toggle { display: flex; border: 1.5px solid var(--text); border-radius: 2px; overflow: hidden; }
-.lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 3px 10px; border: none; cursor: pointer; background: transparent; color: var(--text-sec); transition: all 0.15s; }
-.lang-btn.active { background: var(--text); color: var(--bg); }
+.lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 3px 10px; cursor: pointer; background: transparent; color: var(--text-sec); border: 2px solid var(--text); border-radius: 0; transition: all 0.15s; }
+.lang-btn:hover { background: var(--text); color: var(--bg); }
 
 /* HERO */
-.hero { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; padding-top: 1rem; }
+.hero { display: flex; align-items: center; gap: 3rem; margin-bottom: 3rem; padding-top: 2rem; }
 .hero-text { flex: 1; min-width: 0; }
-.hero-memoji { width: 150px; height: auto; flex-shrink: 0; }
+.hero-memoji { width: 160px; height: auto; flex-shrink: 0; }
 @media (max-width: 560px) {
   .hero { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; }
   .hero-memoji { width: 104px; }
+  .hero-title { font-size: 36px; }
+  .card-title-zh { font-size: 20px; }
 }
-.eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-ter); margin-bottom: 0.75rem; }
-.hero-title { font-size: 52px; font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+.eyebrow { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+           background: var(--text); color: var(--bg); padding: 4px 10px; margin-bottom: 1.4rem; }
+.hero-title { font-size: 56px; font-weight: 800; line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 1.4rem; }
 .hero-title .y { background: var(--c1); color: #111; padding: 0 6px; }
 .hero-title .r { color: var(--c2); }
-.hero-title-zh { font-family: 'Noto Serif TC', serif; font-size: 42px; font-weight: 700; line-height: 1.2; margin-bottom: 1.25rem; display: none; }
-.hero-title-zh .r { color: var(--c2); }
-.hero-desc { font-size: 14px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
-.hero-desc-zh { font-family: 'Noto Serif TC', serif; font-size: 14px; line-height: 2; color: var(--text-sec); max-width: 500px; display: none; }
+.hero-desc { display: none; font-size: 14px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
+.hero-desc-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 15px; line-height: 1.95; color: var(--text-sec); max-width: 34em; }
 
-/* TICKER STRIP */
+/* TOOLS / METHODS / LANGUAGES — now inside About, below the bio */
 .strip {
-  display: flex; border-top: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text);
+  display: flex; border-top: 2px solid var(--text); border-bottom: 2px solid var(--text);
   margin-bottom: 2.5rem;
 }
-.strip-item { flex: 1; padding: 0.6rem 0.75rem; border-right: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+.strip-item { flex: 1; padding: 0.6rem 0.75rem; border-right: 1px solid var(--text); font-family: 'DM Mono', monospace; }
+.strip-item:first-child { padding-left: 0; }
 .strip-item:last-child { border-right: none; }
-/* four columns across a phone leaves under 90px each, which cut "Français" and
-   "Open to relocation" in half — wrap to 2x2 instead */
+/* three columns on a phone leaves under 120px each, which cuts "Français" —
+   stack them instead */
 @media (max-width: 560px) {
-  .strip { flex-wrap: wrap; }
-  .strip-item { flex: 1 1 45%; }
-  .strip-item:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
-  .strip-item:nth-child(2n) { border-right: none; }
+  .strip { flex-direction: column; }
+  .strip-item { padding-left: 0; border-right: none; border-bottom: 1px solid var(--border); }
+  .strip-item:last-child { border-bottom: none; }
 }
 .strip-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); margin-bottom: 3px; }
-.strip-val { font-size: 12px; font-weight: 500; color: var(--text); }
+.strip-val { font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
 
 /* SECTION HEADER */
 .sec-head {
   display: flex; justify-content: space-between; align-items: baseline;
-  margin-bottom: 1rem; padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem; padding-bottom: 0.5rem; margin-top: 3rem;
+  border-bottom: 2px solid var(--text);
 }
-.sec-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-ter); }
+.sec-label { display: inline-block; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+             letter-spacing: 0.14em; background: var(--text); color: var(--bg); padding: 4px 11px; }
+/* About's label shares its block with the magnifier icon, so the block moves
+   out to the wrapper span and the icon inverts with it. */
+#about .sec-head > span { background: var(--text); padding: 4px 11px 4px 9px; }
+#about .sec-head svg { stroke: #fff; }
+#about .sec-label { padding: 0; }
 .sec-count { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
 
 /* WORKS GRID */
-.works-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); margin-bottom: 2.5rem; }
-.card { background: var(--bg); padding: 1.25rem; transition: background 0.15s; text-decoration: none; color: inherit; display: block; }
+.works-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--text); margin-bottom: 2.5rem; }
+.card { background: var(--bg); padding: 1.6rem; transition: background 0.15s; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
 .card:hover { background: var(--hover-bg); }
 .card:hover .card-arrow { opacity: 1; }
-.card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
-/* Below ~700px the featured card's two columns are too narrow to read: the text
-   runs three or four words to a line and the cover shrinks to a strip. Stack
-   them, and drop the whole grid to one card per row on a phone. */
-@media (max-width: 700px) { .card-featured { grid-template-columns: 1fr; gap: 1.25rem; } }
+/* Every card reads image first, text second, whatever wrapper its media uses.
+   The cards keep their old DOM — several of them carry a few thousand
+   characters of inline SVG — and are re-ordered here instead. */
+.card > .card-visual, .card > .card-cover, .card > .choro-link { order: -1; }
+.card-featured { grid-column: 1 / -1; gap: 1.25rem; }
 @media (max-width: 560px) { .works-grid { grid-template-columns: 1fr; } }
-.color-bar { height: 5px; width: 36px; border-radius: 1px; margin-bottom: 0.75rem; }
-.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); margin-bottom: 0.4rem; }
-.card-title { font-size: 16px; font-weight: 700; line-height: 1.2; margin-bottom: 0.6rem; }
-.card-title-zh { font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 0.6rem; display: none; }
+/* The work's colour is the number block itself — it used to be a separate
+   full-width rule above it, which added a line to every card. Each card sets
+   its own background inline; the text is always near-black, which clears 4.5:1
+   on all five of the palette colours (white would not, on the yellow or green).
+   width:max-content as well as align-self — inside the featured cards the
+   number sits in a plain block wrapper, where align-self does nothing. */
+.card-num { align-self: flex-start; width: max-content; font-family: 'DM Mono', monospace;
+            font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+            color: #0A0A0A; padding: 4px 10px; margin-bottom: 0.9rem; }
+.card-title { display: none; font-size: 16px; font-weight: 700; line-height: 1.2; margin-bottom: 0.6rem; }
+.card-title-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 23px; font-weight: 900; line-height: 1.4;
+                 letter-spacing: -0.01em; margin-bottom: 0.6rem; }
 .card-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 0.6rem; }
-.card-tag { font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 6px; border: 0.5px solid var(--border-med); color: var(--text-sec); border-radius: 2px; }
-.card-anno { font-size: 12px; line-height: 1.65; color: var(--text-sec); margin-bottom: 0.75rem; }
-.card-anno-zh { font-family: 'Noto Serif TC', serif; font-size: 12px; line-height: 2; color: var(--text-sec); margin-bottom: 0.75rem; display: none; }
+.card-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 7px; border: 1.5px solid var(--text); color: var(--text); border-radius: 0; }
+.card-anno { display: none; font-size: 12px; line-height: 1.65; color: var(--text-sec); margin-bottom: 0.75rem; }
+.card-anno-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 14px; line-height: 1.95; color: var(--text-sec); margin-bottom: 0.9rem; }
 .card-links { display: flex; gap: 8px; flex-wrap: wrap; }
-.card-link { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 9px; border: 0.5px solid var(--border-med); border-radius: 2px; color: var(--text-sec); text-decoration: none; transition: all 0.12s; }
-.card-link:hover { border-color: var(--text); color: var(--text); }
+.card-link { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 10px; border: 1.5px solid var(--text); border-radius: 0; color: var(--text); text-decoration: none; transition: all 0.12s; }
+.card-link:hover { background: var(--text); color: var(--bg); }
 .card-arrow { font-size: 16px; color: var(--text-ter); opacity: 0; transition: opacity 0.12s; margin-top: 0.25rem; }
 
 /* CUSTOM WORK ICONS */
@@ -135,11 +151,11 @@ nav {
 .card-visual { display: flex; flex-direction: column; gap: 8px; }
 
 /* CARD COVER (shared frame for 02 animation + 03 chart) */
-.card-cover { width: 100%; height: 220px; border-radius: 4px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: center; }
+.card-cover { width: 100%; height: 220px; border-radius: 0; border: 2px solid var(--text); overflow: hidden; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: center; }
 .card-lottie { background: rgba(232, 83, 58, 0.06); }
 .card-lottie svg { display: block; width: 100%; height: 100%; }
 .card-cover-03 { background: rgba(58, 125, 232, 0.05); }
-.card-cover-03 svg { display: block; width: 100%; height: 100%; }
+.card-cover-03 svg { display: block; width: 100%; max-width: 560px; height: 100%; margin: 0 auto; }
 .chart03 .dot { transform-box: fill-box; transform-origin: center; }
 .chart03 .ln { stroke-dasharray: 1; stroke-dashoffset: 0; }
 .chart03.play .ln { stroke-dashoffset: 1; animation: c03draw 1.5s cubic-bezier(.45,0,.2,1) forwards; }
@@ -154,14 +170,14 @@ nav {
 }
 /* WORK 01 — animated choropleth */
 .choro-link { text-decoration: none; display: block; }
-.choro-box { position: relative; width: 100%; height: 320px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: #fbfbfb; display: flex; align-items: center; justify-content: center; }
-.choro-box svg { width: 100%; height: 100%; display: block; }
+.choro-box { position: relative; width: 100%; height: 380px; border: 2px solid var(--text); border-radius: 0; overflow: hidden; background: #fbfbfb; display: flex; align-items: center; justify-content: center; }
+.choro-box svg { width: 100%; max-width: 520px; height: 100%; display: block; margin: 0 auto; }
 .cty { fill: var(--c); stroke: #fff; stroke-width: 0.6; }
 .choro.armed .cty { fill: #e6e6e6; transition: none; }
 .choro.armed.play .cty { fill: var(--c); transition: fill .5s ease; }
 .choro-cap { position: absolute; top: 10px; left: 12px; display: flex; flex-direction: column; gap: 1px; pointer-events: none; }
 .choro-cap-t { font-family: 'DM Mono', monospace; font-size: 10px; color: #555; letter-spacing: .04em; }
-.choro-cap-s { font-family: 'Noto Serif TC', serif; font-size: 10px; color: #999; }
+.choro-cap-s { font-family: 'Noto Sans TC', sans-serif; font-size: 10px; color: #999; }
 .choro-hover { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(17,17,17,.42); color: #fff; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: .03em; opacity: 0; transition: opacity .2s ease; }
 .choro-link:hover .choro-hover { opacity: 1; }
 .choro-legend { display: flex; align-items: center; gap: 8px; }
@@ -170,30 +186,20 @@ nav {
 .choro-legend .cl-ticks { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text-ter); }
 @media (prefers-reduced-motion: reduce) { .choro.armed .cty, .choro.armed.play .cty { fill: var(--c); transition: none; } }
 /* choro-box overrides shared card-cover height */
-.choro-box.card-cover { height: 320px; margin-bottom: 0; }
-/* WORK 01 — Taipei Plan B cover (dark image, so the caption inverts) */
-/* The cover is a tall portrait crop and the annotation next to it runs four
-   paragraphs, so a fixed 320px box left the right-hand column half empty and
-   the map far too small. This one card's visual is taller and sticks as you
-   read past it — the image is `contain`ed, so more height means a bigger map,
-   not a crop. Top offset clears the sticky nav (~61px). Only this card: the
-   referendum card below still wants its fixed 320px choro-box. */
-.tpb-card .card-visual { position: sticky; top: 5rem; align-self: start; }
-.tpb-box.card-cover { position: relative; height: 480px; margin-bottom: 0; background: #0A0A12; }
-/* stacked below 700px there is no text beside it to scroll against */
-@media (max-width: 700px) {
-  .tpb-card .card-visual { position: static; }
-  .tpb-box.card-cover { height: 420px; }
-}
-/* contain, not cover — the two panels must both stay whole. The image background
-   is the same #0A0A12, so the letterboxing is invisible. */
-.tpb-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.choro-box.card-cover { height: 380px; margin-bottom: 0; }
+/* WORK 01 — Taipei Plan B cover (dark image, so the caption inverts).
+   The cover is a tall portrait crop. Now that it sits above the text at full
+   card width, a fixed box height would letterbox it with wide dark margins, so
+   the box sizes to the image and the image is capped by height instead. */
+.tpb-box.card-cover { position: relative; height: auto; margin-bottom: 0; background: #0A0A12; }
+.tpb-box img { display: block; width: auto; max-width: 100%; height: auto; max-height: 540px; margin: 0 auto; }
+@media (max-width: 700px) { .tpb-box img { max-height: 460px; } }
 .tpb-box .choro-cap-t { color: #D8D2E4; }
 .tpb-box .choro-cap-s { color: #8B8698; }
 /* WORK 05 — Indonesia supply-chain map. 16:9 and full card width, so it sizes
    off aspect-ratio rather than the fixed card-cover height. The label text in
    the graphic is small; capping it much shorter makes it unreadable. */
-.idn-box.card-cover { height: auto; aspect-ratio: 16 / 9; position: relative; margin: 0.4rem 0 1rem; background: #EAE6E0; }
+.idn-box.card-cover { height: auto; aspect-ratio: 16 / 9; position: relative; margin: 0 0 0.85rem; background: #EAE6E0; }
 .idn-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
 @media (prefers-reduced-motion: reduce) { .card-lottie { background: rgba(232, 83, 58, 0.04); } }
 .map-wrapper { width: 100%; height: 340px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border); position: relative; }
@@ -224,19 +230,19 @@ nav {
 .chip { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 2px; color: var(--text-sec); }
 
 /* ABOUT */
-.about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
-.about-text { font-size: 13px; line-height: 1.85; color: var(--text-sec); }
-.about-text-zh { font-family: 'Noto Serif TC', serif; font-size: 13px; line-height: 2.1; color: var(--text-sec); display: none; }
+.about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; }
+.about-text { display: none; font-size: 13px; line-height: 1.85; color: var(--text-sec); }
+.about-text-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 14px; line-height: 1.95; color: var(--text-sec); }
 .skills { display: flex; flex-direction: column; gap: 0.4rem; }
 .skill { display: flex; align-items: center; gap: 8px; }
 .skill-name { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); width: 100px; flex-shrink: 0; }
-.skill-track { flex: 1; height: 3px; background: var(--border); border-radius: 2px; }
-.skill-fill { height: 3px; border-radius: 2px; }
+.skill-track { flex: 1; height: 6px; background: var(--border); border-radius: 0; }
+.skill-fill { height: 6px; border-radius: 0; }
 
 /* FOOTER */
 footer {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1.25rem 0; border-top: 1.5px solid var(--text); padding: 1rem 0 2.5rem;
+  padding: 1.25rem 0; border-top: 2px solid var(--text); padding: 1rem 0 2.5rem;
 }
 .footer-links { display: flex; gap: 1rem; }
 .footer-link { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-sec); text-decoration: none; }
@@ -254,29 +260,25 @@ footer {
     <span class="logo" id="logo">AMELIA CHUNG</span>
   </span>
   <div class="nav-right">
-    <a class="nav-link" href="#works" id="nav-works">Works</a>
-    <a class="nav-link" href="articles.html" id="nav-articles">Articles</a>
-    <a class="nav-link" href="lab.html" id="nav-lab">Lab</a>
-    <a class="nav-link" href="#about" id="nav-about">About</a>
-    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">Contact</a>
-    <div class="lang-toggle">
-      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
-    </div>
+    <a class="nav-link" href="#works" id="nav-works">作品集</a>
+    <a class="nav-link" href="articles.html" id="nav-articles">文章</a>
+    <a class="nav-link" href="lab.html" id="nav-lab">實驗室</a>
+    <a class="nav-link" href="#about" id="nav-about">關於</a>
+    <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">聯絡</a>
+    <!-- One tab only: the site is Chinese by default, so the button always
+         offers the other language rather than showing both states. -->
+    <button class="lang-btn" id="lang-btn" onclick="setLang(lang === 'zh' ? 'en' : 'zh')">EN</button>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-text">
-  <p class="eyebrow" id="eyebrow">Data journalist · Visual storyteller · Based in Taipei</p>
-  <h1 class="hero-title" id="hero-en">
-    Stories that make<br>
-    <span class="y">Asia's data</span><br>
-    <span class="r">visible.</span>
-  </h1>
-  <h1 class="hero-title-zh" id="hero-zh">
-    讓亞洲的數據，<br><span class="r">被看見。</span>
+  <p class="eyebrow" id="eyebrow">資料記者 · 視覺說書人 · 台北</p>
+  <h1 class="hero-title">
+    Maps &amp; <span class="y">Data</span><br>
+    Stories about<br>
+    <span class="r">Taiwan</span>
   </h1>
   <p class="hero-desc" id="desc-en">I work at the intersection of investigative journalism, geospatial analysis, and interactive design — building data stories about elections, and environmental politics across Taiwan and Asia.</p>
   <p class="hero-desc-zh" id="desc-zh">我是鍾依靜，駐台北的資料記者。<br>擅長用數據說故事，說關於亞洲政治、科技與環境、性別的那些故事。</p>
@@ -284,18 +286,10 @@ footer {
   <img class="hero-memoji" src="Amelia.png" alt="Amelia Chung">
 </div>
 
-<!-- STRIP -->
-<div class="strip">
-  <div class="strip-item"><div class="strip-label" id="s1">Tools</div><div class="strip-val">QGIS · Python · Flourish</div></div>
-  <div class="strip-item"><div class="strip-label" id="s2">Methods</div><div class="strip-val">GIS · Scrollytelling · Data viz</div></div>
-  <div class="strip-item"><div class="strip-label" id="s3">Languages</div><div class="strip-val">中文 · English · Français</div></div>
-  <div class="strip-item"><div class="strip-label" id="s4">Status</div><div class="strip-val" id="s4val">Open to relocation</div></div>
-</div>
-
 <!-- WORKS -->
 <div id="works">
   <div class="sec-head">
-    <span class="sec-label" id="works-label">Selected works</span>
+    <span class="sec-label" id="works-label">精選作品</span>
     <span class="sec-count">05 projects</span>
   </div>
 
@@ -304,8 +298,7 @@ footer {
     <!-- 01 TAIPEI PLAN B — copy still to be written by Amelia -->
     <div class="card card-featured tpb-card">
       <div>
-        <div class="color-bar" style="background:var(--c5)"></div>
-        <div class="card-num">01 — Featured</div>
+        <div class="card-num" style="background:var(--c5)">01 — Featured</div>
         <div class="card-titlerow">
           <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#B266FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="5.5" cy="12" r="2.4"/>
@@ -326,8 +319,8 @@ footer {
         <p class="card-anno" id="a5-en">In July, Taiwan's Food and Drug Administration moved to tighten controls on three emergency contraceptive pills, and the backlash was immediate. Emergency contraception is still a prescription drug here, which means getting it starts with seeing a doctor — so the real question is not whether the pill exists, but how far you have to travel to reach someone who can prescribe it.<br><br>I mapped that distance across all 456 villages in Taipei. Today the nearest access point is one of 111 obstetric clinics and hospitals, a median of 532 metres away. But nearly 250,000 women — about a fifth of the women in this city — have to travel more than a kilometre to reach one, and they live in 94 of those villages.<br><br>Reclassify the drug so pharmacies can sell it and the access points go from 111 to 858, with the median falling to 204 metres. Reclassification does not solve everything, though: in 33 villages women would still be more than a kilometre from the counter, because the remote hill districts are large, thinly populated and short of medical resources to begin with. That is a different problem.<br><br>Facility data comes from Twinkle Hub, village boundaries from the National Land Surveying and Mapping Center's 2026 edition; distances are straight-line, from each village's area-weighted centroid to the nearest access point. Policy is a stone dropped into water: one line of regulation changes the radius a whole city's women move within, and their heartbeat. That heartbeat is in the page's sound design too.</p>
         <p class="card-anno-zh" id="a5-zh">七月，衛福部食藥署欲嚴加控管三款事後避孕藥，引發軒然大波。在台灣，事後避孕藥仍是處方藥。意味取藥得先看醫生，因此真正的問題並非這顆藥存在與否，而是得走多遠，才能遇到開出處方的醫師。<br><br>我把這段距離畫成台北 456 個里的地圖，現在最近的取得點是 111 家婦產科診所與大醫院，距離中位數 532 公尺，但有近 25 萬名女性，約等於北市女性的五分之一，必須走超過一公里才能取得事後避孕藥，她們就在這其中的 94 個里生活。<br><br>若未來將事後避孕藥改成指示藥、讓藥局能賣，取得點就變成 858 個，中位數降到 204 公尺，但轉類不能解決所有事，仍有 33 個里的女性需走超過一公里，因偏遠山區地廣人稀、醫療資源本來就不足，那又是另一個問題。<br><br>資料取自 Twinkle Hub 與內政部國土測繪中心 2026 年版里界，距離為各里面積加權質心到最近取得點的直線距離。制度猶如投石入水，一紙法規改變的，卻是整座城市女性的行動半徑和心跳。而心跳聲，也做進了頁面的音效裡。</p>
         <div class="card-links">
-          <a class="card-link" href="https://ameliachung.github.io/taipei-plan-b/" target="_blank" rel="noopener" id="l5a-en">Scrollytelling story ↗</a>
-          <a class="card-link" href="https://ameliachung.github.io/taipei-plan-b/assets/gallery-cut.mp4" target="_blank" rel="noopener" id="l5c-en">Installation film ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/taipei-plan-b/" target="_blank" rel="noopener" id="l5a-en">捲動敘事 ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/taipei-plan-b/assets/gallery-cut.mp4" target="_blank" rel="noopener" id="l5c-en">展場影片 ↗</a>
         </div>
       </div>
 
@@ -345,8 +338,7 @@ footer {
     <!-- 02 NUCLEAR REFERENDUM -->
     <div class="card card-featured">
       <div>
-        <div class="color-bar" style="background:var(--c1)"></div>
-        <div class="card-num">02</div>
+        <div class="card-num" style="background:var(--c1)">02</div>
         <div class="card-titlerow">
           <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#C8A000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 21c4-3.6 6.5-6.8 6.5-10.5a6.5 6.5 0 1 0-13 0C5.5 14.2 8 17.4 12 21z"/>
@@ -366,9 +358,9 @@ footer {
         <p class="card-anno" id="a1-en">On 23 August 2025, Taiwan held its third nuclear referendum — asking whether the Maanshan plant, which formally shut down in May, should be allowed to restart once safety regulators give the green light.<br><br>Two interactive maps. The first animates yes-vote share across all 22 counties, tracing the geography of public opinion. The second is a risk map: the hidden cost most voters never factored in — how many villages and residents fall inside the 8km emergency evacuation zone if something goes wrong at Maanshan?</p>
         <p class="card-anno-zh" id="a1-zh">2025年8月23日，台灣舉行第三次核能公投，主題是已在5月停機的核三廠——該不該在主管機關確認沒有安全疑慮後，重新運轉。<br><br>我做了兩張互動地圖。一張用動畫帶出22縣市的同意票比例，看見民意的地理樣貌；另一張風險地圖，畫出多數人投票時沒算進去的隱形成本——萬一核三廠出事，8公里疏散範圍內有多少村落、約幾萬人會受影響？</p>
         <div class="card-links">
-          <a class="card-link" href="https://ameliachung.github.io/2025-nuclear-referendum/" target="_blank" rel="noopener" id="l1a-en">Referendum map ↗</a>
-          <a class="card-link" href="https://ameliachung.github.io/nuclear-risk-tw/" target="_blank" rel="noopener" id="l1b-en">Risk zone map ↗</a>
-          <a class="card-link" href="https://e-info.org.tw/node/241997" target="_blank" rel="noopener" id="l1c-en">Read the story ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/2025-nuclear-referendum/" target="_blank" rel="noopener" id="l1a-en">公投地圖 ↗</a>
+          <a class="card-link" href="https://ameliachung.github.io/nuclear-risk-tw/" target="_blank" rel="noopener" id="l1b-en">風險範圍地圖 ↗</a>
+          <a class="card-link" href="https://e-info.org.tw/node/241997" target="_blank" rel="noopener" id="l1c-en">閱讀報導 ↗</a>
         </div>
       </div>
       
@@ -414,8 +406,7 @@ footer {
 
     <!-- 03 CENSORED -->
     <div class="card">
-      <div class="color-bar" style="background:var(--c2)"></div>
-      <div class="card-num">03</div>
+      <div class="card-num" style="background:var(--c2)">03</div>
       <div class="card-cover card-lottie" id="lottie-02" role="img" aria-label="The Big [Censored] Theory — animated cover"></div>
       <div class="card-titlerow">
         <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#E8533A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -436,15 +427,14 @@ footer {
       <p class="card-anno" id="a2-en">The Big [Censored] Theory is a data journalism piece by The Pudding. Its author, Mandy, first watched The Big Bang Theory in 2011 — and when she returned to it eleven years later on Chinese streaming platform Youku, she kept noticing strange, jarring pauses.<br><br>She compared all 100 episodes of the original against the Youku cuts, using charts to quantify exactly what Chinese regulators had excised.</p>
       <p class="card-anno-zh" id="a2-zh">《The Big [Censored] Theory》是 The Pudding 推出的資料專題。作者 Mandy 在2011年第一次看美劇《生活大爆炸》，11年後重看，卻發現中國串流平台優酷上的版本常出現不連貫的停頓。<br><br>她把100集原版和優酷剪輯版逐集比對，分析原始影音資料庫（集數、秒數、審查理由），同時利用互動式幻燈片和顏色編碼分類，讓讀者理解中國如何監管文化影視作品。</p>
       <div class="card-links">
-        <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E4%BD%9C%E8%80%85%E6%8E%A1%E8%A8%AA%E7%AF%87-1fb99b54b37a" target="_blank" rel="noopener" id="l2a-en">Author interview ↗</a>
-        <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E6%95%B8%E4%BD%8D%E6%95%98%E4%BA%8B%E5%9C%96%E8%A1%A8%E8%A7%80%E5%AF%9F-%E4%B8%8A%E9%9B%86-d7cd8a5a7ce9" target="_blank" rel="noopener" id="l2b-en">Data charts ↗</a>
+        <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E4%BD%9C%E8%80%85%E6%8E%A1%E8%A8%AA%E7%AF%87-1fb99b54b37a" target="_blank" rel="noopener" id="l2a-en">作者採訪 ↗</a>
+        <a class="card-link" href="https://medium.com/@yichingchung910/%E7%94%9F%E6%B4%BB%E5%A4%A7-%E5%97%B6%E5%97%B6-%E4%B8%AD%E5%9C%8B%E7%BE%8E%E5%8A%87%E4%B8%AD%E7%9A%84%E6%95%8F%E6%84%9F%E8%A9%9E-%E6%95%B8%E4%BD%8D%E6%95%98%E4%BA%8B%E5%9C%96%E8%A1%A8%E8%A7%80%E5%AF%9F-%E4%B8%8A%E9%9B%86-d7cd8a5a7ce9" target="_blank" rel="noopener" id="l2b-en">數位圖表 ↗</a>
       </div>
     </div>
 
     <!-- 04 ELECTIONS -->
     <div class="card">
-      <div class="color-bar" style="background:var(--c3)"></div>
-      <div class="card-num">04</div>
+      <div class="card-num" style="background:var(--c3)">04</div>
       <div class="card-cover card-cover-03" role="img" aria-label="Share of women among parties’ district-legislator nominations, 2008–2020">
         <svg viewBox="0 0 330 200" xmlns="http://www.w3.org/2000/svg" class="chart03">
   <g stroke="#9fb2c8" stroke-opacity="0.32" stroke-width="1" stroke-dasharray="2 3">
@@ -456,7 +446,7 @@ footer {
     <circle cx="58" cy="12" r="3" fill="#20B24B"/><text x="63" y="15">DPP</text>
     <circle cx="100" cy="12" r="3" fill="#3FC8E6"/><text x="105" y="15">TPP</text>
   </g>
-  <text x="322" y="15" text-anchor="end" font-family="'Noto Serif TC', serif" font-size="8.5" fill="#999">女性提名比例 ↗</text>
+  <text x="322" y="15" text-anchor="end" font-family="'Noto Sans TC', sans-serif" font-size="8.5" fill="#999">女性提名比例 ↗</text>
   <path class="ln dpp" pathLength="1" d="M40,143.4 L118,94.1 L196,94.1 L274,64.6" fill="none" stroke="#20B24B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
   <path class="ln kmt" pathLength="1" d="M40,130.3 L118,107.3 L196,117.1 L274,64.6" fill="none" stroke="#1B9DE0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
   <circle class="dot" cx="40" cy="143.4" r="3" fill="#fff" stroke="#20B24B" stroke-width="2"/>
@@ -507,8 +497,7 @@ footer {
 
     <!-- 05 INDONESIA -->
     <div class="card" style="grid-column: 1 / -1;">
-      <div class="color-bar" style="background:var(--c4)"></div>
-      <div class="card-num">05</div>
+      <div class="card-num" style="background:var(--c4)">05</div>
       <div class="card-titlerow">
         <svg class="work-icon" viewBox="0 0 24 24" fill="none" stroke="#2ECC8A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="8" y1="7.6" x2="15.6" y2="8.8"/>
@@ -553,7 +542,7 @@ footer {
         <circle cx="10.5" cy="10.5" r="6"/>
         <line x1="15" y1="15" x2="20" y2="20"/>
       </svg>
-      <span class="sec-label" id="about-label">About</span>
+      <span class="sec-label" id="about-label">關於我</span>
     </span>
   </div>
   <div class="about-grid">
@@ -567,6 +556,14 @@ footer {
       <div class="skill"><span class="skill-name">Python</span><div class="skill-track"><div class="skill-fill" style="width:50%;background:var(--c2)"></div></div></div>
       <div class="skill"><span class="skill-name">HTML / CSS / JS</span><div class="skill-track"><div class="skill-fill" style="width:45%;background:var(--c2)"></div></div></div>
     </div>
+  </div>
+
+  <!-- Tools / Methods / Languages — moved down out of the old hero ticker.
+       The Status column was dropped. -->
+  <div class="strip">
+    <div class="strip-item"><div class="strip-label" id="s1">工具</div><div class="strip-val">QGIS · Python · Flourish</div></div>
+    <div class="strip-item"><div class="strip-label" id="s2">方法</div><div class="strip-val">GIS · Scrollytelling · Data viz</div></div>
+    <div class="strip-item"><div class="strip-label" id="s3">語言</div><div class="strip-val">中文 · English · Français</div></div>
   </div>
 </div>
 
@@ -583,19 +580,17 @@ footer {
 </div>
 
 <script>
-let lang = 'en';
+let lang = 'zh';
 const zh = {
-  logo: '鍾依靜',
   eyebrow: '資料記者 · 視覺說書人 · 台北',
-  s1: '工具', s2: '方法', s3: '語言', s4: '狀態', s4val: '可遷居海外',
+  s1: '工具', s2: '方法', s3: '語言',
   works: '精選作品', about: '關於我',
   nav: ['作品集','文章','實驗室','關於','聯絡'],
   filters: ['全部','資料與地圖','專題','專訪','新聞'],
 };
 const en = {
-  logo: 'AMELIA CHUNG',
   eyebrow: 'Data journalist · Visual storyteller · Based in Taipei',
-  s1: 'Tools', s2: 'Methods', s3: 'Languages', s4: 'Status', s4val: 'Open to relocation',
+  s1: 'Tools', s2: 'Methods', s3: 'Languages',
   works: 'Selected works', about: 'About',
   nav: ['Works','Articles','Lab','About','Contact'],
 };
@@ -605,15 +600,12 @@ function setLang(l) {
   const isZh = l === 'zh';
   const d = isZh ? zh : en;
 
-  document.getElementById('btn-en').classList.toggle('active', !isZh);
-  document.getElementById('btn-zh').classList.toggle('active', isZh);
-  document.getElementById('logo').textContent = d.logo;
+  document.documentElement.lang = isZh ? 'zh-Hant' : 'en';
+  document.getElementById('lang-btn').textContent = isZh ? 'EN' : '中';
   document.getElementById('eyebrow').textContent = d.eyebrow;
   document.getElementById('s1').textContent = d.s1;
   document.getElementById('s2').textContent = d.s2;
   document.getElementById('s3').textContent = d.s3;
-  document.getElementById('s4').textContent = d.s4;
-  document.getElementById('s4val').textContent = d.s4val;
   document.getElementById('works-label').textContent = d.works;
   document.getElementById('about-label').textContent = d.about;
 
@@ -623,10 +615,10 @@ function setLang(l) {
   // toggle bilingual elements
   // note: the tN/aN ids are historical and no longer match the displayed card
   // numbers — t5/a5 is the Taipei Plan B card, which shows as 01.
-  ['hero-en','desc-en','about-en','t1-en','t2-en','t3-en','t4-en','t5-en','a1-en','a2-en','a3-en','a4-en','a5-en'].forEach(id => {
+  ['desc-en','about-en','t1-en','t2-en','t3-en','t4-en','t5-en','a1-en','a2-en','a3-en','a4-en','a5-en'].forEach(id => {
     const el = document.getElementById(id); if(el) el.style.display = isZh ? 'none' : 'block';
   });
-  ['hero-zh','desc-zh','about-zh','t1-zh','t2-zh','t3-zh','t4-zh','t5-zh','a1-zh','a2-zh','a3-zh','a4-zh','a5-zh'].forEach(id => {
+  ['desc-zh','about-zh','t1-zh','t2-zh','t3-zh','t4-zh','t5-zh','a1-zh','a2-zh','a3-zh','a4-zh','a5-zh'].forEach(id => {
     const el = document.getElementById(id); if(el) el.style.display = isZh ? 'block' : 'none';
   });
 
@@ -656,6 +648,9 @@ function setLang(l) {
   }
 }
 
+// Chinese is the default; the markup ships in its English state, so paint the
+// Chinese one before the first frame.
+setLang('zh');
 </script>
 <!-- Card 03 cover animation (Lottie) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
