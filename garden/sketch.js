@@ -617,6 +617,8 @@ function setup() {
 
   // 越靠前（y 越大）越晚畫，才不會被後排蓋住
   flowers.sort((a, b) => a.rootY - b.rootY);
+
+  measureBed();
 }
 
 // ====== 無游標裝置的微風 ======
@@ -634,15 +636,35 @@ function mouseMoved(e) {
   if (e && e.pointerType === "mouse") hasRealMouse = true;
 }
 
+// 微風的遊走範圍，在 setup 量出來 —— 用真正的花頂座標，不是猜畫布比例。
+let bedCX, bedCY, bedRX, bedRY;
+
+function measureBed() {
+  let xs = flowers.map((f) => f.x + f.leanX).sort((a, b) => a - b);
+  let ys = flowers.map((f) => f.y).sort((a, b) => a - b);
+  // 取 5/95 百分位而不是最大最小值，免得幾朵長在邊緣的花把範圍撐得太開
+  let q = (arr, p) => arr[floor((arr.length - 1) * p)];
+  bedCX = (q(xs, 0.05) + q(xs, 0.95)) / 2;
+  bedRX = (q(xs, 0.95) - q(xs, 0.05)) / 2;
+  bedCY = (q(ys, 0.05) + q(ys, 0.95)) / 2;
+  bedRY = (q(ys, 0.95) - q(ys, 0.05)) / 2;
+}
+
 // noise() 幾乎不會回傳 0 或 1，實測大多落在 0.28~0.72，所以是從那個區間往外
-// 映射再夾住 —— 直接拿 0~1 去 map 的話，路徑會縮成中間窄窄一條，掃不到上排
-// 那幾株比較高的孤挺花。
+// 映射 —— 直接拿 0~1 去 map 的話，路徑會縮成中間窄窄一條，掃不到上排那幾株
+// 比較高的孤挺花。
 function breezePos() {
   let t = frameCount * 0.0035; // 掃過整片花圃約 5 秒
-  return {
-    x: constrain(map(noise(t, 41), 0.28, 0.72, width * 0.1, width * 0.9), 0, width),
-    y: constrain(map(noise(t + 90, 17), 0.28, 0.72, height * 0.26, height * 0.64), 0, height),
-  };
+  // 先在單位圓裡取點再貼到花圃的橢圓上，落到圓外就拉回邊界。之前是各自夾在
+  // 一個矩形範圍內，微風會走進四個角落的空地、停個一兩秒什麼都推不到。
+  let u = map(noise(t, 41), 0.28, 0.72, -1, 1);
+  let v = map(noise(t + 90, 17), 0.28, 0.72, -1, 1);
+  let r = sqrt(u * u + v * v);
+  if (r > 1) {
+    u /= r;
+    v /= r;
+  }
+  return { x: bedCX + u * bedRX, y: bedCY + v * bedRY };
 }
 
 function draw() {
