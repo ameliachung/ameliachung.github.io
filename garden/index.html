@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>Garden</title>
+<!-- 這份 sketch 需要 p5.js 2.x -->
+<script src="https://cdn.jsdelivr.net/npm/p5@2.3.2/lib/p5.min.js"></script>
+<style>
+/* Embedded in the homepage hero via <iframe>, so no centring and no page
+   background — the canvas sits flush at 0,0 and paints its own ground. */
+html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; }
+canvas { display: block; }
+</style>
+</head>
+<body>
+<script src="sketch.js"></script>
+<script>
+/* 279 flowers redrawn every frame is real work, and the homepage scrolls well
+   past this. The parent page watches the iframe and tells us when to stop —
+   an IntersectionObserver in here would only see this frame's own viewport,
+   which never changes as the parent scrolls. */
+window.addEventListener('message', function (e) {
+  if (e.source !== window.parent) return;
+  if (e.data === 'garden:pause') noLoop();
+  else if (e.data === 'garden:resume') loop();
+});
+document.addEventListener('visibilitychange', function () {
+  document.hidden ? noLoop() : loop();
+});
+</script>
+</body>
+</html>

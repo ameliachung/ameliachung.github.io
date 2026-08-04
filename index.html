@@ -60,10 +60,25 @@ nav {
 /* HERO */
 .hero { display: flex; align-items: center; gap: 3rem; margin-bottom: 3rem; padding-top: 2rem; }
 .hero-text { flex: 1; min-width: 0; }
-.hero-memoji { width: 160px; height: auto; flex-shrink: 0; }
+/* The garden iframe is always 600x600 — its native canvas size — and is shrunk
+   to --garden-size with a transform, so changing the box only means changing
+   that one custom property. */
+/* --garden-scale is deliberately unitless: scale() rejects a length, so
+   deriving it as calc(420px / 600) silently kills the whole transform and the
+   iframe renders at its full 600px. Size the box from the scale instead. */
+.hero-garden { --garden-scale: 0.5; width: calc(600px * var(--garden-scale));
+               height: calc(600px * var(--garden-scale)); flex-shrink: 0; }
+.hero-garden iframe { width: 600px; height: 600px; border: 0; display: block;
+                      transform: scale(var(--garden-scale)); transform-origin: top left; }
+/* Past 1240px there is margin outside the 940px wrap to spill into, so the
+   garden grows and hangs off the right edge. The negative margin keeps its
+   *layout* width at 300px, which is what stops the headline reflowing —
+   "Maps & Data" has to stay on one line or the yellow marker breaks in two. */
+@media (min-width: 1240px) { .hero-garden { --garden-scale: 0.7; margin-right: -120px; } }
+@media (max-width: 860px) { .hero-garden { --garden-scale: 0.4; } }
 @media (max-width: 560px) {
   .hero { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; }
-  .hero-memoji { width: 104px; }
+  .hero-garden { --garden-scale: 0.44; }
   .hero-title { font-size: 36px; }
   .card-title-zh { font-size: 20px; }
 }
@@ -283,7 +298,14 @@ footer {
   <p class="hero-desc" id="desc-en">I work at the intersection of investigative journalism, geospatial analysis, and interactive design — building data stories about elections, and environmental politics across Taiwan and Asia.</p>
   <p class="hero-desc-zh" id="desc-zh">我是鍾依靜，駐台北的資料記者。<br>擅長用數據說故事，說關於亞洲政治、科技與環境、性別的那些故事。</p>
   </div>
-  <img class="hero-memoji" src="Amelia.png" alt="Amelia Chung">
+  <!-- The sketch runs at its native 600x600 and is scaled down by CSS; running
+       it small instead would break its layout, whose stem heights and flower
+       sizes are tuned in canvas pixels. -->
+  <div class="hero-garden">
+    <!-- Spelled out rather than "garden/" so the page also works opened
+         straight from disk, where a bare directory shows a file listing. -->
+    <iframe src="garden/index.html" title="Garden — 生成式花園，滑鼠靠近時花會被推開" loading="lazy" scrolling="no"></iframe>
+  </div>
 </div>
 
 <!-- WORKS -->
@@ -699,6 +721,22 @@ setLang('zh');
     }, { threshold: 0.4 });
     svgs.forEach(function (s) { io.observe(s); });
   } else { svgs.forEach(play); }
+})();
+
+/* Pause the garden sketch once it scrolls out of view. The observer has to live
+   here rather than inside the iframe: an observer in that document only sees
+   its own viewport, which the parent's scrolling never changes. */
+(function () {
+  var box = document.querySelector('.hero-garden iframe');
+  if (!box || !('IntersectionObserver' in window)) return;
+  var running = true;
+  function tell(state) {
+    if (state === running || !box.contentWindow) return;
+    running = state;
+    box.contentWindow.postMessage(state ? 'garden:resume' : 'garden:pause', '*');
+  }
+  new IntersectionObserver(function (es) { tell(es[0].isIntersecting); },
+                           { threshold: 0 }).observe(box);
 })();
 </script>
 </body>
