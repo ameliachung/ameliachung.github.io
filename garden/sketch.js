@@ -619,12 +619,48 @@ function setup() {
   flowers.sort((a, b) => a.rootY - b.rootY);
 }
 
+// ====== 無游標裝置的微風 ======
+// 手機沒有 hover：手指碰到之前 mouseX/mouseY 根本不存在（初值是 0,0，離每朵
+// 花都很遠），碰到之後手指一移動就被瀏覽器判定成捲頁手勢，pointercancel 一發
+// 追蹤就斷了。所以在這類裝置上不讀游標，改用一個看不見的焦點，用 noise 在花圃
+// 上緩緩遊走，花會依序被它推開再回彈 —— 不需要使用者做任何事，也不搶捲動。
+const NO_HOVER = window.matchMedia("(hover: none)").matches;
+
+// (hover: none) 講的是「主要」輸入裝置，所以 iPad 接了觸控板還是回報 none，
+// 會被判成手機、游標推不動花。只要出現一次真正的滑鼠移動就交還控制權
+// （pointerType 要檢查，否則手指滑動也會被算成滑鼠）。
+let hasRealMouse = !NO_HOVER;
+function mouseMoved(e) {
+  if (e && e.pointerType === "mouse") hasRealMouse = true;
+}
+
+// noise() 幾乎不會回傳 0 或 1，實測大多落在 0.28~0.72，所以是從那個區間往外
+// 映射再夾住 —— 直接拿 0~1 去 map 的話，路徑會縮成中間窄窄一條，掃不到上排
+// 那幾株比較高的孤挺花。
+function breezePos() {
+  let t = frameCount * 0.0035; // 掃過整片花圃約 5 秒
+  return {
+    x: constrain(map(noise(t, 41), 0.28, 0.72, width * 0.1, width * 0.9), 0, width),
+    y: constrain(map(noise(t + 90, 17), 0.28, 0.72, height * 0.26, height * 0.64), 0, height),
+  };
+}
+
 function draw() {
-  background(245, 240, 230);
+  // 不畫底色：畫布留透明，直接透出頁面的背景（iframe 的 html/body 已設
+  // background: transparent），網站改色時這裡不必跟著改。
+  clear();
   image(mapLayer, 0, 0);
 
+  let fx = mouseX;
+  let fy = mouseY;
+  if (!hasRealMouse) {
+    let b = breezePos();
+    fx = b.x;
+    fy = b.y;
+  }
+
   for (let f of flowers) {
-    f.update(mouseX, mouseY);
+    f.update(fx, fy);
     f.display();
   }
 }
