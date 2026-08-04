@@ -63,6 +63,10 @@ nav {
 .hero-title { display: none; font-size: 38px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
 .hero-title-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 46px; font-weight: 900; line-height: 1.22;
                  letter-spacing: -0.02em; margin-bottom: 0.9rem; }
+/* #hero-en renders Chinese in both languages; mirrors .hero-title-zh and
+   overrides .hero-title's display:none so it survives before setLang runs. */
+.hero-title-cjk { display: block; font-family: 'Noto Sans TC', sans-serif; font-size: 46px; font-weight: 900;
+                  line-height: 1.22; letter-spacing: -0.02em; margin-bottom: 0.9rem; }
 .hero-desc { display: none; font-size: 13px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
 .hero-desc-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 15px; line-height: 1.95; color: var(--text-sec); max-width: 34em; }
 
@@ -169,7 +173,7 @@ footer {
 
 <div class="hero">
   <p class="eyebrow" id="eyebrow">實驗與練習 · Creative Coding · 生成式視覺</p>
-  <h1 class="hero-title" id="hero-en">Lab &amp;<br>Sketches</h1>
+  <h1 class="hero-title hero-title-cjk" id="hero-en">實驗室與<br>創作草稿</h1>
   <h1 class="hero-title-zh" id="hero-zh">實驗室與<br>創作草稿</h1>
   <p class="hero-desc" id="desc-en">Sketches and exercises from creative coding coursework — generative visuals, interaction experiments, and playful data-driven graphics made with p5.js, Processing, and similar tools.</p>
   <p class="hero-desc-zh" id="desc-zh">Creative Coding 課程中的練習與草稿，包含生成式視覺、互動實驗，以及用 p5.js、Processing 等工具做的資料視覺化小品。</p>
