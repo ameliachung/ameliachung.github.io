@@ -27,8 +27,8 @@
 
 <!-- 引入 Mapbox GL JS 資源，使用 defer 確保不阻塞首屏渲染 -->
 
+<link rel="stylesheet" href="css/site.css">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #ffffff;
   --text: #0A0A0A;
@@ -44,8 +44,6 @@
   --c5: #B266FF;
 }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: 'Syne', 'Noto Sans TC', sans-serif; padding: 0 1.5rem; }
-.wrap { max-width: 940px; margin: 0 auto; }
 
 /* NAV */
 nav {
@@ -54,24 +52,8 @@ nav {
   border-bottom: 2px solid var(--text);
   position: sticky; top: 0; background: var(--bg); z-index: 100;
 }
-.logo { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; cursor: default; white-space: nowrap; }
-/* The avatar sits beside the wordmark rather than inside #logo, because
-   setLang() overwrites that span's textContent and would wipe the image out. */
-.logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
-.logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
-.nav-right { display: flex; align-items: center; gap: 1.5rem; }
 .nav-link { font-size: 13px; font-weight: 500; color: var(--text-sec); text-decoration: none; transition: color 0.1s; }
-.nav-link:hover { color: var(--text); }
-/* The bar does not fit on a phone: the logo was wrapping onto two lines under
-   the links, and Contact and the language buttons were cut off past the right
-   edge. Let it wrap onto a second row instead of shrinking the type. */
-@media (max-width: 700px) {
-  nav { flex-wrap: wrap; gap: 0.5rem 1rem; }
-  .nav-right { flex-wrap: wrap; gap: 0.9rem; }
-}
-@media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
 .lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; padding: 3px 10px; cursor: pointer; background: transparent; color: var(--text-sec); border: 2px solid var(--text); border-radius: 0; transition: all 0.15s; }
-.lang-btn:hover { background: var(--text); color: var(--bg); }
 
 /* HERO */
 .hero { display: flex; align-items: center; gap: 3rem; margin-bottom: 3rem; padding-top: 2rem; }
@@ -104,7 +86,6 @@ nav {
 .hero-title .y { background: var(--c1); color: #111; padding: 0 6px; }
 .hero-title .r { color: var(--c2); }
 .hero-desc { display: none; font-size: 14px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
-.hero-desc-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 15px; line-height: 1.95; color: var(--text-sec); max-width: 34em; }
 
 /* TOOLS / METHODS / LANGUAGES — now inside About, below the bio */
 .strip {
@@ -275,10 +256,6 @@ footer {
   display: flex; justify-content: space-between; align-items: center;
   padding: 1.25rem 0; border-top: 2px solid var(--text); padding: 1rem 0 2.5rem;
 }
-.footer-links { display: flex; gap: 1rem; }
-.footer-link { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-sec); text-decoration: none; }
-.footer-link:hover { color: var(--text); }
-.footer-loc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
 </style>
 </head>
 <body>

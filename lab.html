@@ -22,8 +22,8 @@
 <link rel="apple-touch-icon" href="amelia-avatar.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #ffffff;
   --text: #0A0A0A;
@@ -37,8 +37,6 @@
   --c3: #3A7DE8;
   --c4: #2ECC8A;
 }
-body { background: var(--bg); color: var(--text); font-family: 'Syne', 'Noto Sans TC', sans-serif; padding: 0 1.5rem; }
-.wrap { max-width: 940px; margin: 0 auto; }
 
 /* NAV */
 nav {
@@ -46,29 +44,13 @@ nav {
   padding: 1.25rem 0; margin-bottom: 2.5rem;
   border-bottom: 2px solid var(--text);
 }
-.logo { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; cursor: default; white-space: nowrap; }
-/* The avatar sits beside the wordmark rather than inside #logo, because
-   setLang() overwrites that span's textContent and would wipe the image out. */
-.logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
-.logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
-.nav-right { display: flex; align-items: center; gap: 1.5rem; }
 .nav-link { font-size: 13px; font-weight: 500; color: var(--text-sec); text-decoration: none; cursor: pointer; transition: color 0.1s; }
-.nav-link:hover { color: var(--text); }
-/* Same fix index.html already carries: the bar does not fit on a phone —
-   the logo wrapped under the links and Contact plus the language buttons
-   were cut off past the right edge. Wrap onto a second row instead. */
-@media (max-width: 700px) {
-  nav { flex-wrap: wrap; gap: 0.5rem 1rem; }
-  .nav-right { flex-wrap: wrap; gap: 0.9rem; }
-}
-@media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
 .nav-link.current { color: var(--text); border-bottom: 2px solid var(--text); padding-bottom: 1px; }
 .lang-btn {
   font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
   padding: 3px 10px; cursor: pointer; border: 2px solid var(--text); border-radius: 0;
   background: transparent; color: var(--text-sec); transition: all 0.15s;
 }
-.lang-btn:hover { background: var(--text); color: var(--bg); }
 
 /* HERO */
 .hero { margin-bottom: 2rem; }
@@ -82,7 +64,6 @@ nav {
 .hero-title-cjk { display: block; font-family: 'Noto Sans TC', sans-serif; font-size: 46px; font-weight: 900;
                   line-height: 1.22; letter-spacing: -0.02em; margin-bottom: 0.9rem; }
 .hero-desc { display: none; font-size: 13px; line-height: 1.75; color: var(--text-sec); max-width: 500px; }
-.hero-desc-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 15px; line-height: 1.95; color: var(--text-sec); max-width: 34em; }
 
 /* SECTION HEAD */
 .sec-head {
@@ -159,10 +140,6 @@ footer {
   display: flex; justify-content: space-between; align-items: center;
   margin-top: 1rem;
 }
-.footer-links { display: flex; gap: 1rem; }
-.footer-link { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-sec); text-decoration: none; }
-.footer-link:hover { color: var(--text); }
-.footer-loc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
 </style>
 </head>
 <body>

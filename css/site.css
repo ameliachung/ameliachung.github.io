@@ -1,0 +1,33 @@
+/* 三頁共用的樣式。
+   index / articles / lab 各自是獨立的單檔頁面，nav、footer、logo、排版基底
+   本來三份一模一樣地複製著；改一次要改三個地方，而且已經開始各自漂移。
+   這裡只放「三頁一字不差」的規則，其餘留在各頁的 <style> 裡。
+   載入順序在各頁 <style> 之前，所以頁面自己的規則永遠蓋得過這裡。 */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', 'Noto Sans TC', sans-serif; padding: 0 1.5rem; }
+.wrap { max-width: 940px; margin: 0 auto; }
+.logo { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; cursor: default; white-space: nowrap; }
+/* The avatar sits beside the wordmark rather than inside #logo, because
+   setLang() overwrites that span's textContent and would wipe the image out. */
+.logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
+.logo-mark { width: 28px; height: 28px; display: block; flex-shrink: 0; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-link:hover { color: var(--text); }
+/* 手機上這一排放不下：logo 會被擠到連結下面折成兩行，「聯絡」和語言鈕則被切在
+   右邊界外。與其縮字級，不如讓它折到第二行。
+   下面兩個 media block 必須待在一起、而且 430px 要排在 700px 後面 —— 兩條規則
+   對 .nav-right 的 gap 特異性相同，誰在後面誰贏。當初只把 430px 這條搬進共用檔、
+   把 700px 留在各頁 <style> 裡，順序就反過來了（共用檔先載入），430px 以下的
+   gap 從 0.75rem 變成 0.9rem，三頁的導覽列都被撐寬 12px。 */
+@media (max-width: 700px) {
+  nav { flex-wrap: wrap; gap: 0.5rem 1rem; }
+  .nav-right { flex-wrap: wrap; gap: 0.9rem; }
+}
+@media (max-width: 430px) { .nav-right { gap: 0.75rem; } }
+.lang-btn:hover { background: var(--text); color: var(--bg); }
+.hero-desc-zh { font-family: 'Noto Sans TC', sans-serif; font-size: 15px; line-height: 1.95; color: var(--text-sec); max-width: 34em; }
+.footer-links { display: flex; gap: 1rem; }
+.footer-link { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-sec); text-decoration: none; }
+.footer-link:hover { color: var(--text); }
+.footer-loc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); }
