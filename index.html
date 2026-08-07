@@ -23,7 +23,7 @@
 <link rel="icon" type="image/png" href="amelia-avatar.png">
 <link rel="apple-touch-icon" href="amelia-avatar.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&family=Architects+Daughter&display=swap" rel="stylesheet">
 
 <!-- 引入 Mapbox GL JS 資源，使用 defer 確保不阻塞首屏渲染 -->
 
@@ -65,7 +65,20 @@ nav {
    deriving it as calc(420px / 600) silently kills the whole transform and the
    iframe renders at its full 600px. Size the box from the scale instead. */
 .hero-garden { --garden-scale: 0.5; width: calc(600px * var(--garden-scale));
-               height: calc(600px * var(--garden-scale)); flex-shrink: 0; }
+               height: calc(600px * var(--garden-scale)); flex-shrink: 0; position: relative; }
+/* 手寫註記與捲線，疊在花園上方。兩者都放在 .hero-garden 裡用絕對定位，
+   位置以 % 表示，所以 --garden-scale 一改它們就跟著走。
+   pointer-events: none 是必要的 —— 否則這層會擋住游標，花就不會被推開。*/
+.garden-note, .garden-curl { position: absolute; pointer-events: none; }
+.garden-note { top: 12%; left: 14%; font-family: 'Architects Daughter', cursive;
+               font-size: 13px; line-height: 1.5; color: var(--text); white-space: nowrap; }
+.garden-curl { top: 25%; left: 9%; width: 12%; height: 17%; overflow: visible; }
+/* 1240px 以上花園放大到 0.7，註記照設計稿的比例往內縮排、字級跟著大一級。
+   字級不用 --garden-scale 算，那樣在 0.5 會掉到 10px，小到看不清楚。 */
+@media (min-width: 1240px) { .garden-note { left: 22%; font-size: 14px; } }
+/* 註記的字級固定不縮放，花園小於 0.5 就放不下；而且行動裝置上花園是自己隨風
+   擺動、不吃觸控（見 garden/sketch.js 的 breezePos），叫人去「摸」並不成立。*/
+@media (max-width: 940px) { .garden-note, .garden-curl { display: none; } }
 .hero-garden iframe { width: 600px; height: 600px; border: 0; display: block;
                       transform: scale(var(--garden-scale)); transform-origin: top left; }
 /* Past 1240px there is margin outside the 940px wrap to spill into, so the
@@ -151,6 +164,17 @@ nav {
 .card-link { font-family: 'DM Mono', monospace; font-size: 10px; padding: 5px 10px; border: 1.5px solid var(--text); border-radius: 0; color: var(--text); text-decoration: none; transition: all 0.12s; }
 .card-link:hover { background: var(--text); color: var(--bg); }
 .card-arrow { font-size: 16px; color: var(--text-ter); opacity: 0; transition: opacity 0.12s; margin-top: 0.25rem; }
+
+/* 作品集下方通往「文章」「實驗室」的兩顆按鈕。做成和卡片同寬的一整列，
+   邊框 2px 對齊 works-grid 的黑底分隔線，游標移上去整塊反白。 */
+.works-more { display: flex; gap: 2px; margin-bottom: 2.5rem; }
+.works-more-btn { flex: 1; display: flex; align-items: center; justify-content: space-between;
+                  gap: 1rem; padding: 1.1rem 1.4rem; border: 2px solid var(--text);
+                  font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 700;
+                  color: var(--text); text-decoration: none; transition: all 0.12s; }
+.works-more-btn:hover { background: var(--text); color: var(--bg); }
+.works-more-arrow { font-family: 'DM Mono', monospace; font-size: 14px; }
+@media (max-width: 560px) { .works-more { flex-direction: column; } }
 
 /* CUSTOM WORK ICONS */
 .card-titlerow { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 0.6rem; }
@@ -298,6 +322,13 @@ footer {
     <!-- Spelled out rather than "garden/" so the page also works opened
          straight from disk, where a bare directory shows a file listing. -->
     <iframe src="garden/index.html" title="Garden — 生成式花園，滑鼠靠近時花會被推開" loading="lazy" scrolling="no"></iframe>
+    <p class="garden-note">This is a garden drawn with p5js<br>feel free to touch it!</p>
+    <!-- 手繪捲線，照設計稿上的那一筆描下來的。stroke 用 non-scaling-stroke，
+         花園放大到 0.7 時線條還是同一個粗細，不會跟著變粗。 -->
+    <svg class="garden-curl" viewBox="-2 -2 61 84" fill="none" aria-hidden="true">
+      <path d="M 54.8 5.4 C 52.7 4.9, 46.0 2.2, 42.3 2.5 C 38.5 2.8, 35.1 4.8, 32.3 7.0 C 29.5 9.2, 27.0 12.9, 25.5 15.4 C 24.0 17.9, 23.5 19.7, 23.5 22.0 C 23.5 24.3, 24.4 26.6, 25.5 29.1 C 26.6 31.6, 28.5 35.6, 30.4 36.9 C 32.3 38.2, 35.4 38.0, 37.0 37.0 C 38.6 36.0, 39.9 32.8, 40.0 30.8 C 40.1 28.9, 39.1 26.6, 37.6 25.3 C 36.1 24.1, 33.4 23.8, 31.0 23.3 C 28.6 22.8, 26.4 22.2, 23.5 22.3 C 20.6 22.4, 16.6 22.2, 13.5 24.1 C 10.4 26.0, 6.9 30.1, 5.0 33.8 C 3.1 37.4, 2.3 42.1, 2.0 46.0 C 1.7 49.9, 2.2 53.6, 3.0 57.3 C 3.8 60.9, 4.9 64.7, 6.6 67.9 C 8.2 71.1, 11.8 75.1, 12.9 76.6"
+            stroke="#7A6F68" stroke-width="1" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    </svg>
   </div>
 </div>
 
@@ -547,6 +578,17 @@ footer {
     </div>
 
   </div>
+
+  <!-- 作品集看完之後的兩個去處。文字沿用導覽列的 nav[1] / nav[2]，
+       所以切語言時不必再多維護一組字串。 -->
+  <div class="works-more">
+    <a class="works-more-btn" href="articles.html">
+      <span id="more-articles">文章</span><span class="works-more-arrow">→</span>
+    </a>
+    <a class="works-more-btn" href="lab.html">
+      <span id="more-lab">實驗室</span><span class="works-more-arrow">→</span>
+    </a>
+  </div>
 </div>
 
 <!-- ABOUT -->
@@ -626,6 +668,10 @@ function setLang(l) {
 
   const navIds = ['nav-works','nav-articles','nav-lab','nav-about','nav-contact'];
   navIds.forEach((id,i) => { document.getElementById(id).textContent = d.nav[i]; });
+
+  // 作品集下方的兩顆按鈕，用的是同一組導覽文字
+  document.getElementById('more-articles').textContent = d.nav[1];
+  document.getElementById('more-lab').textContent = d.nav[2];
 
   // toggle bilingual elements
   // note: the tN/aN ids are historical and no longer match the displayed card
