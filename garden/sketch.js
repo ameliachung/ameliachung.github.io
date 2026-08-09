@@ -575,7 +575,8 @@ function drawClippedLine(g, x1, y1, x2, y2, cx, cy, rx, ry) {
 }
 
 function setup() {
-  createCanvas(600, 600);
+  let cnv = createCanvas(600, 600);
+  bindTouch(cnv.elt);
 
   noiseSeed(9);
   mapLayer = createGraphics(width, height);
@@ -623,9 +624,10 @@ function setup() {
 
 // ====== 無游標裝置的微風 ======
 // 手機沒有 hover：手指碰到之前 mouseX/mouseY 根本不存在（初值是 0,0，離每朵
-// 花都很遠），碰到之後手指一移動就被瀏覽器判定成捲頁手勢，pointercancel 一發
-// 追蹤就斷了。所以在這類裝置上不讀游標，改用一個看不見的焦點，用 noise 在花圃
-// 上緩緩遊走，花會依序被它推開再回彈 —— 不需要使用者做任何事，也不搶捲動。
+// 花都很遠）。所以平常不讀游標，改用一個看不見的焦點，用 noise 在花圃上緩緩
+// 遊走，花會依序被它推開再回彈 —— 不需要使用者做任何事，也不搶捲動。
+// 手指真的碰上來的時候則交給下面的 bindTouch 接管（首頁那句手寫的
+// "feel free to touch it!" 是這樣才成立的）。
 const NO_HOVER = window.matchMedia("(hover: none)").matches;
 
 // (hover: none) 講的是「主要」輸入裝置，所以 iPad 接了觸控板還是回報 none，
@@ -634,6 +636,57 @@ const NO_HOVER = window.matchMedia("(hover: none)").matches;
 let hasRealMouse = !NO_HOVER;
 function mouseMoved(e) {
   if (e && e.pointerType === "mouse") hasRealMouse = true;
+}
+
+// ====== 觸控：讓手指真的推得動花 ======
+// 不透過 p5 的 mouseX/mouseY —— 那是它內部把 pointer 寫進去的副作用，而且瀏覽器
+// 把手勢判給捲動時只是停止更新、不會歸位，分不出「手指還在」和「已經放開」。
+// 這裡自己收 pointer 事件，狀態就明確了。
+//
+// 全部用 passive listener、不呼叫 preventDefault，所以在花園上滑動照樣是捲頁；
+// 瀏覽器接手捲動時會送一個 pointercancel，那就當成放開處理。
+// 觸控的 pointer 在 pointerdown 當下會被隱式捕捉到 canvas 上，手指滑出畫布外
+// pointermove 照樣送得進來，不必自己 setPointerCapture。
+let touchPos = null; // 手指現在的位置（畫布座標），沒碰就是 null
+let releasePos = null; // 放開的位置，交棒回微風／游標用
+let releaseT = 0;
+const HANDOFF_FRAMES = 30; // 放開後花半秒滑回去，才不會整片花同時彈一下
+
+function bindTouch(el) {
+  // 花園在首頁是被 CSS transform 縮小的（--garden-scale），所以得拿 rect 的實際
+  // 大小換算回 600x600 的畫布座標，clientX 不能直接當畫布座標用。
+  const toCanvas = (e) => {
+    const r = el.getBoundingClientRect();
+    return {
+      x: ((e.clientX - r.left) / r.width) * width,
+      y: ((e.clientY - r.top) / r.height) * height,
+    };
+  };
+  const opts = { passive: true };
+  el.addEventListener(
+    "pointerdown",
+    (e) => {
+      if (e.pointerType !== "mouse") touchPos = toCanvas(e);
+    },
+    opts,
+  );
+  el.addEventListener(
+    "pointermove",
+    (e) => {
+      if (e.pointerType !== "mouse" && touchPos) touchPos = toCanvas(e);
+    },
+    opts,
+  );
+  // pointerup 之後隱式捕捉解除會再補一個 pointerleave，靠 touchPos 已是 null 擋掉
+  const release = (e) => {
+    if (e.pointerType === "mouse" || !touchPos) return;
+    releasePos = touchPos;
+    releaseT = 0;
+    touchPos = null;
+  };
+  for (const ev of ["pointerup", "pointercancel", "pointerleave"]) {
+    el.addEventListener(ev, release, opts);
+  }
 }
 
 // 微風的遊走範圍，在 setup 量出來 —— 用真正的花頂座標，不是猜畫布比例。
@@ -675,12 +728,25 @@ function draw() {
   clear();
   image(mapLayer, 0, 0);
 
-  let fx = mouseX;
-  let fy = mouseY;
-  if (!hasRealMouse) {
-    let b = breezePos();
-    fx = b.x;
-    fy = b.y;
+  // 焦點：手指 > 游標 > 微風。breezePos() 只吃 frameCount，沒被用到的時候
+  // 相位照樣在走，所以交棒回去的時候微風已經在它該在的位置上了。
+  let fx, fy;
+  if (touchPos) {
+    fx = touchPos.x;
+    fy = touchPos.y;
+    releasePos = null;
+  } else {
+    let base = hasRealMouse ? { x: mouseX, y: mouseY } : breezePos();
+    if (releasePos && (releaseT += 1 / HANDOFF_FRAMES) >= 1) releasePos = null;
+    if (releasePos) {
+      // smoothstep：離手的瞬間先跟著手指，再慢慢被拉回去
+      let e = releaseT * releaseT * (3 - 2 * releaseT);
+      fx = lerp(releasePos.x, base.x, e);
+      fy = lerp(releasePos.y, base.y, e);
+    } else {
+      fx = base.x;
+      fy = base.y;
+    }
   }
 
   for (let f of flowers) {
