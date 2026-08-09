@@ -92,7 +92,10 @@ nav {
 @media (max-width: 860px) { .hero-garden { --garden-scale: 0.4; } }
 @media (max-width: 560px) {
   .hero { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; }
-  .hero-garden { --garden-scale: 0.44; }
+  /* 花園置中，但只有花園 —— align-items 改成 center 會把整塊 .hero-text 也一起
+     縮成內容寬度置中，標題就跟著跑掉了，所以用 align-self 只動這一個。
+     手寫註記是用 % 定位在花園裡的，會跟著一起移，構圖不變。 */
+  .hero-garden { --garden-scale: 0.44; align-self: center; }
   .hero-title { font-size: 36px; }
   .card-title-zh { font-size: 20px; }
 }
