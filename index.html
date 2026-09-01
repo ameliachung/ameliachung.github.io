@@ -236,6 +236,19 @@ nav {
 .tpb-box.card-cover { position: relative; height: auto; margin-bottom: 0; background: #0A0A12; }
 .tpb-box img { display: block; width: auto; max-width: 100%; height: auto; max-height: 540px; margin: 0 auto; }
 @media (max-width: 700px) { .tpb-box img { max-height: 460px; } }
+/* WORK 01 — 華山展場紀錄照。兩張並排，手機轉直排。
+   圖片本身比例不一（白天橫幅 3:2、夜景 4:3.3），所以用固定高度 + object-fit
+   讓兩張的視覺高度對齊，不然並排會參差。 */
+.tpb-shots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.tpb-shot { position: relative; border: 2px solid var(--text); overflow: hidden; background: #0A0A12; }
+.tpb-shot img { display: block; width: 100%; height: 200px; object-fit: cover; }
+.tpb-credit { margin-top: 7px; display: flex; flex-direction: column; gap: 2px; }
+.tpb-credit-t { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-ter); letter-spacing: .04em; }
+.tpb-credit-s { font-family: 'Noto Sans TC', sans-serif; font-size: 10px; color: var(--text-ter); }
+@media (max-width: 700px) {
+  .tpb-shots { grid-template-columns: 1fr; }
+  .tpb-shot img { height: 220px; }
+}
 .tpb-box .choro-cap-t { color: #D8D2E4; }
 .tpb-box .choro-cap-s { color: #8B8698; }
 /* WORK 05 — Indonesia supply-chain map. 16:9 and full card width, so it sizes
@@ -384,6 +397,24 @@ footer {
             <div class="choro-hover">Explore the story ↗</div>
           </div>
         </a>
+
+        <!-- 華山展場紀錄。圖說文字待依靜自己寫，這裡只放已確認的事實：
+             展覽名稱、攝影者由依靜提供；地點取自照片裡的「華山1914 紅磚六合院」
+             告示牌，日期取自檔案的拍攝時間（2026-08-26 / 08-27）。 -->
+        <div class="tpb-shots">
+          <figure class="tpb-shot">
+            <img src="taipei-plan-b-huashan-01.jpg" loading="lazy" decoding="async"
+                 alt="A four-sided LED cube in a Huashan courtyard showing the Taipei Plan B animation, with the line One less kilometer to Plan B, one huge step for her body">
+          </figure>
+          <figure class="tpb-shot">
+            <img src="taipei-plan-b-huashan-02.jpg" loading="lazy" decoding="async"
+                 alt="The same LED cube at night, the orange and violet pixel field glowing against a dark courtyard">
+          </figure>
+        </div>
+        <div class="tpb-credit">
+          <span class="tpb-credit-t">CO-FORM · Huashan 1914 Creative Park, Taipei · Aug 2026</span>
+          <span class="tpb-credit-s">CO-FORM · 華山 1914 文創園區 · 2026 年 8 月 · 攝影：賴晁翔</span>
+        </div>
       </div>
     </div>
 
