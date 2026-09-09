@@ -158,7 +158,7 @@ footer {
     <a class="nav-link" href="mailto:yichingchung910@gmail.com" id="nav-contact">聯絡</a>
     <!-- One tab only: Chinese is the default, so the button always offers
          the other language rather than showing both states. -->
-    <button class="lang-btn" id="lang-btn" onclick="setLang(lang === 'zh' ? 'en' : 'zh')">EN</button>
+    <button class="lang-btn" id="lang-btn" onclick="setLang(currentLang === 'zh' ? 'en' : 'zh')">EN</button>
   </div>
 </nav>
 
@@ -237,10 +237,12 @@ const PIECES = [
   },
 ];
 
-let lang = 'zh';
+// 不能叫 lang：inline onclick 的作用域含按鈕本身，`lang` 會被 HTMLElement
+// 的 lang 屬性（空字串）蓋掉，於是三元判斷永遠選到 'zh'，按了沒反應。
+let currentLang = 'zh';
 
 function render() {
-  const isZh = lang === 'zh';
+  const isZh = currentLang === 'zh';
   const grid = document.getElementById('lab-grid');
   grid.innerHTML = PIECES.map((p, i) => {
     const num = String(i + 1).padStart(2, '0');
@@ -286,7 +288,7 @@ function render() {
 }
 
 function setLang(l) {
-  lang = l;
+  currentLang = l;
   const isZh = l === 'zh';
   document.documentElement.lang = isZh ? 'zh-Hant' : 'en';
   document.getElementById('lang-btn').textContent = isZh ? 'EN' : '中';
